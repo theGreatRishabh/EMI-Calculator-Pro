@@ -21,6 +21,9 @@ export default defineConfig(({ mode }) => {
       // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== "true",
     },
+    build: {
+      sourcemap: true,
+    },
     test: {
       environment: "jsdom",
       setupFiles: ["./src/setupTests.ts"],

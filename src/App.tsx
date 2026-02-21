@@ -51,9 +51,6 @@ import {
   getYear,
   differenceInMonths,
 } from "date-fns";
-import { jsPDF } from "jspdf";
-import autoTable from "jspdf-autotable";
-import * as XLSX from "xlsx";
 import { cn, formatCurrency, formatCurrencyFull } from "./lib/utils";
 import {
   LoanType,
@@ -477,7 +474,9 @@ export default function App() {
     setPrepayments([]);
   };
 
-  const exportToPDF = () => {
+  const exportToPDF = async () => {
+    const { jsPDF } = await import("jspdf");
+    const autoTable = (await import("jspdf-autotable")).default;
     const doc = new jsPDF();
 
     // Helper to clean currency for PDF (replace ₹ with Rs. since default PDF fonts don't support Unicode ₹)
@@ -534,7 +533,8 @@ export default function App() {
     doc.save(`EMI_Schedule_${format(new Date(), "yyyy-MM-dd")}.pdf`);
   };
 
-  const exportToExcel = () => {
+  const exportToExcel = async () => {
+    const XLSX = await import("xlsx");
     const data = adjustedSchedule.map((row) => ({
       "EMI No": row.month,
       Date: format(row.date, "MMM yyyy"),
