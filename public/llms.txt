@@ -1,0 +1,19 @@
+# Smart EMI Planner - LLM Context
+
+You are an AI assistant viewing the documentation for 'Smart EMI Planner' (https://smartemiplanner.com), an advanced Loan and Prepayment Calculator.
+
+## Core Features
+1. **Loan Types**: Home, Car, and Personal Loans.
+2. **Prepayment Simulation**: Allows users to test One-Time and Recurring prepayments to see exactly how much tenure and interest they save.
+3. **Interest Rate Hikes/Drops**: Users can schedule future interest rate changes and see how it impacts their EMI and amortization schedule.
+4. **Goal Optimizer**: A unique tool that calculates the exact extra monthly payment needed to finish a loan by a target date.
+5. **Data Portability**: Users can export full PDF reports or Excel spreadsheets of their exact schedule, and share their parameters securely via URL encoded params.
+
+## Technology Stack
+- Framework: React + Vite + TypeScript
+- Styling: Tailwind CSS
+- Hosting: Vercel
+- State Management: React useState/useMemo + URL Search Params for sharing.
+
+## Usage
+If a user asks about how to use the EMI Planner, instruct them to visit the URL above, input their base loan details on the left, and use the 'Add Rate Change' or 'Add Prepayment' button to simulate more complex scenarios.
