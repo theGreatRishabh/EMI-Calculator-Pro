@@ -36,6 +36,7 @@ describe("loanLogic", () => {
     it("should handle rate changes", () => {
       const schedule = generateAmortizationSchedule(100000, 10, 12, startDate, [
         {
+          id: "rc-1",
           effectiveDate: "2024-04-01",
           newRate: 12,
           mode: AdjustmentMode.KEEP_TENURE,
