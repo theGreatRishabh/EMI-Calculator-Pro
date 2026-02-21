@@ -579,7 +579,7 @@ export default function App() {
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex items-start justify-between w-full md:w-auto">
             <div>
-              <h1 className="text-3xl font-bold tracking-tight text-slate-900">EMI Calculator Pro</h1>
+              <h1 className="text-3xl font-bold tracking-tight text-slate-900">Smart EMI Planner</h1>
               <p className="text-slate-500">Advanced loan simulation with rate changes and prepayments</p>
             </div>
             <button 
@@ -1318,7 +1318,7 @@ export default function App() {
       
       {/* Footer */}
       <footer className="max-w-7xl mx-auto mt-12 pt-8 border-t border-slate-200 text-center text-slate-400 text-sm">
-        <p>© {new Date().getFullYear()} EMI Calculator Pro. All calculations are estimates.</p>
+        <p>© {new Date().getFullYear()} Smart EMI Planner. All calculations are estimates.</p>
         <p className="mt-2">
           Developed by <a href="https://portfolio-tgr.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-bold hover:underline">TGR</a>
         </p>

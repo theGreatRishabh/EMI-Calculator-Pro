@@ -5,7 +5,7 @@ import App from "./App";
 describe("App Component", () => {
   it("renders without crashing", () => {
     render(<App />);
-    const headings = screen.getAllByText(/EMI Calculator/i);
+    const headings = screen.getAllByText(/Smart EMI Planner/i);
     expect(headings.length).toBeGreaterThan(0);
   });
 });
