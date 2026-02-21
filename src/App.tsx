@@ -1,16 +1,25 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { 
-  PieChart, Pie, Cell, ResponsiveContainer, 
-  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend 
-} from 'recharts';
-import { 
-  Calculator, 
-  TrendingUp, 
-  Calendar, 
-  ArrowRight, 
-  Plus, 
-  Trash2, 
-  ChevronDown, 
+import React, { useState, useMemo, useEffect } from "react";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from "recharts";
+import {
+  Calculator,
+  TrendingUp,
+  Calendar,
+  ArrowRight,
+  Plus,
+  Trash2,
+  ChevronDown,
   ChevronUp,
   Info,
   IndianRupee,
@@ -32,30 +41,36 @@ import {
   User,
   Phone,
   Send,
-  X
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
-import { format, addMonths, parseISO, getYear, differenceInMonths } from 'date-fns';
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import * as XLSX from 'xlsx';
-import { cn, formatCurrency, formatCurrencyFull } from './lib/utils';
-import { 
-  LoanType, 
-  AdjustmentMode, 
-  PrepaymentType, 
+  X,
+} from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import {
+  format,
+  addMonths,
+  parseISO,
+  getYear,
+  differenceInMonths,
+} from "date-fns";
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
+import * as XLSX from "xlsx";
+import { cn, formatCurrency, formatCurrencyFull } from "./lib/utils";
+import {
+  LoanType,
+  AdjustmentMode,
+  PrepaymentType,
   PrepaymentReduction,
   RateChange,
   Prepayment,
-  AmortizationRow
-} from './types';
-import { 
-  LOAN_DEFAULTS, 
-  calculateEMI, 
-  generateAmortizationSchedule 
-} from './loanLogic';
+  AmortizationRow,
+} from "./types";
+import {
+  LOAN_DEFAULTS,
+  calculateEMI,
+  generateAmortizationSchedule,
+} from "./loanLogic";
 
-const COLORS = ['#10b981', '#f59e0b'];
+const COLORS = ["#10b981", "#f59e0b"];
 
 interface RateChangeCardProps {
   key?: React.Key;
@@ -64,7 +79,11 @@ interface RateChangeCardProps {
   onRemove: (id: string) => void;
 }
 
-function RateChangeCard({ rateChange, onUpdate, onRemove }: RateChangeCardProps) {
+function RateChangeCard({
+  rateChange,
+  onUpdate,
+  onRemove,
+}: RateChangeCardProps) {
   const [local, setLocal] = useState(rateChange);
   const isDirty = JSON.stringify(local) !== JSON.stringify(rateChange);
 
@@ -75,13 +94,13 @@ function RateChangeCard({ rateChange, onUpdate, onRemove }: RateChangeCardProps)
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3 relative group transition-all hover:border-amber-200"
     >
-      <button 
+      <button
         onClick={() => onRemove(rateChange.id)}
         className="absolute -top-2 -right-2 p-1.5 bg-white text-slate-400 hover:text-red-500 rounded-full shadow-sm border border-slate-200 opacity-0 group-hover:opacity-100 transition-all z-10"
       >
@@ -89,24 +108,32 @@ function RateChangeCard({ rateChange, onUpdate, onRemove }: RateChangeCardProps)
       </button>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">Effective Date</label>
-          <input 
-            type="date" 
+          <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
+            Effective Date
+          </label>
+          <input
+            type="date"
             value={local.effectiveDate}
-            onChange={(e) => setLocal({ ...local, effectiveDate: e.target.value })}
+            onChange={(e) =>
+              setLocal({ ...local, effectiveDate: e.target.value })
+            }
             onBlur={handleApply}
             className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none transition-all"
           />
         </div>
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">New Rate (%)</label>
+          <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
+            New Rate (%)
+          </label>
           <div className="relative">
             <Percent className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-300" />
-            <input 
-              type="number" 
+            <input
+              type="number"
               step="0.1"
               value={local.newRate}
-              onChange={(e) => setLocal({ ...local, newRate: Number(e.target.value) })}
+              onChange={(e) =>
+                setLocal({ ...local, newRate: Number(e.target.value) })
+              }
               onBlur={handleApply}
               className="w-full pl-3 pr-9 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none transition-all"
             />
@@ -114,19 +141,27 @@ function RateChangeCard({ rateChange, onUpdate, onRemove }: RateChangeCardProps)
         </div>
       </div>
       <div className="space-y-1">
-        <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">Adjustment Mode</label>
-        <select 
+        <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
+          Adjustment Mode
+        </label>
+        <select
           value={local.mode}
-          onChange={(e) => setLocal({ ...local, mode: e.target.value as AdjustmentMode })}
+          onChange={(e) =>
+            setLocal({ ...local, mode: e.target.value as AdjustmentMode })
+          }
           onBlur={handleApply}
           className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none transition-all appearance-none cursor-pointer"
         >
-          <option value={AdjustmentMode.KEEP_EMI}>Keep EMI Same (Tenure Changes)</option>
-          <option value={AdjustmentMode.KEEP_TENURE}>Keep Tenure Same (EMI Changes)</option>
+          <option value={AdjustmentMode.KEEP_EMI}>
+            Keep EMI Same (Tenure Changes)
+          </option>
+          <option value={AdjustmentMode.KEEP_TENURE}>
+            Keep Tenure Same (EMI Changes)
+          </option>
         </select>
       </div>
       {isDirty && (
-        <motion.button 
+        <motion.button
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           onClick={handleApply}
@@ -146,7 +181,11 @@ interface PrepaymentCardProps {
   onRemove: (id: string) => void;
 }
 
-function PrepaymentCard({ prepayment, onUpdate, onRemove }: PrepaymentCardProps) {
+function PrepaymentCard({
+  prepayment,
+  onUpdate,
+  onRemove,
+}: PrepaymentCardProps) {
   const [local, setLocal] = useState(prepayment);
   const isDirty = JSON.stringify(local) !== JSON.stringify(prepayment);
 
@@ -157,13 +196,13 @@ function PrepaymentCard({ prepayment, onUpdate, onRemove }: PrepaymentCardProps)
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3 relative group transition-all hover:border-emerald-200"
     >
-      <button 
+      <button
         onClick={() => onRemove(prepayment.id)}
         className="absolute -top-2 -right-2 p-1.5 bg-white text-slate-400 hover:text-red-500 rounded-full shadow-sm border border-slate-200 opacity-0 group-hover:opacity-100 transition-all z-10"
       >
@@ -171,22 +210,28 @@ function PrepaymentCard({ prepayment, onUpdate, onRemove }: PrepaymentCardProps)
       </button>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">Amount (₹)</label>
+          <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
+            Amount (₹)
+          </label>
           <div className="relative">
             <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-300" />
-            <input 
-              type="number" 
+            <input
+              type="number"
               value={local.amount}
-              onChange={(e) => setLocal({ ...local, amount: Number(e.target.value) })}
+              onChange={(e) =>
+                setLocal({ ...local, amount: Number(e.target.value) })
+              }
               onBlur={handleApply}
               className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
             />
           </div>
         </div>
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">Start Date</label>
-          <input 
-            type="date" 
+          <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
+            Start Date
+          </label>
+          <input
+            type="date"
             value={local.startDate}
             onChange={(e) => setLocal({ ...local, startDate: e.target.value })}
             onBlur={handleApply}
@@ -196,10 +241,14 @@ function PrepaymentCard({ prepayment, onUpdate, onRemove }: PrepaymentCardProps)
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">Type</label>
-          <select 
+          <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
+            Type
+          </label>
+          <select
             value={local.type}
-            onChange={(e) => setLocal({ ...local, type: e.target.value as PrepaymentType })}
+            onChange={(e) =>
+              setLocal({ ...local, type: e.target.value as PrepaymentType })
+            }
             onBlur={handleApply}
             className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all appearance-none cursor-pointer"
           >
@@ -208,10 +257,17 @@ function PrepaymentCard({ prepayment, onUpdate, onRemove }: PrepaymentCardProps)
           </select>
         </div>
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">Reduce</label>
-          <select 
+          <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
+            Reduce
+          </label>
+          <select
             value={local.reduction}
-            onChange={(e) => setLocal({ ...local, reduction: e.target.value as PrepaymentReduction })}
+            onChange={(e) =>
+              setLocal({
+                ...local,
+                reduction: e.target.value as PrepaymentReduction,
+              })
+            }
             onBlur={handleApply}
             className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all appearance-none cursor-pointer"
           >
@@ -222,18 +278,22 @@ function PrepaymentCard({ prepayment, onUpdate, onRemove }: PrepaymentCardProps)
       </div>
       {local.type === PrepaymentType.RECURRING && (
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">Frequency (Months)</label>
-          <input 
-            type="number" 
+          <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
+            Frequency (Months)
+          </label>
+          <input
+            type="number"
             value={local.frequency || 12}
-            onChange={(e) => setLocal({ ...local, frequency: Number(e.target.value) })}
+            onChange={(e) =>
+              setLocal({ ...local, frequency: Number(e.target.value) })
+            }
             onBlur={handleApply}
             className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
           />
         </div>
       )}
       {isDirty && (
-        <motion.button 
+        <motion.button
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           onClick={handleApply}
@@ -251,25 +311,29 @@ export default function App() {
   const [amount, setAmount] = useState(LOAN_DEFAULTS[LoanType.HOME].amount);
   const [rate, setRate] = useState(LOAN_DEFAULTS[LoanType.HOME].rate);
   const [tenure, setTenure] = useState(LOAN_DEFAULTS[LoanType.HOME].tenure);
-  const [tenureUnit, setTenureUnit] = useState<'Y' | 'M'>('Y');
-  const [loanStartDate, setLoanStartDate] = useState(format(new Date(), 'yyyy-MM-dd'));
-  
+  const [tenureUnit, setTenureUnit] = useState<"Y" | "M">("Y");
+  const [loanStartDate, setLoanStartDate] = useState(
+    format(new Date(), "yyyy-MM-dd"),
+  );
+
   const [rateChanges, setRateChanges] = useState<RateChange[]>([]);
   const [prepayments, setPrepayments] = useState<Prepayment[]>([]);
-  
-  const [expandedYears, setExpandedYears] = useState<Record<number, boolean>>({});
+
+  const [expandedYears, setExpandedYears] = useState<Record<number, boolean>>(
+    {},
+  );
 
   // URL State Persistence
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const type = params.get('type') as LoanType;
-    const amt = params.get('amt');
-    const r = params.get('rate');
-    const ten = params.get('ten');
-    const unit = params.get('unit') as 'Y' | 'M';
-    const start = params.get('start');
-    const rc = params.get('rc');
-    const pp = params.get('pp');
+    const type = params.get("type") as LoanType;
+    const amt = params.get("amt");
+    const r = params.get("rate");
+    const ten = params.get("ten");
+    const unit = params.get("unit") as "Y" | "M";
+    const start = params.get("start");
+    const rc = params.get("rc");
+    const pp = params.get("pp");
 
     if (type && Object.values(LoanType).includes(type)) setLoanType(type);
     if (amt) setAmount(Number(amt));
@@ -277,34 +341,40 @@ export default function App() {
     if (ten) setTenure(Number(ten));
     if (unit) setTenureUnit(unit);
     if (start) setLoanStartDate(start);
-    
+
     if (rc) {
       try {
         setRateChanges(JSON.parse(atob(rc)));
       } catch (e) {
-        console.error('Failed to parse shared rate changes', e);
+        console.error("Failed to parse shared rate changes", e);
       }
     }
     if (pp) {
       try {
         setPrepayments(JSON.parse(atob(pp)));
       } catch (e) {
-        console.error('Failed to parse shared prepayments', e);
+        console.error("Failed to parse shared prepayments", e);
       }
     }
   }, []);
 
   const [isShared, setIsShared] = useState(false);
   const [showLeadModal, setShowLeadModal] = useState(false);
-  const [leadForm, setLeadForm] = useState({ name: '', email: '', phone: '', loanAmount: '' });
+  const [leadForm, setLeadForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    loanAmount: "",
+  });
   const [isLeadSubmitted, setIsLeadSubmitted] = useState(false);
 
-  const isConsultancyEnabled = (import.meta as any).env.VITE_ENABLE_CONSULTANCY === 'true';
+  const isConsultancyEnabled =
+    (import.meta as any).env.VITE_ENABLE_CONSULTANCY === "true";
 
   const handleLeadSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // In a real app, you'd send this to your backend or CRM
-    console.log('Lead captured:', leadForm);
+    console.log("Lead captured:", leadForm);
     setIsLeadSubmitted(true);
     setTimeout(() => {
       setShowLeadModal(false);
@@ -321,7 +391,7 @@ export default function App() {
       unit: tenureUnit,
       start: loanStartDate,
       rc: btoa(JSON.stringify(rateChanges)),
-      pp: btoa(JSON.stringify(prepayments))
+      pp: btoa(JSON.stringify(prepayments)),
     });
     const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
     navigator.clipboard.writeText(url);
@@ -329,7 +399,7 @@ export default function App() {
     setTimeout(() => setIsShared(false), 2000);
   };
 
-  const tenureMonths = tenureUnit === 'Y' ? tenure * 12 : tenure;
+  const tenureMonths = tenureUnit === "Y" ? tenure * 12 : tenure;
   const startDate = useMemo(() => {
     try {
       return parseISO(loanStartDate);
@@ -338,46 +408,60 @@ export default function App() {
     }
   }, [loanStartDate]);
 
-  const originalSchedule = useMemo(() => 
-    generateAmortizationSchedule(amount, rate, tenureMonths, startDate),
-    [amount, rate, tenureMonths, startDate]
+  const originalSchedule = useMemo(
+    () => generateAmortizationSchedule(amount, rate, tenureMonths, startDate),
+    [amount, rate, tenureMonths, startDate],
   );
 
-  const adjustedSchedule = useMemo(() => 
-    generateAmortizationSchedule(amount, rate, tenureMonths, startDate, rateChanges, prepayments),
-    [amount, rate, tenureMonths, startDate, rateChanges, prepayments]
+  const adjustedSchedule = useMemo(
+    () =>
+      generateAmortizationSchedule(
+        amount,
+        rate,
+        tenureMonths,
+        startDate,
+        rateChanges,
+        prepayments,
+      ),
+    [amount, rate, tenureMonths, startDate, rateChanges, prepayments],
   );
 
   const originalSummary = useMemo(() => {
-    const totalInterest = originalSchedule.reduce((sum, row) => sum + row.interest, 0);
+    const totalInterest = originalSchedule.reduce(
+      (sum, row) => sum + row.interest,
+      0,
+    );
     return {
       totalInterest,
       totalPayment: amount + totalInterest,
       months: originalSchedule.length,
-      emi: originalSchedule[0]?.emi || 0
+      emi: originalSchedule[0]?.emi || 0,
     };
   }, [originalSchedule, amount]);
 
   const adjustedSummary = useMemo(() => {
-    const totalInterest = adjustedSchedule.reduce((sum, row) => sum + row.interest, 0);
+    const totalInterest = adjustedSchedule.reduce(
+      (sum, row) => sum + row.interest,
+      0,
+    );
     const today = new Date();
     const monthsPassed = Math.max(0, differenceInMonths(today, startDate));
     const totalMonths = adjustedSchedule.length;
     const remainingMonths = Math.max(0, totalMonths - monthsPassed);
-    
+
     return {
       totalInterest,
       totalPayment: amount + totalInterest,
       months: totalMonths,
       emi: adjustedSchedule[0]?.emi || 0,
       monthsPassed,
-      remainingMonths
+      remainingMonths,
     };
   }, [adjustedSchedule, amount, startDate]);
 
   const savings = {
     interest: originalSummary.totalInterest - adjustedSummary.totalInterest,
-    months: originalSummary.months - adjustedSummary.months
+    months: originalSummary.months - adjustedSummary.months,
   };
 
   const handleLoanTypeChange = (type: LoanType) => {
@@ -385,70 +469,94 @@ export default function App() {
     setAmount(LOAN_DEFAULTS[type].amount);
     setRate(LOAN_DEFAULTS[type].rate);
     setTenure(LOAN_DEFAULTS[type].tenure);
-    setTenureUnit('Y');
-    setLoanStartDate(format(new Date(), 'yyyy-MM-dd'));
+    setTenureUnit("Y");
+    setLoanStartDate(format(new Date(), "yyyy-MM-dd"));
     setRateChanges([]);
     setPrepayments([]);
   };
 
   const exportToPDF = () => {
     const doc = new jsPDF();
-    
+
     // Helper to clean currency for PDF (replace ₹ with Rs. since default PDF fonts don't support Unicode ₹)
-    const cleanCurrency = (val: string) => val.replace(/₹/g, 'Rs. ');
+    const cleanCurrency = (val: string) => val.replace(/₹/g, "Rs. ");
 
     doc.setFontSize(20);
-    doc.text('EMI Amortization Schedule', 14, 22);
+    doc.text("EMI Amortization Schedule", 14, 22);
     doc.setFontSize(11);
-    doc.text(`Loan Amount: ${cleanCurrency(formatCurrencyFull(amount))}`, 14, 32);
+    doc.text(
+      `Loan Amount: ${cleanCurrency(formatCurrencyFull(amount))}`,
+      14,
+      32,
+    );
     doc.text(`Interest Rate: ${rate}%`, 14, 38);
-    doc.text(`Tenure: ${tenure} ${tenureUnit === 'Y' ? 'Years' : 'Months'}`, 14, 44);
+    doc.text(
+      `Tenure: ${tenure} ${tenureUnit === "Y" ? "Years" : "Months"}`,
+      14,
+      44,
+    );
 
-    const tableData = adjustedSchedule.map(row => [
+    const tableData = adjustedSchedule.map((row) => [
       row.month,
-      format(row.date, 'MMM yyyy'),
+      format(row.date, "MMM yyyy"),
       cleanCurrency(formatCurrency(row.openingBalance)),
       cleanCurrency(formatCurrency(row.emi)),
       cleanCurrency(formatCurrency(row.interest)),
       cleanCurrency(formatCurrency(row.principal)),
-      row.prepayment > 0 ? cleanCurrency(formatCurrency(row.prepayment)) : '-',
+      row.prepayment > 0 ? cleanCurrency(formatCurrency(row.prepayment)) : "-",
       cleanCurrency(formatCurrency(row.closingBalance)),
-      `${row.interestRate}%`
+      `${row.interestRate}%`,
     ]);
 
     autoTable(doc, {
-      head: [['No', 'Date', 'Opening', 'EMI', 'Interest', 'Principal', 'Prepay', 'Closing', 'Rate']],
+      head: [
+        [
+          "No",
+          "Date",
+          "Opening",
+          "EMI",
+          "Interest",
+          "Principal",
+          "Prepay",
+          "Closing",
+          "Rate",
+        ],
+      ],
       body: tableData,
       startY: 50,
-      theme: 'grid',
-      styles: { fontSize: 8, font: 'helvetica' },
-      headStyles: { fillColor: [16, 185, 129] }
+      theme: "grid",
+      styles: { fontSize: 8, font: "helvetica" },
+      headStyles: { fillColor: [16, 185, 129] },
     });
 
-    doc.save(`EMI_Schedule_${format(new Date(), 'yyyy-MM-dd')}.pdf`);
+    doc.save(`EMI_Schedule_${format(new Date(), "yyyy-MM-dd")}.pdf`);
   };
 
   const exportToExcel = () => {
-    const data = adjustedSchedule.map(row => ({
-      'EMI No': row.month,
-      'Date': format(row.date, 'MMM yyyy'),
-      'Opening Balance': row.openingBalance,
-      'EMI': row.emi,
-      'Interest': row.interest,
-      'Principal': row.principal,
-      'Prepayment': row.prepayment,
-      'Closing Balance': row.closingBalance,
-      'Interest Rate': row.interestRate
+    const data = adjustedSchedule.map((row) => ({
+      "EMI No": row.month,
+      Date: format(row.date, "MMM yyyy"),
+      "Opening Balance": row.openingBalance,
+      EMI: row.emi,
+      Interest: row.interest,
+      Principal: row.principal,
+      Prepayment: row.prepayment,
+      "Closing Balance": row.closingBalance,
+      "Interest Rate": row.interestRate,
     }));
 
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Schedule');
-    XLSX.writeFile(wb, `EMI_Schedule_${format(new Date(), 'yyyy-MM-dd')}.xlsx`);
+    XLSX.utils.book_append_sheet(wb, ws, "Schedule");
+    XLSX.writeFile(wb, `EMI_Schedule_${format(new Date(), "yyyy-MM-dd")}.xlsx`);
   };
 
-  const [goalMonths, setGoalMonths] = useState(tenure * (tenureUnit === 'Y' ? 12 : 1));
-  const [calculatedPrepayment, setCalculatedPrepayment] = useState<number | null>(null);
+  const [goalMonths, setGoalMonths] = useState(
+    tenure * (tenureUnit === "Y" ? 12 : 1),
+  );
+  const [calculatedPrepayment, setCalculatedPrepayment] = useState<
+    number | null
+  >(null);
 
   const calculateGoalPrepayment = () => {
     let low = 0;
@@ -460,13 +568,13 @@ export default function App() {
       const testPrepayments: Prepayment[] = [
         ...prepayments,
         {
-          id: 'goal-test',
+          id: "goal-test",
           amount: mid,
           startDate: loanStartDate,
           type: PrepaymentType.RECURRING,
           reduction: PrepaymentReduction.TENURE,
-          frequency: 1
-        }
+          frequency: 1,
+        },
       ];
 
       const testSchedule = generateAmortizationSchedule(
@@ -475,7 +583,7 @@ export default function App() {
         tenureMonths,
         startDate,
         rateChanges,
-        testPrepayments
+        testPrepayments,
       );
 
       if (testSchedule.length <= goalMonths) {
@@ -496,7 +604,7 @@ export default function App() {
         startDate: loanStartDate,
         type: PrepaymentType.RECURRING,
         reduction: PrepaymentReduction.TENURE,
-        frequency: 1
+        frequency: 1,
       };
       setPrepayments([...prepayments, newPrepayment]);
       setCalculatedPrepayment(null);
@@ -504,53 +612,60 @@ export default function App() {
   };
 
   const addRateChange = () => {
-    const defaultDate = format(addMonths(startDate, 12), 'yyyy-MM-dd');
+    const defaultDate = format(addMonths(startDate, 12), "yyyy-MM-dd");
     const newChange: RateChange = {
       id: Math.random().toString(36).substr(2, 9),
       effectiveDate: defaultDate,
       newRate: rate + 0.5,
-      mode: AdjustmentMode.KEEP_TENURE
+      mode: AdjustmentMode.KEEP_TENURE,
     };
     setRateChanges([...rateChanges, newChange]);
   };
 
   const removeRateChange = (id: string) => {
-    setRateChanges(rateChanges.filter(rc => rc.id !== id));
+    setRateChanges(rateChanges.filter((rc) => rc.id !== id));
   };
 
   const updateRateChange = (id: string, updates: Partial<RateChange>) => {
-    setRateChanges(rateChanges.map(rc => rc.id === id ? { ...rc, ...updates } : rc));
+    setRateChanges(
+      rateChanges.map((rc) => (rc.id === id ? { ...rc, ...updates } : rc)),
+    );
   };
 
   const addPrepayment = () => {
-    const defaultDate = format(addMonths(startDate, 12), 'yyyy-MM-dd');
+    const defaultDate = format(addMonths(startDate, 12), "yyyy-MM-dd");
     const newPrepayment: Prepayment = {
       id: Math.random().toString(36).substr(2, 9),
       amount: 50000,
       startDate: defaultDate,
       type: PrepaymentType.ONE_TIME,
-      reduction: PrepaymentReduction.TENURE
+      reduction: PrepaymentReduction.TENURE,
     };
     setPrepayments([...prepayments, newPrepayment]);
   };
 
   const removePrepayment = (id: string) => {
-    setPrepayments(prepayments.filter(p => p.id !== id));
+    setPrepayments(prepayments.filter((p) => p.id !== id));
   };
 
   const updatePrepayment = (id: string, updates: Partial<Prepayment>) => {
-    setPrepayments(prepayments.map(p => p.id === id ? { ...p, ...updates } : p));
+    setPrepayments(
+      prepayments.map((p) => (p.id === id ? { ...p, ...updates } : p)),
+    );
   };
 
   const pieData = [
-    { name: 'Principal', value: amount },
-    { name: 'Interest', value: adjustedSummary.totalInterest },
+    { name: "Principal", value: amount },
+    { name: "Interest", value: adjustedSummary.totalInterest },
   ];
 
   const chartData = useMemo(() => {
     const data: any[] = [];
-    const maxMonths = Math.max(originalSchedule.length, adjustedSchedule.length);
-    
+    const maxMonths = Math.max(
+      originalSchedule.length,
+      adjustedSchedule.length,
+    );
+
     for (let i = 0; i < maxMonths; i += 12) {
       const yearLabel = getYear(addMonths(startDate, i));
       data.push({
@@ -564,7 +679,7 @@ export default function App() {
 
   const yearWiseSchedule = useMemo(() => {
     const years: Record<number, AmortizationRow[]> = {};
-    adjustedSchedule.forEach(row => {
+    adjustedSchedule.forEach((row) => {
       const year = getYear(row.date);
       if (!years[year]) years[year] = [];
       years[year].push(row);
@@ -578,19 +693,34 @@ export default function App() {
         {/* Header */}
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex items-start justify-between w-full md:w-auto">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight text-slate-900">Smart EMI Planner</h1>
-              <p className="text-slate-500">Advanced loan simulation with rate changes and prepayments</p>
+            <div className="flex items-center gap-4">
+              <img
+                src="/favicon.png"
+                alt="Smart EMI Planner Logo"
+                className="w-12 h-12 rounded-xl shadow-sm border border-slate-200"
+              />
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+                  Smart EMI Planner
+                </h1>
+                <p className="text-slate-500">
+                  Advanced loan simulation with rate changes and prepayments
+                </p>
+              </div>
             </div>
-            <button 
+            <button
               onClick={handleShare}
               className="md:hidden p-2 bg-white border border-slate-200 rounded-xl shadow-sm text-slate-600 hover:text-emerald-600 transition-colors"
               title="Share Calculation"
             >
-              {isShared ? <Check className="w-5 h-5 text-emerald-600" /> : <Share2 className="w-5 h-5" />}
+              {isShared ? (
+                <Check className="w-5 h-5 text-emerald-600" />
+              ) : (
+                <Share2 className="w-5 h-5" />
+              )}
             </button>
           </div>
-          
+
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex bg-white p-1 rounded-xl shadow-sm border border-slate-200">
               {Object.values(LoanType).map((type) => (
@@ -599,17 +729,17 @@ export default function App() {
                   onClick={() => handleLoanTypeChange(type)}
                   className={cn(
                     "px-4 py-2 rounded-lg text-sm font-medium transition-all",
-                    loanType === type 
-                      ? "bg-emerald-600 text-white shadow-md" 
-                      : "text-slate-600 hover:bg-slate-50"
+                    loanType === type
+                      ? "bg-emerald-600 text-white shadow-md"
+                      : "text-slate-600 hover:bg-slate-50",
                   )}
                 >
                   {type.charAt(0) + type.slice(1).toLowerCase()} Loan
                 </button>
               ))}
             </div>
-            
-            <button 
+
+            <button
               onClick={handleShare}
               className="hidden md:flex items-center gap-2 px-4 py-2 bg-slate-100 border border-slate-300 rounded-lg text-sm font-bold text-slate-700 hover:bg-slate-200 transition-all shadow-sm"
             >
@@ -638,18 +768,22 @@ export default function App() {
                   <Calculator className="w-6 h-6 text-emerald-600" />
                   Loan Parameters
                 </h2>
-                
+
                 <div className="space-y-10">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
                     <div className="space-y-3 w-full">
                       <div className="flex justify-between">
-                        <label className="text-sm font-bold text-slate-600">Loan Amount</label>
-                        <span className="text-sm font-extrabold text-emerald-600">{formatCurrencyFull(amount)}</span>
+                        <label className="text-sm font-bold text-slate-600">
+                          Loan Amount
+                        </label>
+                        <span className="text-sm font-extrabold text-emerald-600">
+                          {formatCurrencyFull(amount)}
+                        </span>
                       </div>
-                      <input 
-                        type="range" 
-                        min="100000" 
-                        max={LOAN_DEFAULTS[loanType].maxAmount} 
+                      <input
+                        type="range"
+                        min="100000"
+                        max={LOAN_DEFAULTS[loanType].maxAmount}
                         step="50000"
                         value={amount}
                         onChange={(e) => setAmount(Number(e.target.value))}
@@ -657,7 +791,7 @@ export default function App() {
                       />
                       <div className="relative">
                         <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                        <input 
+                        <input
                           type="number"
                           value={amount}
                           onChange={(e) => setAmount(Number(e.target.value))}
@@ -668,13 +802,17 @@ export default function App() {
 
                     <div className="space-y-3 w-full">
                       <div className="flex justify-between">
-                        <label className="text-sm font-bold text-slate-600">Interest Rate (% p.a.)</label>
-                        <span className="text-sm font-extrabold text-emerald-600">{rate}%</span>
+                        <label className="text-sm font-bold text-slate-600">
+                          Interest Rate (% p.a.)
+                        </label>
+                        <span className="text-sm font-extrabold text-emerald-600">
+                          {rate}%
+                        </span>
                       </div>
-                      <input 
-                        type="range" 
-                        min="1" 
-                        max="20" 
+                      <input
+                        type="range"
+                        min="1"
+                        max="20"
                         step="0.05"
                         value={rate}
                         onChange={(e) => setRate(Number(e.target.value))}
@@ -682,7 +820,7 @@ export default function App() {
                       />
                       <div className="relative">
                         <Percent className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                        <input 
+                        <input
                           type="number"
                           value={rate}
                           step="0.05"
@@ -694,29 +832,49 @@ export default function App() {
 
                     <div className="space-y-3 w-full">
                       <div className="flex justify-between items-center">
-                        <label className="text-sm font-bold text-slate-600">Tenure</label>
+                        <label className="text-sm font-bold text-slate-600">
+                          Tenure
+                        </label>
                         <div className="flex bg-slate-100 p-1 rounded-lg">
-                          <button 
-                            onClick={() => setTenureUnit('Y')}
-                            className={cn("px-3 py-1 text-[10px] font-bold rounded-md transition-all", tenureUnit === 'Y' ? "bg-white shadow-sm text-emerald-600" : "text-slate-500")}
-                          >Yrs</button>
-                          <button 
-                            onClick={() => setTenureUnit('M')}
-                            className={cn("px-3 py-1 text-[10px] font-bold rounded-md transition-all", tenureUnit === 'M' ? "bg-white shadow-sm text-emerald-600" : "text-slate-500")}
-                          >Mo</button>
+                          <button
+                            onClick={() => setTenureUnit("Y")}
+                            className={cn(
+                              "px-3 py-1 text-[10px] font-bold rounded-md transition-all",
+                              tenureUnit === "Y"
+                                ? "bg-white shadow-sm text-emerald-600"
+                                : "text-slate-500",
+                            )}
+                          >
+                            Yrs
+                          </button>
+                          <button
+                            onClick={() => setTenureUnit("M")}
+                            className={cn(
+                              "px-3 py-1 text-[10px] font-bold rounded-md transition-all",
+                              tenureUnit === "M"
+                                ? "bg-white shadow-sm text-emerald-600"
+                                : "text-slate-500",
+                            )}
+                          >
+                            Mo
+                          </button>
                         </div>
                       </div>
-                      <input 
-                        type="range" 
-                        min="1" 
-                        max={tenureUnit === 'Y' ? LOAN_DEFAULTS[loanType].maxTenure : LOAN_DEFAULTS[loanType].maxTenure * 12} 
+                      <input
+                        type="range"
+                        min="1"
+                        max={
+                          tenureUnit === "Y"
+                            ? LOAN_DEFAULTS[loanType].maxTenure
+                            : LOAN_DEFAULTS[loanType].maxTenure * 12
+                        }
                         value={tenure}
                         onChange={(e) => setTenure(Number(e.target.value))}
                         className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
                       />
                       <div className="relative">
                         <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                        <input 
+                        <input
                           type="number"
                           value={tenure}
                           onChange={(e) => setTenure(Number(e.target.value))}
@@ -731,14 +889,16 @@ export default function App() {
                         Loan Start Date
                       </label>
                       <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-3 group hover:border-emerald-200 transition-all">
-                        <input 
+                        <input
                           type="date"
                           value={loanStartDate}
                           onChange={(e) => setLoanStartDate(e.target.value)}
                           className="bg-transparent border-none text-sm font-medium focus:ring-0 outline-none w-full cursor-pointer"
                         />
                       </div>
-                      <p className="text-[10px] text-slate-400 italic">Calculations adjust based on this date</p>
+                      <p className="text-[10px] text-slate-400 italic">
+                        Calculations adjust based on this date
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -748,14 +908,21 @@ export default function App() {
               <section className="bg-emerald-50 p-6 rounded-2xl border border-emerald-100 space-y-4">
                 <div className="flex items-center gap-2">
                   <Target className="w-5 h-5 text-emerald-600" />
-                  <h2 className="text-lg font-semibold text-emerald-900">Goal Optimizer</h2>
+                  <h2 className="text-lg font-semibold text-emerald-900">
+                    Goal Optimizer
+                  </h2>
                 </div>
-                <p className="text-sm text-emerald-700">Calculate required monthly prepayment to close your loan faster.</p>
-                
+                <p className="text-sm text-emerald-700">
+                  Calculate required monthly prepayment to close your loan
+                  faster.
+                </p>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-emerald-800">Target Tenure (Months)</label>
-                    <input 
+                    <label className="text-sm font-medium text-emerald-800">
+                      Target Tenure (Months)
+                    </label>
+                    <input
                       type="number"
                       value={goalMonths}
                       onChange={(e) => setGoalMonths(Number(e.target.value))}
@@ -763,7 +930,7 @@ export default function App() {
                     />
                   </div>
                   <div className="flex items-end">
-                    <button 
+                    <button
                       onClick={calculateGoalPrepayment}
                       className="w-full py-2 bg-emerald-600 text-white rounded-lg font-bold text-sm hover:bg-emerald-700 transition-colors shadow-sm"
                     >
@@ -773,16 +940,20 @@ export default function App() {
                 </div>
 
                 {calculatedPrepayment !== null && (
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="p-4 bg-white rounded-xl border border-emerald-200 flex flex-col sm:flex-row items-center justify-between gap-4"
                   >
                     <div>
-                      <p className="text-xs text-slate-500 uppercase font-bold tracking-wider">Required Monthly Prepayment</p>
-                      <p className="text-2xl font-bold text-emerald-600">{formatCurrencyFull(calculatedPrepayment)}</p>
+                      <p className="text-xs text-slate-500 uppercase font-bold tracking-wider">
+                        Required Monthly Prepayment
+                      </p>
+                      <p className="text-2xl font-bold text-emerald-600">
+                        {formatCurrencyFull(calculatedPrepayment)}
+                      </p>
                     </div>
-                    <button 
+                    <button
                       onClick={applyGoalPrepayment}
                       className="px-6 py-2 bg-emerald-100 text-emerald-700 rounded-lg font-bold text-sm hover:bg-emerald-200 transition-colors"
                     >
@@ -797,30 +968,56 @@ export default function App() {
                 <section className="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 space-y-4">
                   <div className="flex items-center gap-2">
                     <TrendingUp className="w-5 h-5 text-indigo-600" />
-                    <h2 className="text-lg font-semibold text-indigo-900">Tax Benefit Estimator (India)</h2>
+                    <h2 className="text-lg font-semibold text-indigo-900">
+                      Tax Benefit Estimator (India)
+                    </h2>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="p-4 bg-white rounded-xl border border-indigo-100">
-                      <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">Section 24(b) - Interest</p>
-                      <p className="text-xl font-bold text-indigo-600">
-                        {formatCurrencyFull(Math.min(200000, adjustedSummary.totalInterest / (adjustedSummary.months / 12)))}
-                        <span className="text-[10px] text-slate-400 font-normal ml-1">/ year avg</span>
+                      <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">
+                        Section 24(b) - Interest
                       </p>
-                      <p className="text-[10px] text-slate-400 mt-1">Deduction limit: ₹2,00,000</p>
+                      <p className="text-xl font-bold text-indigo-600">
+                        {formatCurrencyFull(
+                          Math.min(
+                            200000,
+                            adjustedSummary.totalInterest /
+                              (adjustedSummary.months / 12),
+                          ),
+                        )}
+                        <span className="text-[10px] text-slate-400 font-normal ml-1">
+                          / year avg
+                        </span>
+                      </p>
+                      <p className="text-[10px] text-slate-400 mt-1">
+                        Deduction limit: ₹2,00,000
+                      </p>
                     </div>
                     <div className="p-4 bg-white rounded-xl border border-indigo-100">
-                      <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">Section 80C - Principal</p>
-                      <p className="text-xl font-bold text-indigo-600">
-                        {formatCurrencyFull(Math.min(150000, amount / (adjustedSummary.months / 12)))}
-                        <span className="text-[10px] text-slate-400 font-normal ml-1">/ year avg</span>
+                      <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">
+                        Section 80C - Principal
                       </p>
-                      <p className="text-[10px] text-slate-400 mt-1">Deduction limit: ₹1,50,000</p>
+                      <p className="text-xl font-bold text-indigo-600">
+                        {formatCurrencyFull(
+                          Math.min(
+                            150000,
+                            amount / (adjustedSummary.months / 12),
+                          ),
+                        )}
+                        <span className="text-[10px] text-slate-400 font-normal ml-1">
+                          / year avg
+                        </span>
+                      </p>
+                      <p className="text-[10px] text-slate-400 mt-1">
+                        Deduction limit: ₹1,50,000
+                      </p>
                     </div>
                   </div>
                   <div className="bg-indigo-600/5 p-3 rounded-lg border border-indigo-200/50">
                     <p className="text-xs text-indigo-700 leading-relaxed">
                       <Info className="w-3 h-3 inline mr-1 mb-0.5" />
-                      Estimates based on annual averages. Actual benefits depend on your tax slab and other investments.
+                      Estimates based on annual averages. Actual benefits depend
+                      on your tax slab and other investments.
                     </p>
                   </div>
                 </section>
@@ -830,37 +1027,56 @@ export default function App() {
             {/* Summary & Pie Chart */}
             <div className="lg:col-span-5 xl:col-span-4 flex flex-col gap-4">
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex-1 flex flex-col">
-                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Quick Summary</h3>
+                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">
+                  Quick Summary
+                </h3>
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="space-y-1">
-                    <span className="text-[10px] text-slate-400 uppercase font-bold">Monthly EMI</span>
-                    <p className="text-lg font-bold text-slate-900 truncate">{formatCurrencyFull(adjustedSummary.emi)}</p>
+                    <span className="text-[10px] text-slate-400 uppercase font-bold">
+                      Monthly EMI
+                    </span>
+                    <p className="text-lg font-bold text-slate-900 truncate">
+                      {formatCurrencyFull(adjustedSummary.emi)}
+                    </p>
                   </div>
                   <div className="space-y-1">
-                    <span className="text-[10px] text-slate-400 uppercase font-bold">Total Interest</span>
-                    <p className="text-lg font-bold text-slate-900 truncate">{formatCurrencyFull(adjustedSummary.totalInterest)}</p>
+                    <span className="text-[10px] text-slate-400 uppercase font-bold">
+                      Total Interest
+                    </span>
+                    <p className="text-lg font-bold text-slate-900 truncate">
+                      {formatCurrencyFull(adjustedSummary.totalInterest)}
+                    </p>
                   </div>
                   <div className="space-y-1">
-                    <span className="text-[10px] text-slate-400 uppercase font-bold">Already Paid</span>
+                    <span className="text-[10px] text-slate-400 uppercase font-bold">
+                      Already Paid
+                    </span>
                     <p className="text-sm font-bold text-slate-700">
-                      {adjustedSummary.monthsPassed} Mo 
+                      {adjustedSummary.monthsPassed} Mo
                       <span className="text-[10px] font-normal text-slate-400 ml-1">
                         ({(adjustedSummary.monthsPassed / 12).toFixed(1)} Yrs)
                       </span>
                     </p>
                   </div>
                   <div className="space-y-1">
-                    <span className="text-[10px] text-slate-400 uppercase font-bold">Remaining</span>
+                    <span className="text-[10px] text-slate-400 uppercase font-bold">
+                      Remaining
+                    </span>
                     <p className="text-sm font-bold text-emerald-600">
                       {adjustedSummary.remainingMonths} Mo
                       <span className="text-[10px] font-normal text-slate-400 ml-1">
-                        ({(adjustedSummary.remainingMonths / 12).toFixed(1)} Yrs)
+                        ({(adjustedSummary.remainingMonths / 12).toFixed(1)}{" "}
+                        Yrs)
                       </span>
                     </p>
                   </div>
                   <div className="col-span-2 pt-2 border-t border-slate-100">
-                    <span className="text-[10px] text-slate-400 uppercase font-bold">Total Payment (Principal + Interest)</span>
-                    <p className="text-xl font-bold text-emerald-600 truncate">{formatCurrencyFull(adjustedSummary.totalPayment)}</p>
+                    <span className="text-[10px] text-slate-400 uppercase font-bold">
+                      Total Payment (Principal + Interest)
+                    </span>
+                    <p className="text-xl font-bold text-emerald-600 truncate">
+                      {formatCurrencyFull(adjustedSummary.totalPayment)}
+                    </p>
                   </div>
                 </div>
                 <div className="flex-1 min-h-[200px] relative">
@@ -875,31 +1091,47 @@ export default function App() {
                         paddingAngle={5}
                         dataKey="value"
                         labelLine={false}
-                        label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
+                        label={({ percent }) =>
+                          `${(percent * 100).toFixed(0)}%`
+                        }
                       >
                         {pieData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={COLORS[index % COLORS.length]}
+                          />
                         ))}
                       </Pie>
-                      <Tooltip formatter={(value: number) => formatCurrencyFull(value)} />
+                      <Tooltip
+                        formatter={(value: number) => formatCurrencyFull(value)}
+                      />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
                 <div className="flex justify-center gap-6 mt-2">
                   {pieData.map((entry, index) => (
                     <div key={entry.name} className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index] }} />
-                      <span className="text-xs text-slate-500">{entry.name}</span>
+                      <div
+                        className="w-3 h-3 rounded-full"
+                        style={{ backgroundColor: COLORS[index] }}
+                      />
+                      <span className="text-xs text-slate-500">
+                        {entry.name}
+                      </span>
                     </div>
                   ))}
                 </div>
               </div>
-              
+
               <div className="bg-emerald-600 p-6 rounded-2xl shadow-lg text-white">
                 <div className="flex justify-between items-start">
                   <div className="space-y-1">
-                    <span className="text-xs font-medium opacity-80 uppercase tracking-wider">Total Savings</span>
-                    <p className="text-3xl font-bold">{formatCurrencyFull(savings.interest)}</p>
+                    <span className="text-xs font-medium opacity-80 uppercase tracking-wider">
+                      Total Savings
+                    </span>
+                    <p className="text-3xl font-bold">
+                      {formatCurrencyFull(savings.interest)}
+                    </p>
                   </div>
                   <div className="p-2 bg-white/20 rounded-lg">
                     <TrendingUp className="w-5 h-5" />
@@ -907,7 +1139,10 @@ export default function App() {
                 </div>
                 <div className="mt-4 flex items-center gap-2 text-sm opacity-90">
                   <Clock className="w-4 h-4" />
-                  <span>Reduced tenure by {Math.floor(savings.months / 12)}y {savings.months % 12}m</span>
+                  <span>
+                    Reduced tenure by {Math.floor(savings.months / 12)}y{" "}
+                    {savings.months % 12}m
+                  </span>
                 </div>
               </div>
             </div>
@@ -922,7 +1157,7 @@ export default function App() {
                   <TrendingUp className="w-5 h-5 text-amber-500" />
                   Rate Change Simulator
                 </h2>
-                <button 
+                <button
                   onClick={addRateChange}
                   className="flex items-center gap-2 px-3 py-1.5 bg-amber-50 text-amber-600 rounded-lg hover:bg-amber-100 transition-colors text-xs font-bold"
                 >
@@ -930,7 +1165,7 @@ export default function App() {
                   Add Change
                 </button>
               </div>
-              
+
               <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                 {rateChanges.length === 0 && (
                   <div className="flex flex-col items-center justify-center py-12 text-slate-400 border-2 border-dashed border-slate-100 rounded-xl">
@@ -940,11 +1175,11 @@ export default function App() {
                 )}
                 <AnimatePresence>
                   {rateChanges.map((rc) => (
-                    <RateChangeCard 
-                      key={rc.id} 
-                      rateChange={rc} 
-                      onUpdate={updateRateChange} 
-                      onRemove={removeRateChange} 
+                    <RateChangeCard
+                      key={rc.id}
+                      rateChange={rc}
+                      onUpdate={updateRateChange}
+                      onRemove={removeRateChange}
                     />
                   ))}
                 </AnimatePresence>
@@ -958,7 +1193,7 @@ export default function App() {
                   <ArrowRight className="w-5 h-5 text-emerald-500" />
                   Prepayment Planner
                 </h2>
-                <button 
+                <button
                   onClick={addPrepayment}
                   className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-100 transition-colors text-xs font-bold"
                 >
@@ -966,7 +1201,7 @@ export default function App() {
                   Add Prepayment
                 </button>
               </div>
-              
+
               <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                 {prepayments.length === 0 && (
                   <div className="flex flex-col items-center justify-center py-12 text-slate-400 border-2 border-dashed border-slate-100 rounded-xl">
@@ -976,11 +1211,11 @@ export default function App() {
                 )}
                 <AnimatePresence>
                   {prepayments.map((p) => (
-                    <PrepaymentCard 
-                      key={p.id} 
-                      prepayment={p} 
-                      onUpdate={updatePrepayment} 
-                      onRemove={removePrepayment} 
+                    <PrepaymentCard
+                      key={p.id}
+                      prepayment={p}
+                      onUpdate={updatePrepayment}
+                      onRemove={removePrepayment}
                     />
                   ))}
                 </AnimatePresence>
@@ -991,7 +1226,9 @@ export default function App() {
           {/* Row 3: Balance Chart */}
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Loan Balance Projection</h3>
+              <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">
+                Loan Balance Projection
+              </h3>
               <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest">
                 <div className="flex items-center gap-1.5">
                   <div className="w-3 h-0.5 bg-slate-300 border-t-2 border-dashed border-slate-300" />
@@ -1008,49 +1245,57 @@ export default function App() {
                 <AreaChart data={chartData}>
                   <defs>
                     <linearGradient id="colorOrig" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#94a3b8" stopOpacity={0.1}/>
-                      <stop offset="95%" stopColor="#94a3b8" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#94a3b8" stopOpacity={0.1} />
+                      <stop offset="95%" stopColor="#94a3b8" stopOpacity={0} />
                     </linearGradient>
                     <linearGradient id="colorAdj" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.1}/>
-                      <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.1} />
+                      <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                  <XAxis 
-                    dataKey="year" 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{ fontSize: 10, fill: '#94a3b8' }} 
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    vertical={false}
+                    stroke="#f1f5f9"
+                  />
+                  <XAxis
+                    dataKey="year"
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 10, fill: "#94a3b8" }}
                     dy={10}
                   />
-                  <YAxis 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{ fontSize: 10, fill: '#94a3b8' }}
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 10, fill: "#94a3b8" }}
                     tickFormatter={(value) => `₹${value / 100000}L`}
                   />
-                  <Tooltip 
-                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
-                    formatter={(value: number) => formatCurrency(value)} 
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: "12px",
+                      border: "none",
+                      boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+                    }}
+                    formatter={(value: number) => formatCurrency(value)}
                   />
-                  <Area 
-                    type="monotone" 
-                    dataKey="original" 
+                  <Area
+                    type="monotone"
+                    dataKey="original"
                     name="Original"
-                    stroke="#94a3b8" 
-                    fillOpacity={1} 
-                    fill="url(#colorOrig)" 
+                    stroke="#94a3b8"
+                    fillOpacity={1}
+                    fill="url(#colorOrig)"
                     strokeWidth={2}
                     strokeDasharray="5 5"
                   />
-                  <Area 
-                    type="monotone" 
-                    dataKey="adjusted" 
+                  <Area
+                    type="monotone"
+                    dataKey="adjusted"
                     name="Adjusted"
-                    stroke="#10b981" 
-                    fillOpacity={1} 
-                    fill="url(#colorAdj)" 
+                    stroke="#10b981"
+                    fillOpacity={1}
+                    fill="url(#colorAdj)"
                     strokeWidth={2}
                   />
                 </AreaChart>
@@ -1066,14 +1311,14 @@ export default function App() {
                 Detailed Amortization Schedule
               </h2>
               <div className="flex flex-wrap items-center gap-3">
-                <button 
+                <button
                   onClick={exportToPDF}
                   className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold hover:bg-slate-200 transition-colors"
                 >
                   <FileText className="w-4 h-4" />
                   Export PDF
                 </button>
-                <button 
+                <button
                   onClick={exportToExcel}
                   className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold hover:bg-slate-200 transition-colors"
                 >
@@ -1086,63 +1331,153 @@ export default function App() {
                 </div>
               </div>
             </div>
-            
+
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse min-w-[800px]">
                 <thead className="bg-slate-50 border-y border-slate-200">
                   <tr>
-                    <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">EMI No</th>
-                    <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Date</th>
-                    <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Opening Bal</th>
-                    <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">EMI</th>
-                    <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Interest</th>
-                    <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Principal</th>
-                    <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Prepayment</th>
-                    <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Closing Bal</th>
-                    <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Rate (%)</th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                      EMI No
+                    </th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                      Date
+                    </th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                      Opening Bal
+                    </th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                      EMI
+                    </th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                      Interest
+                    </th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                      Principal
+                    </th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                      Prepayment
+                    </th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                      Closing Bal
+                    </th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                      Rate (%)
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {(Object.entries(yearWiseSchedule) as [string, AmortizationRow[]][]).map(([year, rows]) => {
+                  {(
+                    Object.entries(yearWiseSchedule) as [
+                      string,
+                      AmortizationRow[],
+                    ][]
+                  ).map(([year, rows]) => {
                     const isExpanded = expandedYears[Number(year)];
-                    const yearTotalInterest = rows.reduce((sum, r) => sum + r.interest, 0);
-                    const yearTotalPrincipal = rows.reduce((sum, r) => sum + r.principal, 0);
-                    const yearTotalPrepayment = rows.reduce((sum, r) => sum + r.prepayment, 0);
-                    
+                    const yearTotalInterest = rows.reduce(
+                      (sum, r) => sum + r.interest,
+                      0,
+                    );
+                    const yearTotalPrincipal = rows.reduce(
+                      (sum, r) => sum + r.principal,
+                      0,
+                    );
+                    const yearTotalPrepayment = rows.reduce(
+                      (sum, r) => sum + r.prepayment,
+                      0,
+                    );
+
                     return (
                       <React.Fragment key={year}>
-                        <tr 
-                          onClick={() => setExpandedYears(prev => ({ ...prev, [Number(year)]: !prev[Number(year)] }))}
+                        <tr
+                          onClick={() =>
+                            setExpandedYears((prev) => ({
+                              ...prev,
+                              [Number(year)]: !prev[Number(year)],
+                            }))
+                          }
                           className="bg-slate-50/50 cursor-pointer hover:bg-slate-100 transition-colors"
                         >
                           <td className="px-6 py-4 font-bold text-slate-700 flex items-center gap-2">
                             <div className="p-1 bg-white rounded shadow-sm border border-slate-200">
-                              {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                              {isExpanded ? (
+                                <ChevronUp className="w-3 h-3" />
+                              ) : (
+                                <ChevronDown className="w-3 h-3" />
+                              )}
                             </div>
                             {year}
                           </td>
-                          <td className="px-6 py-4 text-xs text-slate-400 italic">Annual Summary</td>
-                          <td className="px-6 py-4 text-sm font-bold text-slate-700">{formatCurrency(rows[0].openingBalance)}</td>
-                          <td className="px-6 py-4 text-sm font-bold text-slate-700">{formatCurrency(rows.reduce((sum, r) => sum + r.emi, 0))}</td>
-                          <td className="px-6 py-4 text-sm font-bold text-amber-600">{formatCurrency(yearTotalInterest)}</td>
-                          <td className="px-6 py-4 text-sm font-bold text-emerald-600">{formatCurrency(yearTotalPrincipal)}</td>
-                          <td className="px-6 py-4 text-sm font-bold text-indigo-600">{yearTotalPrepayment > 0 ? formatCurrency(yearTotalPrepayment) : '-'}</td>
-                          <td className="px-6 py-4 text-sm font-bold text-slate-700">{formatCurrency(rows[rows.length - 1].closingBalance)}</td>
-                          <td className="px-6 py-4 text-sm font-bold text-amber-500">{rows[0].interestRate}%</td>
+                          <td className="px-6 py-4 text-xs text-slate-400 italic">
+                            Annual Summary
+                          </td>
+                          <td className="px-6 py-4 text-sm font-bold text-slate-700">
+                            {formatCurrency(rows[0].openingBalance)}
+                          </td>
+                          <td className="px-6 py-4 text-sm font-bold text-slate-700">
+                            {formatCurrency(
+                              rows.reduce((sum, r) => sum + r.emi, 0),
+                            )}
+                          </td>
+                          <td className="px-6 py-4 text-sm font-bold text-amber-600">
+                            {formatCurrency(yearTotalInterest)}
+                          </td>
+                          <td className="px-6 py-4 text-sm font-bold text-emerald-600">
+                            {formatCurrency(yearTotalPrincipal)}
+                          </td>
+                          <td className="px-6 py-4 text-sm font-bold text-indigo-600">
+                            {yearTotalPrepayment > 0
+                              ? formatCurrency(yearTotalPrepayment)
+                              : "-"}
+                          </td>
+                          <td className="px-6 py-4 text-sm font-bold text-slate-700">
+                            {formatCurrency(
+                              rows[rows.length - 1].closingBalance,
+                            )}
+                          </td>
+                          <td className="px-6 py-4 text-sm font-bold text-amber-500">
+                            {rows[0].interestRate}%
+                          </td>
                         </tr>
-                        {isExpanded && rows.map((row) => (
-                          <tr key={row.month} className={cn("hover:bg-slate-50 transition-colors", row.prepayment > 0 && "bg-emerald-50/30")}>
-                            <td className="px-6 py-3 text-xs text-slate-500">{row.month}</td>
-                            <td className="px-6 py-3 text-xs text-slate-500">{format(row.date, 'MMM yyyy')}</td>
-                            <td className="px-6 py-3 text-xs text-slate-500">{formatCurrencyFull(row.openingBalance)}</td>
-                            <td className="px-6 py-3 text-xs font-medium text-slate-700">{formatCurrencyFull(row.emi)}</td>
-                            <td className="px-6 py-3 text-xs text-amber-600">{formatCurrencyFull(row.interest)}</td>
-                            <td className="px-6 py-3 text-xs text-emerald-600">{formatCurrencyFull(row.principal)}</td>
-                            <td className="px-6 py-3 text-xs font-bold text-indigo-600">{row.prepayment > 0 ? formatCurrencyFull(row.prepayment) : '-'}</td>
-                            <td className="px-6 py-3 text-xs font-medium text-slate-700">{formatCurrencyFull(row.closingBalance)}</td>
-                            <td className="px-6 py-3 text-xs font-bold text-amber-500">{row.interestRate}%</td>
-                          </tr>
-                        ))}
+                        {isExpanded &&
+                          rows.map((row) => (
+                            <tr
+                              key={row.month}
+                              className={cn(
+                                "hover:bg-slate-50 transition-colors",
+                                row.prepayment > 0 && "bg-emerald-50/30",
+                              )}
+                            >
+                              <td className="px-6 py-3 text-xs text-slate-500">
+                                {row.month}
+                              </td>
+                              <td className="px-6 py-3 text-xs text-slate-500">
+                                {format(row.date, "MMM yyyy")}
+                              </td>
+                              <td className="px-6 py-3 text-xs text-slate-500">
+                                {formatCurrencyFull(row.openingBalance)}
+                              </td>
+                              <td className="px-6 py-3 text-xs font-medium text-slate-700">
+                                {formatCurrencyFull(row.emi)}
+                              </td>
+                              <td className="px-6 py-3 text-xs text-amber-600">
+                                {formatCurrencyFull(row.interest)}
+                              </td>
+                              <td className="px-6 py-3 text-xs text-emerald-600">
+                                {formatCurrencyFull(row.principal)}
+                              </td>
+                              <td className="px-6 py-3 text-xs font-bold text-indigo-600">
+                                {row.prepayment > 0
+                                  ? formatCurrencyFull(row.prepayment)
+                                  : "-"}
+                              </td>
+                              <td className="px-6 py-3 text-xs font-medium text-slate-700">
+                                {formatCurrencyFull(row.closingBalance)}
+                              </td>
+                              <td className="px-6 py-3 text-xs font-bold text-amber-500">
+                                {row.interestRate}%
+                              </td>
+                            </tr>
+                          ))}
                       </React.Fragment>
                     );
                   })}
@@ -1163,14 +1498,17 @@ export default function App() {
                 </div>
                 <div className="space-y-4">
                   <h2 className="text-3xl md:text-4xl font-bold leading-tight">
-                    Unlock Your Personalized <span className="text-emerald-400">Debt-Free</span> Roadmap
+                    Unlock Your Personalized{" "}
+                    <span className="text-emerald-400">Debt-Free</span> Roadmap
                   </h2>
                   <p className="text-slate-400 text-lg leading-relaxed">
-                    Our expert consultancy is currently restricted to verified users. Get a customized interest-saving audit and a step-by-step plan to close your loan 5-10 years earlier.
+                    Our expert consultancy is currently restricted to verified
+                    users. Get a customized interest-saving audit and a
+                    step-by-step plan to close your loan 5-10 years earlier.
                   </p>
                 </div>
                 <div className="flex flex-wrap justify-center gap-4 pt-4">
-                  <button 
+                  <button
                     onClick={() => setShowLeadModal(true)}
                     className="flex items-center gap-2 px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition-all shadow-xl shadow-emerald-900/40 hover:scale-105 active:scale-95"
                   >
@@ -1183,11 +1521,15 @@ export default function App() {
                     { label: "Verified Experts", val: "15+" },
                     { label: "Interest Saved", val: "₹50Cr+" },
                     { label: "Active Clients", val: "2k+" },
-                    { label: "Success Rate", val: "99%" }
+                    { label: "Success Rate", val: "99%" },
                   ].map((stat, i) => (
                     <div key={i} className="text-center">
-                      <p className="text-2xl font-bold text-white">{stat.val}</p>
-                      <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">{stat.label}</p>
+                      <p className="text-2xl font-bold text-white">
+                        {stat.val}
+                      </p>
+                      <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">
+                        {stat.label}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -1198,13 +1540,13 @@ export default function App() {
             <AnimatePresence>
               {showLeadModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm">
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, scale: 0.9, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.9, y: 20 }}
                     className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden relative"
                   >
-                    <button 
+                    <button
                       onClick={() => setShowLeadModal(false)}
                       className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 transition-colors"
                     >
@@ -1213,12 +1555,16 @@ export default function App() {
 
                     <div className="p-8">
                       <div className="text-center space-y-2 mb-8">
-                        <h3 className="text-2xl font-bold text-slate-900">Request Expert Audit</h3>
-                        <p className="text-slate-500 text-sm">Fill in your details to unlock the consultancy wall.</p>
+                        <h3 className="text-2xl font-bold text-slate-900">
+                          Request Expert Audit
+                        </h3>
+                        <p className="text-slate-500 text-sm">
+                          Fill in your details to unlock the consultancy wall.
+                        </p>
                       </div>
 
                       {isLeadSubmitted ? (
-                        <motion.div 
+                        <motion.div
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           className="text-center py-12 space-y-4"
@@ -1226,54 +1572,79 @@ export default function App() {
                           <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
                             <Check className="w-8 h-8" />
                           </div>
-                          <h4 className="text-xl font-bold text-slate-900">Request Received!</h4>
-                          <p className="text-slate-500">Our expert will contact you within 24 hours.</p>
+                          <h4 className="text-xl font-bold text-slate-900">
+                            Request Received!
+                          </h4>
+                          <p className="text-slate-500">
+                            Our expert will contact you within 24 hours.
+                          </p>
                         </motion.div>
                       ) : (
                         <form onSubmit={handleLeadSubmit} className="space-y-4">
                           <div className="space-y-1">
-                            <label className="text-xs font-bold text-slate-400 uppercase">Full Name</label>
+                            <label className="text-xs font-bold text-slate-400 uppercase">
+                              Full Name
+                            </label>
                             <div className="relative">
                               <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
-                              <input 
+                              <input
                                 required
                                 type="text"
                                 placeholder="John Doe"
                                 value={leadForm.name}
-                                onChange={(e) => setLeadForm({...leadForm, name: e.target.value})}
+                                onChange={(e) =>
+                                  setLeadForm({
+                                    ...leadForm,
+                                    name: e.target.value,
+                                  })
+                                }
                                 className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
                               />
                             </div>
                           </div>
                           <div className="space-y-1">
-                            <label className="text-xs font-bold text-slate-400 uppercase">Email Address</label>
+                            <label className="text-xs font-bold text-slate-400 uppercase">
+                              Email Address
+                            </label>
                             <div className="relative">
                               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
-                              <input 
+                              <input
                                 required
                                 type="email"
                                 placeholder="john@example.com"
                                 value={leadForm.email}
-                                onChange={(e) => setLeadForm({...leadForm, email: e.target.value})}
+                                onChange={(e) =>
+                                  setLeadForm({
+                                    ...leadForm,
+                                    email: e.target.value,
+                                  })
+                                }
                                 className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
                               />
                             </div>
                           </div>
                           <div className="space-y-1">
-                            <label className="text-xs font-bold text-slate-400 uppercase">Phone Number</label>
+                            <label className="text-xs font-bold text-slate-400 uppercase">
+                              Phone Number
+                            </label>
                             <div className="relative">
                               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
-                              <input 
+                              <input
                                 required
                                 type="tel"
                                 placeholder="+91 98765 43210"
                                 value={leadForm.phone}
-                                onChange={(e) => setLeadForm({...leadForm, phone: e.target.value})}
+                                onChange={(e) =>
+                                  setLeadForm({
+                                    ...leadForm,
+                                    phone: e.target.value,
+                                  })
+                                }
                                 className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
                               />
                             </div>
                           </div>
-                          <button 
+                          <button
                             type="submit"
                             className="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-emerald-900/20 flex items-center justify-center gap-2 mt-4"
                           >
@@ -1281,7 +1652,8 @@ export default function App() {
                             Unlock Roadmap Now
                           </button>
                           <p className="text-[10px] text-center text-slate-400 pt-2">
-                            By clicking, you agree to our privacy policy and terms of service.
+                            By clicking, you agree to our privacy policy and
+                            terms of service.
                           </p>
                         </form>
                       )}
@@ -1296,31 +1668,58 @@ export default function App() {
         {/* SEO / Educational Content Section */}
         <section className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8">
           <article className="space-y-4">
-            <h3 className="text-xl font-bold text-slate-800">What is an EMI?</h3>
+            <h3 className="text-xl font-bold text-slate-800">
+              What is an EMI?
+            </h3>
             <p className="text-slate-600 text-sm leading-relaxed">
-              Equated Monthly Installment (EMI) is a fixed payment amount made by a borrower to a lender at a specified date each calendar month. EMIs are applied to both interest and principal each month, so that over a specified number of years, the loan is paid off in full.
+              Equated Monthly Installment (EMI) is a fixed payment amount made
+              by a borrower to a lender at a specified date each calendar month.
+              EMIs are applied to both interest and principal each month, so
+              that over a specified number of years, the loan is paid off in
+              full.
             </p>
           </article>
           <article className="space-y-4">
-            <h3 className="text-xl font-bold text-slate-800">Benefits of Prepayment</h3>
+            <h3 className="text-xl font-bold text-slate-800">
+              Benefits of Prepayment
+            </h3>
             <p className="text-slate-600 text-sm leading-relaxed">
-              Making prepayments on your loan can significantly reduce your total interest burden and shorten your loan tenure. Even small, regular prepayments can save you lakhs of rupees in interest over the long term, especially in the early years of a home loan.
+              Making prepayments on your loan can significantly reduce your
+              total interest burden and shorten your loan tenure. Even small,
+              regular prepayments can save you lakhs of rupees in interest over
+              the long term, especially in the early years of a home loan.
             </p>
           </article>
           <article className="space-y-4">
-            <h3 className="text-xl font-bold text-slate-800">Floating vs Fixed Rates</h3>
+            <h3 className="text-xl font-bold text-slate-800">
+              Floating vs Fixed Rates
+            </h3>
             <p className="text-slate-600 text-sm leading-relaxed">
-              Floating interest rates change based on market conditions (like the RBI Repo Rate), while fixed rates remain constant. Our calculator allows you to simulate floating rate hikes to see how they impact your monthly budget and total loan cost.
+              Floating interest rates change based on market conditions (like
+              the RBI Repo Rate), while fixed rates remain constant. Our
+              calculator allows you to simulate floating rate hikes to see how
+              they impact your monthly budget and total loan cost.
             </p>
           </article>
         </section>
       </div>
-      
+
       {/* Footer */}
       <footer className="max-w-7xl mx-auto mt-12 pt-8 border-t border-slate-200 text-center text-slate-400 text-sm">
-        <p>© {new Date().getFullYear()} Smart EMI Planner. All calculations are estimates.</p>
+        <p>
+          © {new Date().getFullYear()} Smart EMI Planner. All calculations are
+          estimates.
+        </p>
         <p className="mt-2">
-          Developed by <a href="https://portfolio-tgr.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-bold hover:underline">TGR</a>
+          Developed by{" "}
+          <a
+            href="https://portfolio-tgr.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-emerald-600 font-bold hover:underline"
+          >
+            TGR
+          </a>
         </p>
       </footer>
 

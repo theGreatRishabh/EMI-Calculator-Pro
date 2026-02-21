@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Smart EMI Planner - Advanced Loan & Prepayment Planner</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <meta name="theme-color" content="#10b981" />
     <meta
       name="description"
       content="Calculate Home, Car, and Personal Loan EMIs. Plan prepayments, simulate interest rate hikes, and find the fastest way to close your loan."
@@ -28,6 +31,12 @@
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://smartemiplanner.com/" />
+    <meta
+      property="og:image"
+      content="https://smartemiplanner.com/favicon.png"
+    />
+    <meta property="og:site_name" content="Smart EMI Planner" />
+    <meta property="og:locale" content="en_IN" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -38,7 +47,37 @@
     />
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div style="display: none">
+        <h1>Smart EMI Planner - EMI Calculator</h1>
+        <h2>Home, Car, and Personal Loan EMI Calculator</h2>
+        <p>
+          Start planning your financial freedom with Smart EMI Planner.
+          Calculate your monthly installments, plan your prepayments, and
+          simulate various interest rate changes. The best free EMI Calculator,
+          Amortization Schedule generator, and Loan Goal Optimizer.
+        </p>
+        <p>
+          Common features include tracking principal and interest over time,
+          sharing calculations securely, and downloading pdf/excel statements.
+        </p>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Smart EMI Planner",
+        "url": "https://smartemiplanner.com/",
+        "description": "Calculate Home, Car, and Personal Loan EMIs. Plan prepayments, simulate interest rate hikes, and find the fastest way to close your loan.",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "All",
+        "author": {
+          "@type": "Person",
+          "name": "Smart EMI Planner"
+        }
+      }
+    </script>
   </body>
 </html>
