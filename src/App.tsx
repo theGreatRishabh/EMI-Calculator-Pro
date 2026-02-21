@@ -101,6 +101,7 @@ function RateChangeCard({
       className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3 relative group transition-all hover:border-amber-200"
     >
       <button
+        aria-label="Remove rate change"
         onClick={() => onRemove(rateChange.id)}
         className="absolute -top-2 -right-2 p-1.5 bg-white text-slate-400 hover:text-red-500 rounded-full shadow-sm border border-slate-200 opacity-0 group-hover:opacity-100 transition-all z-10"
       >
@@ -203,6 +204,7 @@ function PrepaymentCard({
       className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3 relative group transition-all hover:border-emerald-200"
     >
       <button
+        aria-label="Remove prepayment"
         onClick={() => onRemove(prepayment.id)}
         className="absolute -top-2 -right-2 p-1.5 bg-white text-slate-400 hover:text-red-500 rounded-full shadow-sm border border-slate-200 opacity-0 group-hover:opacity-100 transition-all z-10"
       >
@@ -709,6 +711,7 @@ export default function App() {
               </div>
             </div>
             <button
+              aria-label="Share Calculation"
               onClick={handleShare}
               className="md:hidden p-2 bg-white border border-slate-200 rounded-xl shadow-sm text-slate-600 hover:text-emerald-600 transition-colors"
               title="Share Calculation"
@@ -793,6 +796,8 @@ export default function App() {
                         <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                         <input
                           type="number"
+                          id="loan-amount"
+                          aria-label="Loan Amount"
                           value={amount}
                           onChange={(e) => setAmount(Number(e.target.value))}
                           className="w-full pl-9 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
@@ -822,6 +827,8 @@ export default function App() {
                         <Percent className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                         <input
                           type="number"
+                          id="interest-rate"
+                          aria-label="Interest Rate"
                           value={rate}
                           step="0.05"
                           onChange={(e) => setRate(Number(e.target.value))}
@@ -876,6 +883,8 @@ export default function App() {
                         <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                         <input
                           type="number"
+                          id="loan-tenure"
+                          aria-label="Loan Tenure"
                           value={tenure}
                           onChange={(e) => setTenure(Number(e.target.value))}
                           className="w-full pl-9 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
@@ -891,6 +900,8 @@ export default function App() {
                       <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-3 group hover:border-emerald-200 transition-all">
                         <input
                           type="date"
+                          id="loan-start-date"
+                          aria-label="Loan Start Date"
                           value={loanStartDate}
                           onChange={(e) => setLoanStartDate(e.target.value)}
                           className="bg-transparent border-none text-sm font-medium focus:ring-0 outline-none w-full cursor-pointer"
@@ -1389,13 +1400,25 @@ export default function App() {
                     return (
                       <React.Fragment key={year}>
                         <tr
+                          tabIndex={0}
+                          role="button"
+                          aria-expanded={isExpanded}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              setExpandedYears((prev) => ({
+                                ...prev,
+                                [Number(year)]: !prev[Number(year)],
+                              }));
+                            }
+                          }}
                           onClick={() =>
                             setExpandedYears((prev) => ({
                               ...prev,
                               [Number(year)]: !prev[Number(year)],
                             }))
                           }
-                          className="bg-slate-50/50 cursor-pointer hover:bg-slate-100 transition-colors"
+                          className="bg-slate-50/50 cursor-pointer hover:bg-slate-100 transition-colors focus:ring-2 focus:ring-inset focus:ring-emerald-500 outline-none"
                         >
                           <td className="px-6 py-4 font-bold text-slate-700 flex items-center gap-2">
                             <div className="p-1 bg-white rounded shadow-sm border border-slate-200">
@@ -1547,6 +1570,7 @@ export default function App() {
                     className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden relative"
                   >
                     <button
+                      aria-label="Close modal"
                       onClick={() => setShowLeadModal(false)}
                       className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 transition-colors"
                     >
