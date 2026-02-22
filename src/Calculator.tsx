@@ -545,23 +545,60 @@ export default function App() {
   };
 
   const exportToExcel = async () => {
-    const XLSX = await import("xlsx");
-    const data = adjustedSchedule.map((row) => ({
-      "EMI No": row.month,
-      Date: format(row.date, "MMM yyyy"),
-      "Opening Balance": row.openingBalance,
-      EMI: row.emi,
-      Interest: row.interest,
-      Principal: row.principal,
-      Prepayment: row.prepayment,
-      "Closing Balance": row.closingBalance,
-      "Interest Rate": row.interestRate,
-    }));
+    const exceljs = await import("exceljs");
+    // Vite dynamic imports sometimes resolve the module object with a default property
+    const ExcelJS = exceljs.default || exceljs;
+    const { saveAs } = await import("file-saver");
 
-    const ws = XLSX.utils.json_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Schedule");
-    XLSX.writeFile(wb, `EMI_Schedule_${format(new Date(), "yyyy-MM-dd")}.xlsx`);
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Schedule");
+
+    worksheet.columns = [
+      { header: "EMI No", key: "month", width: 10 },
+      { header: "Date", key: "date", width: 15 },
+      { header: "Opening Balance", key: "opening", width: 20 },
+      { header: "EMI", key: "emi", width: 15 },
+      { header: "Interest", key: "interest", width: 15 },
+      { header: "Principal", key: "principal", width: 15 },
+      { header: "Prepayment", key: "prepayment", width: 15 },
+      { header: "Closing Balance", key: "closing", width: 20 },
+      { header: "Interest Rate", key: "rate", width: 15 },
+    ];
+
+    // Style the header row
+    worksheet.getRow(1).font = { bold: true };
+    worksheet.getRow(1).fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "FFE2E8F0" }, // Tailwind slate-200
+    };
+
+    adjustedSchedule.forEach((row) => {
+      worksheet.addRow({
+        month: row.month,
+        date: format(row.date, "MMM yyyy"),
+        opening: row.openingBalance,
+        emi: row.emi,
+        interest: row.interest,
+        principal: row.principal,
+        prepayment: row.prepayment,
+        closing: row.closingBalance,
+        rate: row.interestRate,
+      });
+    });
+
+    // Format currency columns
+    ["C", "D", "E", "F", "G", "H"].forEach((col) => {
+      worksheet.getColumn(col).numFmt = "₹#,##0.00";
+    });
+
+    worksheet.getColumn("I").numFmt = '0.00"%"';
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    saveAs(blob, `EMI_Schedule_${format(new Date(), "yyyy-MM-dd")}.xlsx`);
   };
 
   const [goalMonths, setGoalMonths] = useState(
