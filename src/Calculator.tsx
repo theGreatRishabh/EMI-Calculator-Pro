@@ -567,6 +567,7 @@ export default function App() {
   const [goalMonths, setGoalMonths] = useState(
     tenure * (tenureUnit === "Y" ? 12 : 1),
   );
+  const [goalStartDate, setGoalStartDate] = useState<string>("");
   const [calculatedPrepayment, setCalculatedPrepayment] = useState<
     number | null
   >(null);
@@ -576,6 +577,19 @@ export default function App() {
     let high = amount;
     let result = 0;
 
+    // Calculate months elapsed from the loan start date to the goal start date
+    // If goalStartDate is earlier than loanStartDate, elapsed is 0 or negative, we treat as 0
+    let elapsedMonths = 0;
+    if (goalStartDate) {
+      const loanStart = parseISO(loanStartDate);
+      const goalStart = parseISO(goalStartDate);
+      const diff = differenceInMonths(goalStart, loanStart);
+      elapsedMonths = Math.max(0, diff);
+    }
+
+    // Total goal months from the original start date to hit the user's target time to close
+    const totalGoalMonths = elapsedMonths + goalMonths;
+
     for (let i = 0; i < 20; i++) {
       const mid = (low + high) / 2;
       const testPrepayments: Prepayment[] = [
@@ -583,7 +597,7 @@ export default function App() {
         {
           id: "goal-test",
           amount: mid,
-          startDate: loanStartDate,
+          startDate: goalStartDate || loanStartDate,
           type: PrepaymentType.RECURRING,
           reduction: PrepaymentReduction.TENURE,
           frequency: 1,
@@ -599,7 +613,8 @@ export default function App() {
         testPrepayments,
       );
 
-      if (testSchedule.length <= goalMonths) {
+      // We check if the schedule finishes within the total estimated time
+      if (testSchedule.length <= totalGoalMonths) {
         result = mid;
         high = mid;
       } else {
@@ -614,7 +629,7 @@ export default function App() {
       const newPrepayment: Prepayment = {
         id: Math.random().toString(36).substr(2, 9),
         amount: calculatedPrepayment,
-        startDate: loanStartDate,
+        startDate: goalStartDate || loanStartDate,
         type: PrepaymentType.RECURRING,
         reduction: PrepaymentReduction.TENURE,
         frequency: 1,
@@ -936,13 +951,14 @@ export default function App() {
                 </div>
                 <p className="text-sm text-emerald-700">
                   Calculate required monthly prepayment to close your loan
-                  faster.
+                  faster. If a Start Date is selected, the required time to
+                  close will be measured from that date.
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-emerald-800">
-                      Target Tenure (Months)
+                      Target Time to Close (Months)
                     </label>
                     <input
                       type="number"
@@ -951,7 +967,18 @@ export default function App() {
                       className="w-full px-4 py-2 bg-white border border-emerald-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
                     />
                   </div>
-                  <div className="flex items-end">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-emerald-800">
+                      Start Date (Optional)
+                    </label>
+                    <input
+                      type="date"
+                      value={goalStartDate}
+                      onChange={(e) => setGoalStartDate(e.target.value)}
+                      className="w-full px-4 py-2 bg-white border border-emerald-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer"
+                    />
+                  </div>
+                  <div className="sm:col-span-2 flex items-end">
                     <button
                       onClick={calculateGoalPrepayment}
                       className="w-full py-2 bg-emerald-600 text-white rounded-lg font-bold text-sm hover:bg-emerald-700 transition-colors shadow-sm"
@@ -1552,7 +1579,7 @@ export default function App() {
                     Hire Our Tech Agency
                   </button>
                   <a
-                    href="https://portfolio-tgr.vercel.app/"
+                    href="https://omegaalphatech.com/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 px-8 py-4 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold transition-all shadow-xl hover:scale-105 active:scale-95 border border-slate-700"
