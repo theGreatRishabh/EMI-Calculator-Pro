@@ -1552,7 +1552,7 @@ export default function App() {
                     Hire Our Tech Agency
                   </button>
                   <a
-                    href="https://github.com/theGreatRishabh"
+                    href="https://portfolio-tgr.vercel.app/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 px-8 py-4 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold transition-all shadow-xl hover:scale-105 active:scale-95 border border-slate-700"
@@ -1755,17 +1755,6 @@ export default function App() {
         <p>
           © {new Date().getFullYear()} Smart EMI Planner. All calculations are
           estimates.
-        </p>
-        <p className="mt-2">
-          Developed by{" "}
-          <a
-            href="https://portfolio-tgr.vercel.app/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-emerald-600 font-bold hover:underline"
-          >
-            TGR
-          </a>
         </p>
       </footer>
 

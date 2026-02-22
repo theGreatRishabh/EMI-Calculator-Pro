@@ -49,7 +49,7 @@ function GlobalHeader() {
             Learn & Blog
           </Link>
           <a
-            href="https://github.com/theGreatRishabh"
+            href="https://portfolio-tgr.vercel.app/"
             target="_blank"
             rel="noopener noreferrer"
             className="hidden lg:flex items-center gap-2 px-4 py-2 bg-slate-900 border border-slate-700 text-white hover:bg-slate-800 rounded-lg text-sm font-bold shadow-sm transition-all ml-2"
@@ -77,12 +77,12 @@ export default function App() {
       <footer className="bg-slate-900 text-slate-400 py-4 text-center text-xs font-medium border-t border-slate-800 sticky bottom-0 z-40">
         Built with ❤️ by{" "}
         <a
-          href="https://github.com/theGreatRishabh"
+          href="https://portfolio-tgr.vercel.app/"
           target="_blank"
           rel="noopener noreferrer"
           className="text-emerald-400 hover:text-emerald-300 font-bold transition-colors"
         >
-          Our Tech Agency
+          OmegaAlphaTech
         </a>
         . Need a custom financial app for your business? We build
         high-performance web tools.
