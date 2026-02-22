@@ -69,6 +69,17 @@ import {
 
 const COLORS = ["#10b981", "#f59e0b"];
 
+const parseNumberInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  let val = e.target.value;
+  if (val === "") return 0;
+  if (/^0[0-9]/.test(val)) {
+    val = val.replace(/^0+(?=[0-9])/, "");
+    // Force DOM update to fix React's number sync issue
+    e.target.value = val;
+  }
+  return Math.max(0, Number(val));
+};
+
 interface RateChangeCardProps {
   key?: React.Key;
   rateChange: RateChange;
@@ -130,7 +141,7 @@ function RateChangeCard({
               step="0.1"
               value={local.newRate}
               onChange={(e) =>
-                setLocal({ ...local, newRate: Number(e.target.value) })
+                setLocal({ ...local, newRate: parseNumberInput(e) })
               }
               onBlur={handleApply}
               className="w-full pl-3 pr-9 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none transition-all"
@@ -218,7 +229,7 @@ function PrepaymentCard({
               type="number"
               value={local.amount}
               onChange={(e) =>
-                setLocal({ ...local, amount: Number(e.target.value) })
+                setLocal({ ...local, amount: parseNumberInput(e) })
               }
               onBlur={handleApply}
               className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
@@ -282,9 +293,9 @@ function PrepaymentCard({
           </label>
           <input
             type="number"
-            value={local.frequency || 12}
+            value={local.frequency}
             onChange={(e) =>
-              setLocal({ ...local, frequency: Number(e.target.value) })
+              setLocal({ ...local, frequency: parseNumberInput(e) })
             }
             onBlur={handleApply}
             className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
@@ -799,7 +810,7 @@ export default function App() {
                           id="loan-amount"
                           aria-label="Loan Amount"
                           value={amount}
-                          onChange={(e) => setAmount(Number(e.target.value))}
+                          onChange={(e) => setAmount(parseNumberInput(e))}
                           className="w-full pl-9 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
                         />
                       </div>
@@ -831,7 +842,7 @@ export default function App() {
                           aria-label="Interest Rate"
                           value={rate}
                           step="0.05"
-                          onChange={(e) => setRate(Number(e.target.value))}
+                          onChange={(e) => setRate(parseNumberInput(e))}
                           className="w-full pl-9 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
                         />
                       </div>
@@ -886,7 +897,7 @@ export default function App() {
                           id="loan-tenure"
                           aria-label="Loan Tenure"
                           value={tenure}
-                          onChange={(e) => setTenure(Number(e.target.value))}
+                          onChange={(e) => setTenure(parseNumberInput(e))}
                           className="w-full pl-9 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
                         />
                       </div>
@@ -936,7 +947,7 @@ export default function App() {
                     <input
                       type="number"
                       value={goalMonths}
-                      onChange={(e) => setGoalMonths(Number(e.target.value))}
+                      onChange={(e) => setGoalMonths(parseNumberInput(e))}
                       className="w-full px-4 py-2 bg-white border border-emerald-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
                     />
                   </div>
