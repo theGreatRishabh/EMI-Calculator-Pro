@@ -48,6 +48,14 @@ function GlobalHeader() {
             <BookOpen className="w-4 h-4" />
             Learn & Blog
           </Link>
+          <a
+            href="https://github.com/theGreatRishabh"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden lg:flex items-center gap-2 px-4 py-2 bg-slate-900 border border-slate-700 text-white hover:bg-slate-800 rounded-lg text-sm font-bold shadow-sm transition-all ml-2"
+          >
+            Hire Our Tech Agency
+          </a>
         </nav>
       </div>
     </header>
@@ -58,13 +66,27 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col">
       <GlobalHeader />
-      <main className="flex-1">
+      <main className="flex-1 pb-16">
         <Routes>
           <Route path="/" element={<Calculator />} />
           <Route path="/blog" element={<BlogList />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
         </Routes>
       </main>
+
+      <footer className="bg-slate-900 text-slate-400 py-4 text-center text-xs font-medium border-t border-slate-800 sticky bottom-0 z-40">
+        Built with ❤️ by{" "}
+        <a
+          href="https://github.com/theGreatRishabh"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-emerald-400 hover:text-emerald-300 font-bold transition-colors"
+        >
+          Our Tech Agency
+        </a>
+        . Need a custom financial app for your business? We build
+        high-performance web tools.
+      </footer>
     </div>
   );
 }

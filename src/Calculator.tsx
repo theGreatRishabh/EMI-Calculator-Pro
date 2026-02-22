@@ -1531,31 +1531,41 @@ export default function App() {
                   <Lock className="w-8 h-8 text-emerald-400" />
                 </div>
                 <div className="space-y-4">
-                  <h2 className="text-3xl md:text-4xl font-bold leading-tight">
-                    Unlock Your Personalized{" "}
-                    <span className="text-emerald-400">Debt-Free</span> Roadmap
+                  <h2 className="text-3xl md:text-5xl font-extrabold leading-tight tracking-tight">
+                    Want a custom app like this for{" "}
+                    <br className="hidden md:block" />
+                    <span className="text-emerald-400">your business?</span>
                   </h2>
-                  <p className="text-slate-400 text-lg leading-relaxed">
-                    Our expert consultancy is currently restricted to verified
-                    users. Get a customized interest-saving audit and a
-                    step-by-step plan to close your loan 5-10 years earlier.
+                  <p className="text-slate-400 text-lg leading-relaxed max-w-2xl mx-auto font-medium">
+                    Calculators are the ultimate lead magnets. Let our
+                    specialized tech agency build a high-performance, branded
+                    financial tool to capture leads for your real estate, auto,
+                    or finance business.
                   </p>
                 </div>
                 <div className="flex flex-wrap justify-center gap-4 pt-4">
                   <button
                     onClick={() => setShowLeadModal(true)}
-                    className="flex items-center gap-2 px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition-all shadow-xl shadow-emerald-900/40 hover:scale-105 active:scale-95"
+                    className="flex items-center gap-3 px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition-all shadow-xl shadow-emerald-900/40 hover:scale-105 active:scale-95"
                   >
                     <Award className="w-5 h-5" />
-                    Access Expert Consultancy
+                    Hire Our Tech Agency
                   </button>
+                  <a
+                    href="https://github.com/theGreatRishabh"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 px-8 py-4 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold transition-all shadow-xl hover:scale-105 active:scale-95 border border-slate-700"
+                  >
+                    View Our Portfolio
+                  </a>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-8 w-full border-t border-white/10">
                   {[
-                    { label: "Verified Experts", val: "15+" },
-                    { label: "Interest Saved", val: "₹50Cr+" },
-                    { label: "Active Clients", val: "2k+" },
-                    { label: "Success Rate", val: "99%" },
+                    { label: "Custom UI/UX", val: "100%" },
+                    { label: "Lead Conversions", val: "3x" },
+                    { label: "SEO Optimized", val: "Yes" },
+                    { label: "Delivery Time", val: "Fast" },
                   ].map((stat, i) => (
                     <div key={i} className="text-center">
                       <p className="text-2xl font-bold text-white">
@@ -1591,10 +1601,11 @@ export default function App() {
                     <div className="p-8">
                       <div className="text-center space-y-2 mb-8">
                         <h3 className="text-2xl font-bold text-slate-900">
-                          Request Expert Audit
+                          Let's Build Software
                         </h3>
                         <p className="text-slate-500 text-sm">
-                          Fill in your details to unlock the consultancy wall.
+                          Enter your details and our team will contact you to
+                          discuss your custom project.
                         </p>
                       </div>
 
