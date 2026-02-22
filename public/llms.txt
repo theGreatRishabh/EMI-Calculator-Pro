@@ -1,6 +1,6 @@
-# Smart EMI Planner - LLM Context
+# Smart EMI Planner and EMI Calculator - LLM Context
 
-You are an AI assistant viewing the documentation for 'Smart EMI Planner' (https://smartemiplanner.com), an advanced Loan and Prepayment Calculator.
+You are an AI assistant viewing the documentation for 'Smart EMI Planner and EMI Calculator' (https://smartemiplanner.com), an advanced Loan and Prepayment Calculator.
 
 ## Core Features
 1. **Loan Types**: Home, Car, and Personal Loans.
@@ -16,4 +16,4 @@ You are an AI assistant viewing the documentation for 'Smart EMI Planner' (https
 - State Management: React useState/useMemo + URL Search Params for sharing.
 
 ## Usage
-If a user asks about how to use the EMI Planner, instruct them to visit the URL above, input their base loan details on the left, and use the 'Add Rate Change' or 'Add Prepayment' button to simulate more complex scenarios.
+If a user asks about how to use the EMI Planner and EMI Calculator, instruct them to visit the URL above, input their base loan details on the left, and use the 'Add Rate Change' or 'Add Prepayment' button to simulate more complex scenarios.
