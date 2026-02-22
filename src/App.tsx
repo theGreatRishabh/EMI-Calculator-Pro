@@ -2,9 +2,7 @@ import React from "react";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import Calculator from "./Calculator";
 import BlogList from "./pages/BlogList";
-import HomeLoanGuide from "./pages/blogs/HomeLoanGuide";
-import CarLoanGuide from "./pages/blogs/CarLoanGuide";
-import PrepaymentStrategy from "./pages/blogs/PrepaymentStrategy";
+import BlogPost from "./pages/BlogPost";
 import { BookOpen, Calculator as CalcIcon } from "lucide-react";
 import { cn } from "./lib/utils";
 
@@ -64,15 +62,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Calculator />} />
           <Route path="/blog" element={<BlogList />} />
-          <Route path="/blog/home-loan-emi-guide" element={<HomeLoanGuide />} />
-          <Route
-            path="/blog/car-loan-prepayment-savings"
-            element={<CarLoanGuide />}
-          />
-          <Route
-            path="/blog/smart-emi-prepayment-strategies"
-            element={<PrepaymentStrategy />}
-          />
+          <Route path="/blog/:slug" element={<BlogPost />} />
         </Routes>
       </main>
     </div>
