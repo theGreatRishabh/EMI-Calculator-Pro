@@ -714,7 +714,7 @@ export default function App() {
               />
               <div>
                 <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-                  Smart EMI Planner
+                  Smart EMI Calculator
                 </h1>
                 <p className="text-slate-500">
                   Advanced loan simulation with rate changes and prepayments
