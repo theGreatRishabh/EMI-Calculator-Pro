@@ -2,13 +2,22 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
-import matter from "gray-matter";
 import { useDocumentMeta } from "../hooks/useDocumentMeta";
+import blogPosts from "../blogMeta.json";
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
   const [content, setContent] = useState("");
-  const [meta, setMeta] = useState<any>({});
+  // Find meta from pre-generated catalog
+  const postMeta = blogPosts.find((p) => p.slug === slug) || {
+    title: "Loading Blog...",
+    excerpt: "Read our latest financial insights.",
+    category: "Insights",
+    date: new Date().toLocaleDateString(),
+    readTime: "5 min read",
+  };
+
+  const [meta, setMeta] = useState<any>(postMeta);
   const [isLoading, setIsLoading] = useState(true);
 
   // Fallback for metadata
@@ -26,16 +35,35 @@ export default function BlogPost() {
           throw new Error("Post not found");
         }
         const text = await response.text();
-        const { data, content: markdownBody } = matter(text);
 
-        setMeta(data);
+        // Strip frontmatter manually instead of using gray-matter in browser
+        let markdownBody = text;
+        if (text.startsWith("---")) {
+          const endMatch = text.indexOf("---", 3);
+          if (endMatch !== -1) {
+            markdownBody = text.substring(endMatch + 3).trim();
+          }
+        }
+
+        // Update meta if it wasn't found in catalog
+        const found = blogPosts.find((p) => p.slug === slug);
+        if (found) {
+          setMeta(found);
+        }
+
         setContent(markdownBody);
       } catch (error) {
         console.error("Error fetching blog:", error);
         setContent(
           "# Post Not Found\nSorry, the article you are looking for does not exist.",
         );
-        setMeta({ title: "Not Found" });
+        setMeta({
+          title: "Not Found",
+          category: "",
+          date: "",
+          readTime: "",
+          excerpt: "",
+        });
       } finally {
         setIsLoading(false);
       }
