@@ -52,25 +52,81 @@
       name="twitter:description"
       content="Free online EMI Calculator. Calculate Home Loan EMI, plan prepayments, and simulate rate changes."
     />
+    <style>
+      #loader-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background-color: #f9fafb;
+      }
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #e5e7eb;
+        border-top-color: #10b981;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+      }
+      .noscript-warning {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        font-family: system-ui, sans-serif;
+        background-color: #fef2f2;
+        color: #991b1b;
+        text-align: center;
+        padding: 2rem;
+      }
+    </style>
   </head>
   <body>
+    <noscript>
+      <style>
+        #loader-container {
+          display: none !important;
+        }
+      </style>
+      <div class="noscript-warning">
+        <div>
+          <h2 style="margin-bottom: 1rem">JavaScript is Required</h2>
+          <p>
+            Please enable JavaScript in your browser settings to use the Smart
+            EMI Planner.
+          </p>
+        </div>
+      </div>
+    </noscript>
     <div id="root">
-      <div
-        style="
-          padding: 2rem;
-          font-family: system-ui, sans-serif;
-          text-align: center;
-          color: #4b5563;
-        "
-      >
-        <h1>Smart EMI Planner - EMI Calculator</h1>
-        <h2>Home, Car, and Personal Loan EMI Calculator</h2>
-        <p>
-          Loading the Smart EMI Planner... Start planning your financial freedom
-          by calculating your monthly installments, prepayments, and interest
-          rate changes. The best free EMI Calculator, Amortization Schedule
-          generator, and Loan Goal Optimizer.
-        </p>
+      <div id="loader-container">
+        <div class="spinner"></div>
+        <div class="sr-only">
+          <h1>Smart EMI Planner - EMI Calculator</h1>
+          <h2>Home, Car, and Personal Loan EMI Calculator</h2>
+          <p>
+            Loading the Smart EMI Planner... Start planning your financial
+            freedom by calculating your monthly installments, prepayments, and
+            interest rate changes. The best free EMI Calculator, Amortization
+            Schedule generator, and Loan Goal Optimizer.
+          </p>
+        </div>
       </div>
     </div>
     <script type="module" src="/src/main.tsx"></script>
