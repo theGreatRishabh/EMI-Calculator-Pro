@@ -1,22 +1,22 @@
 export enum LoanType {
-  HOME = 'HOME',
-  CAR = 'CAR',
-  PERSONAL = 'PERSONAL',
+  HOME = "HOME",
+  CAR = "CAR",
+  PERSONAL = "PERSONAL",
 }
 
 export enum AdjustmentMode {
-  KEEP_EMI = 'KEEP_EMI',
-  KEEP_TENURE = 'KEEP_TENURE',
+  KEEP_EMI = "KEEP_EMI",
+  KEEP_TENURE = "KEEP_TENURE",
 }
 
 export enum PrepaymentType {
-  ONE_TIME = 'ONE_TIME',
-  RECURRING = 'RECURRING',
+  ONE_TIME = "ONE_TIME",
+  RECURRING = "RECURRING",
 }
 
 export enum PrepaymentReduction {
-  TENURE = 'TENURE',
-  EMI = 'EMI',
+  TENURE = "TENURE",
+  EMI = "EMI",
 }
 
 export interface RateChange {
@@ -55,4 +55,20 @@ export interface LoanSummary {
   tenureMonths: number;
   savedInterest: number;
   savedMonths: number;
+}
+
+export interface TaxTip {
+  title: string;
+  amount: number;
+  limitLabel: string;
+  description: string;
+}
+
+export interface CurrencyConfig {
+  code: string;
+  locale: string;
+  symbol: string;
+  name: string;
+  taxTips: TaxTip[];
+  useIndianNotation: boolean; // For Lakhs/Crores
 }

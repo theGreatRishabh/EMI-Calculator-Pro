@@ -69,6 +69,122 @@ import {
 
 const COLORS = ["#10b981", "#f59e0b"];
 
+const CURRENCY_CONFIGS: Record<string, CurrencyConfig> = {
+  INR: {
+    code: "INR",
+    locale: "en-IN",
+    symbol: "₹",
+    name: "Indian Rupee",
+    useIndianNotation: true,
+    taxTips: [
+      {
+        title: "Section 24(b) - Interest",
+        amount: 200000,
+        limitLabel: "Deduction limit: ₹2,00,000",
+        description: "Deduct up to ₹2,00,000 on home loan interest per year.",
+      },
+      {
+        title: "Section 80C - Principal",
+        amount: 150000,
+        limitLabel: "Deduction limit: ₹1,50,000",
+        description: "Save up to ₹1,50,000 on principal repayment per year.",
+      },
+    ],
+  },
+  USD: {
+    code: "USD",
+    locale: "en-US",
+    symbol: "$",
+    name: "US Dollar",
+    useIndianNotation: false,
+    taxTips: [
+      {
+        title: "Mortgage Interest Deduction",
+        amount: 750000,
+        limitLabel: "Limit: $750,000 debt",
+        description:
+          "Deduct interest on up to $750,000 of mortgage debt ($375,000 if married filing separately).",
+      },
+      {
+        title: "Property Tax Deduction",
+        amount: 10000,
+        limitLabel: "SALT Limit: $10,000",
+        description:
+          "Deduct up to $10,000 for state and local taxes (SALT), including property taxes.",
+      },
+    ],
+  },
+  GBP: {
+    code: "GBP",
+    locale: "en-GB",
+    symbol: "£",
+    name: "British Pound",
+    useIndianNotation: false,
+    taxTips: [
+      {
+        title: "First-Time Buyer ISA",
+        amount: 12000,
+        limitLabel: "Max bonus: £3,000",
+        description:
+          "Government bonus of 25% on savings up to £12,000 for a first home.",
+      },
+      {
+        title: "Rent-a-Room Relief",
+        amount: 7500,
+        limitLabel: "Limit: £7,500/year",
+        description:
+          "Tax-free income if you let out furnished accommodation in your main home.",
+      },
+    ],
+  },
+  EUR: {
+    code: "EUR",
+    locale: "en-DE",
+    symbol: "€",
+    name: "Euro",
+    useIndianNotation: false,
+    taxTips: [
+      {
+        title: "Interest Deduction (Germany)",
+        amount: 0,
+        limitLabel: "Variable limit",
+        description:
+          "Mortgage interest can be fully deducted from rental income for investment properties.",
+      },
+      {
+        title: "Energy Efficiency Bonus",
+        amount: 15000,
+        limitLabel: "Example: KfW 40 Plus",
+        description:
+          "Grants or low-interest loans for building energy-efficient homes.",
+      },
+    ],
+  },
+  AUD: {
+    code: "AUD",
+    locale: "en-AU",
+    symbol: "$",
+    name: "Australian Dollar",
+    useIndianNotation: false,
+    taxTips: [
+      {
+        title: "Negative Gearing",
+        amount: 0,
+        limitLabel: "No hard limit",
+        description:
+          "Deduct loan interest and expenses from your taxable income if they exceed rental income.",
+      },
+      {
+        title: "Capital Works Deduction",
+        amount: 0,
+        limitLabel: "2.5% per year",
+        description:
+          "Deduct construction costs and renovations over 40 years for investment properties.",
+      },
+    ],
+  },
+};
+
 const parseNumberInput = (e: React.ChangeEvent<HTMLInputElement>) => {
   let val = e.target.value;
   if (val === "") return 0;
@@ -220,11 +336,12 @@ function PrepaymentCard({
       </button>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
-            Amount (₹)
-          </label>
           <div className="relative">
-            <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-300" />
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 flex items-center justify-center font-bold text-slate-300 leading-none text-xs">
+              {CURRENCY_CONFIGS[
+                document.querySelector("select")?.value || "INR"
+              ]?.symbol || "₹"}
+            </div>
             <input
               type="number"
               value={local.amount}
@@ -333,6 +450,41 @@ export default function App() {
     {},
   );
 
+  const [currencyCode, setCurrencyCode] = useState<string>("INR");
+  const currency = CURRENCY_CONFIGS[currencyCode] || CURRENCY_CONFIGS.INR;
+
+  // Currency Detection
+  useEffect(() => {
+    const detectCurrency = () => {
+      // 1. Check URL
+      const params = new URLSearchParams(window.location.search);
+      const urlCurr = params.get("curr");
+      if (urlCurr && CURRENCY_CONFIGS[urlCurr]) {
+        setCurrencyCode(urlCurr);
+        return;
+      }
+
+      // 2. Check Locale
+      try {
+        const locale = new Intl.NumberFormat().resolvedOptions().locale;
+        if (locale.includes("US")) setCurrencyCode("USD");
+        else if (locale.includes("GB")) setCurrencyCode("GBP");
+        else if (locale.includes("AU")) setCurrencyCode("AUD");
+        else if (
+          locale.includes("DE") ||
+          locale.includes("FR") ||
+          locale.includes("IT") ||
+          locale.includes("ES")
+        )
+          setCurrencyCode("EUR");
+        else setCurrencyCode("INR");
+      } catch (e) {
+        setCurrencyCode("INR");
+      }
+    };
+    detectCurrency();
+  }, []);
+
   // URL State Persistence
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -344,6 +496,9 @@ export default function App() {
     const start = params.get("start");
     const rc = params.get("rc");
     const pp = params.get("pp");
+    const curr = params.get("curr");
+
+    if (curr && CURRENCY_CONFIGS[curr]) setCurrencyCode(curr);
 
     if (type && Object.values(LoanType).includes(type)) setLoanType(type);
     if (amt) setAmount(Number(amt));
@@ -402,6 +557,7 @@ export default function App() {
       start: loanStartDate,
       rc: btoa(JSON.stringify(rateChanges)),
       pp: btoa(JSON.stringify(prepayments)),
+      curr: currencyCode,
     });
     const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
     navigator.clipboard.writeText(url);
@@ -497,7 +653,7 @@ export default function App() {
     doc.text("EMI Amortization Schedule", 14, 22);
     doc.setFontSize(11);
     doc.text(
-      `Loan Amount: ${cleanCurrency(formatCurrencyFull(amount))}`,
+      `Loan Amount: ${cleanCurrency(formatCurrencyFull(amount, currency.code, currency.locale))}`,
       14,
       32,
     );
@@ -511,12 +667,56 @@ export default function App() {
     const tableData = adjustedSchedule.map((row) => [
       row.month,
       format(row.date, "MMM yyyy"),
-      cleanCurrency(formatCurrency(row.openingBalance)),
-      cleanCurrency(formatCurrency(row.emi)),
-      cleanCurrency(formatCurrency(row.interest)),
-      cleanCurrency(formatCurrency(row.principal)),
-      row.prepayment > 0 ? cleanCurrency(formatCurrency(row.prepayment)) : "-",
-      cleanCurrency(formatCurrency(row.closingBalance)),
+      cleanCurrency(
+        formatCurrency(
+          row.openingBalance,
+          currency.code,
+          currency.locale,
+          currency.useIndianNotation,
+        ),
+      ),
+      cleanCurrency(
+        formatCurrency(
+          row.emi,
+          currency.code,
+          currency.locale,
+          currency.useIndianNotation,
+        ),
+      ),
+      cleanCurrency(
+        formatCurrency(
+          row.interest,
+          currency.code,
+          currency.locale,
+          currency.useIndianNotation,
+        ),
+      ),
+      cleanCurrency(
+        formatCurrency(
+          row.principal,
+          currency.code,
+          currency.locale,
+          currency.useIndianNotation,
+        ),
+      ),
+      row.prepayment > 0
+        ? cleanCurrency(
+            formatCurrency(
+              row.prepayment,
+              currency.code,
+              currency.locale,
+              currency.useIndianNotation,
+            ),
+          )
+        : "-",
+      cleanCurrency(
+        formatCurrency(
+          row.closingBalance,
+          currency.code,
+          currency.locale,
+          currency.useIndianNotation,
+        ),
+      ),
       `${row.interestRate}%`,
     ]);
 
@@ -589,7 +789,7 @@ export default function App() {
 
     // Format currency columns
     ["C", "D", "E", "F", "G", "H"].forEach((col) => {
-      worksheet.getColumn(col).numFmt = "₹#,##0.00";
+      worksheet.getColumn(col).numFmt = `"${currency.symbol}"#,##0.00`;
     });
 
     worksheet.getColumn("I").numFmt = '0.00"%"';
@@ -856,7 +1056,9 @@ export default function App() {
                         className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
                       />
                       <div className="relative">
-                        <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center font-bold text-slate-400 leading-none">
+                          {currency.symbol}
+                        </div>
                         <input
                           type="number"
                           id="loan-amount"
@@ -980,11 +1182,30 @@ export default function App() {
 
               {/* Goal Optimizer Tool */}
               <section className="bg-emerald-50 p-6 rounded-2xl border border-emerald-100 space-y-4">
-                <div className="flex items-center gap-2">
-                  <Target className="w-5 h-5 text-emerald-600" />
-                  <h2 className="text-lg font-semibold text-emerald-900">
-                    Goal Optimizer
-                  </h2>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Target className="w-5 h-5 text-emerald-600" />
+                    <h2 className="text-lg font-semibold text-emerald-900">
+                      Goal Optimizer
+                    </h2>
+                  </div>
+                  {/* Currency Selector */}
+                  <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-lg border border-slate-200 shadow-sm transition-all hover:bg-white hover:border-emerald-200">
+                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter ml-1 hidden sm:block">
+                      Currency
+                    </div>
+                    <select
+                      value={currencyCode}
+                      onChange={(e) => setCurrencyCode(e.target.value)}
+                      className="bg-transparent border-none text-xs font-bold text-emerald-700 outline-none cursor-pointer pr-1"
+                    >
+                      {Object.values(CURRENCY_CONFIGS).map((cc) => (
+                        <option key={cc.code} value={cc.code}>
+                          {cc.code} ({cc.symbol})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
                 <p className="text-sm text-emerald-700">
                   Calculate required monthly prepayment to close your loan
@@ -1055,55 +1276,52 @@ export default function App() {
                   <div className="flex items-center gap-2">
                     <TrendingUp className="w-5 h-5 text-indigo-600" />
                     <h2 className="text-lg font-semibold text-indigo-900">
-                      Tax Benefit Estimator (India)
+                      Tax Benefit Estimator ({currency.name})
                     </h2>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="p-4 bg-white rounded-xl border border-indigo-100">
-                      <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">
-                        Section 24(b) - Interest
-                      </p>
-                      <p className="text-xl font-bold text-indigo-600">
-                        {formatCurrencyFull(
-                          Math.min(
-                            200000,
-                            adjustedSummary.totalInterest /
-                              (adjustedSummary.months / 12),
-                          ),
-                        )}
-                        <span className="text-[10px] text-slate-400 font-normal ml-1">
-                          / year avg
-                        </span>
-                      </p>
-                      <p className="text-[10px] text-slate-400 mt-1">
-                        Deduction limit: ₹2,00,000
-                      </p>
-                    </div>
-                    <div className="p-4 bg-white rounded-xl border border-indigo-100">
-                      <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">
-                        Section 80C - Principal
-                      </p>
-                      <p className="text-xl font-bold text-indigo-600">
-                        {formatCurrencyFull(
-                          Math.min(
-                            150000,
-                            amount / (adjustedSummary.months / 12),
-                          ),
-                        )}
-                        <span className="text-[10px] text-slate-400 font-normal ml-1">
-                          / year avg
-                        </span>
-                      </p>
-                      <p className="text-[10px] text-slate-400 mt-1">
-                        Deduction limit: ₹1,50,000
-                      </p>
-                    </div>
+                    {currency.taxTips.map((tip, idx) => (
+                      <div
+                        key={idx}
+                        className="p-4 bg-white rounded-xl border border-indigo-100"
+                      >
+                        <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">
+                          {tip.title}
+                        </p>
+                        <p className="text-xl font-bold text-indigo-600">
+                          {tip.amount > 0
+                            ? formatCurrencyFull(
+                                Math.min(
+                                  tip.amount,
+                                  tip.title.toLowerCase().includes("interest")
+                                    ? adjustedSummary.totalInterest /
+                                        (adjustedSummary.months / 12)
+                                    : amount / (adjustedSummary.months / 12),
+                                ),
+                                currency.code,
+                                currency.locale,
+                              )
+                            : "Consult Advisor"}
+                          {tip.amount > 0 && (
+                            <span className="text-[10px] text-slate-400 font-normal ml-1">
+                              / year avg
+                            </span>
+                          )}
+                        </p>
+                        <p className="text-[10px] text-slate-400 mt-1">
+                          {tip.limitLabel}
+                        </p>
+                        <p className="text-[10px] text-indigo-500 mt-1 italic">
+                          {tip.description}
+                        </p>
+                      </div>
+                    ))}
                   </div>
                   <div className="bg-indigo-600/5 p-3 rounded-lg border border-indigo-200/50">
                     <p className="text-xs text-indigo-700 leading-relaxed">
                       <Info className="w-3 h-3 inline mr-1 mb-0.5" />
                       Estimates based on annual averages. Actual benefits depend
-                      on your tax slab and other investments.
+                      on local tax laws and individual circumstances.
                     </p>
                   </div>
                 </section>
@@ -1122,7 +1340,11 @@ export default function App() {
                       Monthly EMI
                     </span>
                     <p className="text-lg font-bold text-slate-900 truncate">
-                      {formatCurrencyFull(adjustedSummary.emi)}
+                      {formatCurrencyFull(
+                        adjustedSummary.emi,
+                        currency.code,
+                        currency.locale,
+                      )}
                     </p>
                   </div>
                   <div className="space-y-1">
@@ -1130,7 +1352,11 @@ export default function App() {
                       Total Interest
                     </span>
                     <p className="text-lg font-bold text-slate-900 truncate">
-                      {formatCurrencyFull(adjustedSummary.totalInterest)}
+                      {formatCurrencyFull(
+                        adjustedSummary.totalInterest,
+                        currency.code,
+                        currency.locale,
+                      )}
                     </p>
                   </div>
                   <div className="space-y-1">
@@ -1161,7 +1387,11 @@ export default function App() {
                       Total Payment (Principal + Interest)
                     </span>
                     <p className="text-xl font-bold text-emerald-600 truncate">
-                      {formatCurrencyFull(adjustedSummary.totalPayment)}
+                      {formatCurrencyFull(
+                        adjustedSummary.totalPayment,
+                        currency.code,
+                        currency.locale,
+                      )}
                     </p>
                   </div>
                 </div>
@@ -1189,7 +1419,13 @@ export default function App() {
                         ))}
                       </Pie>
                       <Tooltip
-                        formatter={(value: number) => formatCurrencyFull(value)}
+                        formatter={(value: number) =>
+                          formatCurrencyFull(
+                            value,
+                            currency.code,
+                            currency.locale,
+                          )
+                        }
                       />
                     </PieChart>
                   </ResponsiveContainer>
@@ -1216,7 +1452,11 @@ export default function App() {
                       Total Savings
                     </span>
                     <p className="text-3xl font-bold">
-                      {formatCurrencyFull(savings.interest)}
+                      {formatCurrencyFull(
+                        savings.interest,
+                        currency.code,
+                        currency.locale,
+                      )}
                     </p>
                   </div>
                   <div className="p-2 bg-white/20 rounded-lg">
