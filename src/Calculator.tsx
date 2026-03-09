@@ -227,16 +227,20 @@ function RateChangeCard({
       <button
         aria-label="Remove rate change"
         onClick={() => onRemove(rateChange.id)}
-        className="absolute -top-2 -right-2 p-1.5 bg-white text-slate-400 hover:text-red-500 rounded-full shadow-sm border border-slate-200 opacity-0 group-hover:opacity-100 transition-all z-10"
+        className="absolute -top-2 -right-2 p-2.5 bg-white text-slate-400 hover:text-red-500 rounded-full shadow-md border border-slate-200 opacity-0 group-hover:opacity-100 transition-all z-10 sm:p-2"
       >
-        <Trash2 className="w-3.5 h-3.5" />
+        <Trash2 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
       </button>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
+          <label
+            htmlFor={`rate-date-${rateChange.id}`}
+            className="text-[10px] uppercase tracking-wider font-bold text-slate-400"
+          >
             Effective Date
           </label>
           <input
+            id={`rate-date-${rateChange.id}`}
             type="date"
             value={local.effectiveDate}
             onChange={(e) =>
@@ -247,12 +251,16 @@ function RateChangeCard({
           />
         </div>
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
+          <label
+            htmlFor={`rate-input-${rateChange.id}`}
+            className="text-[10px] uppercase tracking-wider font-bold text-slate-400"
+          >
             New Rate (%)
           </label>
           <div className="relative">
             <Percent className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-300" />
             <input
+              id={`rate-input-${rateChange.id}`}
               type="number"
               step="0.1"
               value={local.newRate}
@@ -330,12 +338,18 @@ function PrepaymentCard({
       <button
         aria-label="Remove prepayment"
         onClick={() => onRemove(prepayment.id)}
-        className="absolute -top-2 -right-2 p-1.5 bg-white text-slate-400 hover:text-red-500 rounded-full shadow-sm border border-slate-200 opacity-0 group-hover:opacity-100 transition-all z-10"
+        className="absolute -top-2 -right-2 p-2.5 bg-white text-slate-400 hover:text-red-500 rounded-full shadow-md border border-slate-200 opacity-0 group-hover:opacity-100 transition-all z-10 sm:p-2"
       >
-        <Trash2 className="w-3.5 h-3.5" />
+        <Trash2 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
       </button>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="space-y-1">
+          <label
+            htmlFor={`prepay-amount-${prepayment.id}`}
+            className="text-[10px] uppercase tracking-wider font-bold text-slate-400"
+          >
+            Amount
+          </label>
           <div className="relative">
             <div className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 flex items-center justify-center font-bold text-slate-300 leading-none text-xs">
               {CURRENCY_CONFIGS[
@@ -343,6 +357,7 @@ function PrepaymentCard({
               ]?.symbol || "₹"}
             </div>
             <input
+              id={`prepay-amount-${prepayment.id}`}
               type="number"
               value={local.amount}
               onChange={(e) =>
@@ -354,10 +369,14 @@ function PrepaymentCard({
           </div>
         </div>
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
+          <label
+            htmlFor={`prepay-date-${prepayment.id}`}
+            className="text-[10px] uppercase tracking-wider font-bold text-slate-400"
+          >
             Start Date
           </label>
           <input
+            id={`prepay-date-${prepayment.id}`}
             type="date"
             value={local.startDate}
             onChange={(e) => setLocal({ ...local, startDate: e.target.value })}
@@ -368,10 +387,14 @@ function PrepaymentCard({
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
+          <label
+            htmlFor={`prepay-type-${prepayment.id}`}
+            className="text-[10px] uppercase tracking-wider font-bold text-slate-400"
+          >
             Type
           </label>
           <select
+            id={`prepay-type-${prepayment.id}`}
             value={local.type}
             onChange={(e) =>
               setLocal({ ...local, type: e.target.value as PrepaymentType })
@@ -384,10 +407,14 @@ function PrepaymentCard({
           </select>
         </div>
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
+          <label
+            htmlFor={`prepay-reduction-${prepayment.id}`}
+            className="text-[10px] uppercase tracking-wider font-bold text-slate-400"
+          >
             Reduce
           </label>
           <select
+            id={`prepay-reduction-${prepayment.id}`}
             value={local.reduction}
             onChange={(e) =>
               setLocal({
@@ -405,10 +432,14 @@ function PrepaymentCard({
       </div>
       {local.type === PrepaymentType.RECURRING && (
         <div className="space-y-1">
-          <label className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
+          <label
+            htmlFor={`prepay-frequency-${prepayment.id}`}
+            className="text-[10px] uppercase tracking-wider font-bold text-slate-400"
+          >
             Frequency (Months)
           </label>
           <input
+            id={`prepay-frequency-${prepayment.id}`}
             type="number"
             value={local.frequency}
             onChange={(e) =>
@@ -507,16 +538,20 @@ export default function App() {
     if (unit) setTenureUnit(unit);
     if (start) setLoanStartDate(start);
 
+    const validateArray = (val: any) => (Array.isArray(val) ? val : []);
+
     if (rc) {
       try {
-        setRateChanges(JSON.parse(atob(rc)));
+        const parsed = JSON.parse(atob(rc));
+        setRateChanges(validateArray(parsed));
       } catch (e) {
         console.error("Failed to parse shared rate changes", e);
       }
     }
     if (pp) {
       try {
-        setPrepayments(JSON.parse(atob(pp)));
+        const parsed = JSON.parse(atob(pp));
+        setPrepayments(validateArray(parsed));
       } catch (e) {
         console.error("Failed to parse shared prepayments", e);
       }
@@ -1039,7 +1074,10 @@ export default function App() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
                     <div className="space-y-3 w-full">
                       <div className="flex justify-between">
-                        <label className="text-sm font-bold text-slate-600">
+                        <label
+                          htmlFor="loan-amount"
+                          className="text-sm font-bold text-slate-600"
+                        >
                           Loan Amount
                         </label>
                         <span className="text-sm font-extrabold text-emerald-600">
@@ -1047,6 +1085,8 @@ export default function App() {
                         </span>
                       </div>
                       <input
+                        id="loan-amount-slider"
+                        aria-label="Loan Amount Slider"
                         type="range"
                         min="100000"
                         max={LOAN_DEFAULTS[loanType].maxAmount}
@@ -1072,7 +1112,10 @@ export default function App() {
 
                     <div className="space-y-3 w-full">
                       <div className="flex justify-between">
-                        <label className="text-sm font-bold text-slate-600">
+                        <label
+                          htmlFor="interest-rate"
+                          className="text-sm font-bold text-slate-600"
+                        >
                           Interest Rate (% p.a.)
                         </label>
                         <span className="text-sm font-extrabold text-emerald-600">
@@ -1080,31 +1123,37 @@ export default function App() {
                         </span>
                       </div>
                       <input
+                        id="interest-rate-slider"
+                        aria-label="Interest Rate Slider"
                         type="range"
                         min="1"
                         max="20"
-                        step="0.05"
+                        step="0.1"
                         value={rate}
                         onChange={(e) => setRate(Number(e.target.value))}
                         className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
                       />
                       <div className="relative">
-                        <Percent className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center font-bold text-slate-400">
+                          %
+                        </div>
                         <input
-                          type="number"
                           id="interest-rate"
-                          aria-label="Interest Rate"
+                          type="number"
+                          step="0.1"
                           value={rate}
-                          step="0.05"
                           onChange={(e) => setRate(parseNumberInput(e))}
-                          className="w-full pl-9 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                          className="w-full pl-4 pr-9 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
                         />
                       </div>
                     </div>
 
                     <div className="space-y-3 w-full">
                       <div className="flex justify-between items-center">
-                        <label className="text-sm font-bold text-slate-600">
+                        <label
+                          htmlFor="loan-tenure"
+                          className="text-sm font-bold text-slate-600"
+                        >
                           Tenure
                         </label>
                         <div className="flex bg-slate-100 p-1 rounded-lg">
@@ -1133,32 +1182,35 @@ export default function App() {
                         </div>
                       </div>
                       <input
+                        id="loan-tenure-slider"
+                        aria-label="Loan Tenure Slider"
                         type="range"
                         min="1"
-                        max={
-                          tenureUnit === "Y"
-                            ? LOAN_DEFAULTS[loanType].maxTenure
-                            : LOAN_DEFAULTS[loanType].maxTenure * 12
-                        }
+                        max={LOAN_DEFAULTS[loanType].maxTenure}
+                        step="1"
                         value={tenure}
                         onChange={(e) => setTenure(Number(e.target.value))}
                         className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
                       />
                       <div className="relative">
-                        <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 font-bold text-slate-400 text-[10px] uppercase">
+                          {tenureUnit === "Y" ? "Yrs" : "Mos"}
+                        </div>
                         <input
-                          type="number"
                           id="loan-tenure"
-                          aria-label="Loan Tenure"
+                          type="number"
                           value={tenure}
                           onChange={(e) => setTenure(parseNumberInput(e))}
-                          className="w-full pl-9 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                          className="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
                         />
                       </div>
                     </div>
 
                     <div className="space-y-3">
-                      <label className="text-sm font-bold text-slate-600 flex items-center gap-2">
+                      <label
+                        htmlFor="loan-start-date"
+                        className="text-sm font-bold text-slate-600 flex items-center gap-2"
+                      >
                         <Calendar className="w-4 h-4 text-slate-400" />
                         Loan Start Date
                       </label>

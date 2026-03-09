@@ -38,5 +38,37 @@
     "date": "October 24, 2023",
     "readTime": "5 min read",
     "category": "Personal Finance & Insurance"
+  },
+  {
+    "slug": "how-to-calculate-emi",
+    "title": "How to Calculate EMI: The Simple Step-by-Step Guide",
+    "excerpt": "Learn the exact formula to calculate your loan EMI. We break down the math so you can plan your finances with 100% accuracy.",
+    "date": "March 10, 2026",
+    "readTime": "5 min read",
+    "category": "Financial Education"
+  },
+  {
+    "slug": "reduce-home-loan-emi",
+    "title": "Top 5 Strategies to Reduce Your Home Loan EMI in 2026",
+    "excerpt": "Is your home loan EMI eating up your savings? Learn 5 proven strategies to lower your monthly burden and save on total interest.",
+    "date": "March 10, 2026",
+    "readTime": "6 min read",
+    "category": "Home Loans"
+  },
+  {
+    "slug": "loan-prepayment-strategy",
+    "title": "Loan Prepayment Strategy: The '5% Rule' for Debt Freedom",
+    "excerpt": "Learn how small, strategic prepayments can save you millions in interest. We explain the 5% rule and why early prepayments are most effective.",
+    "date": "March 10, 2026",
+    "readTime": "7 min read",
+    "category": "Wealth Building"
+  },
+  {
+    "slug": "emi-calculation-formula",
+    "title": "The Math Behind EMI: Complete Formula Derivation",
+    "excerpt": "Ever wondered how banks arrive at your EMI number? We dive into the geometric progression and mathematical logic behind the EMI formula.",
+    "date": "March 10, 2026",
+    "readTime": "8 min read",
+    "category": "Mathematics"
   }
 ]

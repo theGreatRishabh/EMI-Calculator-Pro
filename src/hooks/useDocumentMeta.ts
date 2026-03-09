@@ -21,6 +21,9 @@ export function useDocumentMeta({
     );
     const originalOgDesc = ogDescElem?.getAttribute("content") || "";
 
+    const canonicalElem = document.querySelector('link[rel="canonical"]');
+    const originalCanonical = canonicalElem?.getAttribute("href") || "";
+
     // Set new values
     document.title = title;
 
@@ -36,12 +39,19 @@ export function useDocumentMeta({
     if (ogTitleElem) ogTitleElem.setAttribute("content", title);
     if (ogDescElem) ogDescElem.setAttribute("content", description);
 
+    // Dynamic Canonical
+    if (canonicalElem) {
+      const currentUrl = window.location.origin + window.location.pathname;
+      canonicalElem.setAttribute("href", currentUrl);
+    }
+
     // Cleanup function to restore originals when component unmounts
     return () => {
       document.title = originalTitle;
       if (descElem) descElem.setAttribute("content", originalDesc);
       if (ogTitleElem) ogTitleElem.setAttribute("content", originalOgTitle);
       if (ogDescElem) ogDescElem.setAttribute("content", originalOgDesc);
+      if (canonicalElem) canonicalElem.setAttribute("href", originalCanonical);
     };
   }, [title, description]);
 }
