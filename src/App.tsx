@@ -49,12 +49,12 @@ function GlobalHeader() {
             Learn & Blog
           </Link>
           <a
-            href="https://omegaalphatech.com/"
+            href="https://www.omegaalphatech.com/contact"
             target="_blank"
             rel="noopener noreferrer"
             className="hidden lg:flex items-center gap-2 px-4 py-2 bg-slate-900 border border-slate-700 text-white hover:bg-slate-800 rounded-lg text-sm font-bold shadow-sm transition-all ml-2"
           >
-            Hire Our Tech Agency
+            Request a Feature
           </a>
         </nav>
       </div>

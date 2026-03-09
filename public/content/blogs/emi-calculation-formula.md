@@ -6,8 +6,6 @@ readTime: "8 min read"
 category: "Mathematics"
 ---
 
-# The Math Behind EMI: Complete Formula Derivation
-
 If you’ve ever looked at the EMI formula—**P x R x (1+R)^N / [(1+R)^N - 1]**—and wondered where it came from, you're in the right place.
 
 The formula is derived from the **Present Value of an Annuity**. Here is the step-by-step logic.

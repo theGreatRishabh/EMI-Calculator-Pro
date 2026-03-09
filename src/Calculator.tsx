@@ -60,6 +60,7 @@ import {
   RateChange,
   Prepayment,
   AmortizationRow,
+  CurrencyConfig,
 } from "./types";
 import {
   LOAN_DEFAULTS,
@@ -1233,11 +1234,17 @@ export default function App() {
               </section>
 
               {/* Goal Optimizer Tool */}
-              <section className="bg-emerald-50 p-6 rounded-2xl border border-emerald-100 space-y-4">
+              <section
+                aria-labelledby="goal-optimizer-title"
+                className="bg-emerald-50 p-6 rounded-2xl border border-emerald-100 space-y-4"
+              >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Target className="w-5 h-5 text-emerald-600" />
-                    <h2 className="text-lg font-semibold text-emerald-900">
+                    <h2
+                      id="goal-optimizer-title"
+                      className="text-lg font-semibold text-emerald-900"
+                    >
                       Goal Optimizer
                     </h2>
                   </div>
@@ -1324,10 +1331,16 @@ export default function App() {
 
               {/* Tax Benefit Section */}
               {loanType === LoanType.HOME && (
-                <section className="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 space-y-4">
+                <section
+                  aria-labelledby="tax-benefit-title"
+                  className="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 space-y-4"
+                >
                   <div className="flex items-center gap-2">
                     <TrendingUp className="w-5 h-5 text-indigo-600" />
-                    <h2 className="text-lg font-semibold text-indigo-900">
+                    <h2
+                      id="tax-benefit-title"
+                      className="text-lg font-semibold text-indigo-900"
+                    >
                       Tax Benefit Estimator ({currency.name})
                     </h2>
                   </div>
@@ -1529,9 +1542,15 @@ export default function App() {
           {/* Row 2: Advanced Tools */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Rate Change Simulator */}
-            <section className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+            <section
+              aria-labelledby="rate-simulator-title"
+              className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4"
+            >
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold flex items-center gap-2">
+                <h2
+                  id="rate-simulator-title"
+                  className="text-lg font-semibold flex items-center gap-2"
+                >
                   <TrendingUp className="w-5 h-5 text-amber-500" />
                   Rate Change Simulator
                 </h2>
@@ -1565,9 +1584,15 @@ export default function App() {
             </section>
 
             {/* Prepayment Planner */}
-            <section className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+            <section
+              aria-labelledby="prepayment-planner-title"
+              className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4"
+            >
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold flex items-center gap-2">
+                <h2
+                  id="prepayment-planner-title"
+                  className="text-lg font-semibold flex items-center gap-2"
+                >
                   <ArrowRight className="w-5 h-5 text-emerald-500" />
                   Prepayment Planner
                 </h2>
@@ -1893,20 +1918,21 @@ export default function App() {
                     <span className="text-emerald-400">your business?</span>
                   </h2>
                   <p className="text-slate-400 text-lg leading-relaxed max-w-2xl mx-auto font-medium">
-                    Calculators are the ultimate lead magnets. Let our
-                    specialized tech agency build a high-performance, branded
-                    financial tool to capture leads for your real estate, auto,
-                    or finance business.
+                    Have a specific calculation or feature in mind? We'd love to
+                    hear your feedback. Request a new feature or get a custom
+                    financial tool built for your business.
                   </p>
                 </div>
                 <div className="flex flex-wrap justify-center gap-4 pt-4">
-                  <button
-                    onClick={() => setShowLeadModal(true)}
+                  <a
+                    href="https://www.omegaalphatech.com/contact"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex items-center gap-3 px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition-all shadow-xl shadow-emerald-900/40 hover:scale-105 active:scale-95"
                   >
                     <Award className="w-5 h-5" />
-                    Hire Our Tech Agency
-                  </button>
+                    Request a Feature
+                  </a>
                   <a
                     href="https://omegaalphatech.com/"
                     target="_blank"

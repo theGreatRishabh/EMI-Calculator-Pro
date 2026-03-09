@@ -6,8 +6,6 @@ readTime: "7 min read"
 category: "Wealth Building"
 ---
 
-# Loan Prepayment Strategy: The '5% Rule' for Debt Freedom
-
 Prepaying your loan is one of the most guaranteed "returns on investment" you can find. In this guide, we explore how to use the **5% Rule** to shave years off your mortgage.
 
 ## What is the 5% Prepayment Rule?
