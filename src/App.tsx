@@ -4,6 +4,7 @@ import Calculator from "./Calculator";
 import BlogList from "./pages/BlogList";
 import BlogPost from "./pages/BlogPost";
 import { BookOpen, Calculator as CalcIcon } from "lucide-react";
+import { motion } from "framer-motion";
 import { cn } from "./lib/utils";
 
 function GlobalHeader() {
@@ -23,28 +24,38 @@ function GlobalHeader() {
             Smart EMI Planner
           </span>
         </Link>
-        <nav className="flex items-center gap-1 sm:gap-2 bg-slate-100/50 p-1 rounded-xl">
+        <nav className="relative flex items-center gap-1 sm:gap-2 bg-slate-100/80 p-1 rounded-xl">
           <Link
             to="/"
             className={cn(
-              "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold transition-all",
-              isCalc
-                ? "bg-white text-emerald-700 shadow-sm border border-slate-200/60"
-                : "text-slate-600 hover:text-emerald-600 hover:bg-slate-50",
+              "relative z-10 flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold transition-colors duration-300",
+              isCalc ? "text-emerald-700" : "text-slate-600 hover:text-emerald-600 hover:bg-slate-50/50"
             )}
           >
+            {isCalc && (
+              <motion.div
+                layoutId="nav-pill"
+                className="absolute inset-0 bg-white rounded-lg shadow-sm border border-slate-200/60 -z-10"
+                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+              />
+            )}
             <CalcIcon className="w-4 h-4" />
             Calculator
           </Link>
           <Link
             to="/blog"
             className={cn(
-              "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold transition-all",
-              !isCalc
-                ? "bg-white text-emerald-700 shadow-sm border border-slate-200/60"
-                : "text-slate-600 hover:text-emerald-600 hover:bg-slate-50",
+              "relative z-10 flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold transition-colors duration-300",
+              !isCalc ? "text-emerald-700" : "text-slate-600 hover:text-emerald-600 hover:bg-slate-50/50"
             )}
           >
+            {!isCalc && (
+              <motion.div
+                layoutId="nav-pill"
+                className="absolute inset-0 bg-white rounded-lg shadow-sm border border-slate-200/60 -z-10"
+                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+              />
+            )}
             <BookOpen className="w-4 h-4" />
             Learn & Blog
           </Link>

@@ -75,8 +75,10 @@ const CURRENCY_CONFIGS: Record<string, CurrencyConfig> = {
     code: "INR",
     locale: "en-IN",
     symbol: "₹",
-    name: "Indian Rupee",
+    name: "India (New Delhi)",
     useIndianNotation: true,
+    stampDutyRate: 6,
+    registrationRate: 1,
     taxTips: [
       {
         title: "Section 24(b) - Interest",
@@ -96,22 +98,22 @@ const CURRENCY_CONFIGS: Record<string, CurrencyConfig> = {
     code: "USD",
     locale: "en-US",
     symbol: "$",
-    name: "US Dollar",
+    name: "USA (Washington D.C.)",
     useIndianNotation: false,
+    stampDutyRate: 4,
+    registrationRate: 1,
     taxTips: [
       {
         title: "Mortgage Interest Deduction",
         amount: 750000,
         limitLabel: "Limit: $750,000 debt",
-        description:
-          "Deduct interest on up to $750,000 of mortgage debt ($375,000 if married filing separately).",
+        description: "Deduct interest on up to $750,000 of mortgage debt.",
       },
       {
         title: "Property Tax Deduction",
         amount: 10000,
         limitLabel: "SALT Limit: $10,000",
-        description:
-          "Deduct up to $10,000 for state and local taxes (SALT), including property taxes.",
+        description: "Deduct up to $10,000 for state and local taxes.",
       },
     ],
   },
@@ -119,68 +121,69 @@ const CURRENCY_CONFIGS: Record<string, CurrencyConfig> = {
     code: "GBP",
     locale: "en-GB",
     symbol: "£",
-    name: "British Pound",
+    name: "UK (London)",
     useIndianNotation: false,
+    stampDutyRate: 5,
+    registrationRate: 0.5,
     taxTips: [
       {
-        title: "First-Time Buyer ISA",
-        amount: 12000,
-        limitLabel: "Max bonus: £3,000",
+        title: "First-Time Buyer Relief",
+        amount: 425000,
+        limitLabel: "Up to £425k",
         description:
-          "Government bonus of 25% on savings up to £12,000 for a first home.",
+          "Zero stamp duty for first-time buyers on properties up to £425,000.",
       },
       {
         title: "Rent-a-Room Relief",
         amount: 7500,
         limitLabel: "Limit: £7,500/year",
-        description:
-          "Tax-free income if you let out furnished accommodation in your main home.",
+        description: "Tax-free income if you let out furnished accommodation.",
       },
     ],
   },
   EUR: {
     code: "EUR",
-    locale: "en-DE",
+    locale: "de-DE",
     symbol: "€",
-    name: "Euro",
+    name: "Europe (Berlin)",
     useIndianNotation: false,
+    stampDutyRate: 6,
+    registrationRate: 1.5,
     taxTips: [
       {
-        title: "Interest Deduction (Germany)",
-        amount: 0,
-        limitLabel: "Variable limit",
-        description:
-          "Mortgage interest can be fully deducted from rental income for investment properties.",
+        title: "Home Office Allowance",
+        amount: 1250,
+        limitLabel: "Limit: €1,250",
+        description: "Deduct home office expenses from your professional income.",
       },
       {
-        title: "Energy Efficiency Bonus",
-        amount: 15000,
-        limitLabel: "Example: KfW 40 Plus",
-        description:
-          "Grants or low-interest loans for building energy-efficient homes.",
+        title: "Professional Workspace",
+        amount: 0,
+        limitLabel: "Investment Property",
+        description: "Interest on investment properties is often tax-deductible.",
       },
     ],
   },
   AUD: {
     code: "AUD",
     locale: "en-AU",
-    symbol: "$",
-    name: "Australian Dollar",
+    symbol: "A$",
+    name: "Australia (Canberra)",
     useIndianNotation: false,
+    stampDutyRate: 4,
+    registrationRate: 0.5,
     taxTips: [
       {
         title: "Negative Gearing",
         amount: 0,
-        limitLabel: "No hard limit",
-        description:
-          "Deduct loan interest and expenses from your taxable income if they exceed rental income.",
+        limitLabel: "Investment Property",
+        description: "Off-set property losses against your taxable income.",
       },
       {
-        title: "Capital Works Deduction",
-        amount: 0,
-        limitLabel: "2.5% per year",
-        description:
-          "Deduct construction costs and renovations over 40 years for investment properties.",
+        title: "FHOG Grant",
+        amount: 10000,
+        limitLabel: "First Home Buyer",
+        description: "First Home Owner Grant for new residential properties.",
       },
     ],
   },
@@ -189,9 +192,10 @@ const CURRENCY_CONFIGS: Record<string, CurrencyConfig> = {
 const parseNumberInput = (e: React.ChangeEvent<HTMLInputElement>) => {
   let val = e.target.value;
   if (val === "") return 0;
+  // Remove leading zeros for display, but keep single 0
   if (/^0[0-9]/.test(val)) {
-    val = val.replace(/^0+(?=[0-9])/, "");
-    // Force DOM update to fix React's number sync issue
+    val = val.replace(/^0+/, "");
+    // Force sync with DOM to prevent "07" flickering in some browsers
     e.target.value = val;
   }
   return Math.max(0, Number(val));
@@ -311,12 +315,14 @@ function RateChangeCard({
 interface PrepaymentCardProps {
   key?: React.Key;
   prepayment: Prepayment;
+  currencySymbol: string;
   onUpdate: (id: string, updates: Partial<Prepayment>) => void;
   onRemove: (id: string) => void;
 }
 
 function PrepaymentCard({
   prepayment,
+  currencySymbol,
   onUpdate,
   onRemove,
 }: PrepaymentCardProps) {
@@ -353,9 +359,7 @@ function PrepaymentCard({
           </label>
           <div className="relative">
             <div className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 flex items-center justify-center font-bold text-slate-300 leading-none text-xs">
-              {CURRENCY_CONFIGS[
-                document.querySelector("select")?.value || "INR"
-              ]?.symbol || "₹"}
+              {currencySymbol}
             </div>
             <input
               id={`prepay-amount-${prepayment.id}`}
@@ -478,6 +482,18 @@ export default function App() {
   const [rateChanges, setRateChanges] = useState<RateChange[]>([]);
   const [prepayments, setPrepayments] = useState<Prepayment[]>([]);
 
+  const [monthlyTax, setMonthlyTax] = useState(0);
+  const [monthlyInsurance, setMonthlyInsurance] = useState(0);
+
+  const [downPayment, setDownPayment] = useState(0);
+  const [propertyValue, setPropertyValue] = useState(0);
+  const [customStampDutyRate, setCustomStampDutyRate] = useState<number | null>(
+    null,
+  );
+  const [customRegistrationRate, setCustomRegistrationRate] = useState<
+    number | null
+  >(null);
+
   const [expandedYears, setExpandedYears] = useState<Record<number, boolean>>(
     {},
   );
@@ -517,7 +533,7 @@ export default function App() {
     detectCurrency();
   }, []);
 
-  // URL State Persistence
+  // URL & LocalStorage State Persistence
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const type = params.get("type") as LoanType;
@@ -526,18 +542,74 @@ export default function App() {
     const ten = params.get("ten");
     const unit = params.get("unit") as "Y" | "M";
     const start = params.get("start");
+    const tax = params.get("tax");
+    const ins = params.get("ins");
+    const dp = params.get("dp");
+    const pval = params.get("pval");
+    const sdr = params.get("sdr");
+    const regr = params.get("regr");
     const rc = params.get("rc");
     const pp = params.get("pp");
     const curr = params.get("curr");
 
-    if (curr && CURRENCY_CONFIGS[curr]) setCurrencyCode(curr);
+    // Load from LocalStorage if URL is empty
+    const savedState = !window.location.search
+      ? localStorage.getItem("emi_calculator_state")
+      : null;
+    const local = savedState ? JSON.parse(savedState) : null;
 
-    if (type && Object.values(LoanType).includes(type)) setLoanType(type);
+    if (curr && CURRENCY_CONFIGS[curr]) {
+      setCurrencyCode(curr);
+    } else if (local?.currencyCode && CURRENCY_CONFIGS[local.currencyCode]) {
+      setCurrencyCode(local.currencyCode);
+    }
+
+    if (type && Object.values(LoanType).includes(type)) {
+      setLoanType(type);
+    } else if (
+      local?.loanType &&
+      Object.values(LoanType).includes(local.loanType)
+    ) {
+      setLoanType(local.loanType);
+    }
+
     if (amt) setAmount(Number(amt));
+    else if (local?.amount) setAmount(local.amount);
+
     if (r) setRate(Number(r));
+    else if (local?.rate) setRate(local.rate);
+
     if (ten) setTenure(Number(ten));
+    else if (local?.tenure) setTenure(local.tenure);
+
     if (unit) setTenureUnit(unit);
+    else if (local?.tenureUnit) setTenureUnit(local.tenureUnit);
+
     if (start) setLoanStartDate(start);
+    else if (local?.loanStartDate) setLoanStartDate(local.loanStartDate);
+
+    if (tax) setMonthlyTax(Number(tax));
+    else if (local?.monthlyTax) setMonthlyTax(local.monthlyTax);
+
+    if (ins) setMonthlyInsurance(Number(ins));
+    else if (local?.monthlyInsurance)
+      setMonthlyInsurance(local.monthlyInsurance);
+
+    if (dp) setDownPayment(Number(dp));
+    else if (local?.downPayment) setDownPayment(local.downPayment);
+
+    if (pval) setPropertyValue(Number(pval));
+    else if (local?.propertyValue) setPropertyValue(local.propertyValue);
+    else if (!window.location.search)
+      setPropertyValue(Number((amount / 0.8).toFixed(0)));
+
+    if (sdr) setCustomStampDutyRate(Number(sdr));
+    else if (local?.customStampDutyRate !== undefined)
+      setCustomStampDutyRate(local.customStampDutyRate);
+
+    if (regr) setCustomRegistrationRate(Number(regr));
+    else if (local?.customRegistrationRate !== undefined)
+      setCustomRegistrationRate(local.customRegistrationRate);
 
     const validateArray = (val: any) => (Array.isArray(val) ? val : []);
 
@@ -548,7 +620,10 @@ export default function App() {
       } catch (e) {
         console.error("Failed to parse shared rate changes", e);
       }
+    } else if (local?.rateChanges) {
+      setRateChanges(local.rateChanges);
     }
+
     if (pp) {
       try {
         const parsed = JSON.parse(atob(pp));
@@ -556,8 +631,48 @@ export default function App() {
       } catch (e) {
         console.error("Failed to parse shared prepayments", e);
       }
+    } else if (local?.prepayments) {
+      setPrepayments(local.prepayments);
     }
   }, []);
+
+  // Save to LocalStorage
+  useEffect(() => {
+    const state = {
+      loanType,
+      amount,
+      rate,
+      tenure,
+      tenureUnit,
+      loanStartDate,
+      monthlyTax,
+      monthlyInsurance,
+      downPayment,
+      propertyValue,
+      customStampDutyRate,
+      customRegistrationRate,
+      rateChanges,
+      prepayments,
+      currencyCode,
+    };
+    localStorage.setItem("emi_calculator_state", JSON.stringify(state));
+  }, [
+    loanType,
+    amount,
+    rate,
+    tenure,
+    tenureUnit,
+    loanStartDate,
+    monthlyTax,
+    monthlyInsurance,
+    downPayment,
+    propertyValue,
+    customStampDutyRate,
+    customRegistrationRate,
+    rateChanges,
+    prepayments,
+    currencyCode,
+  ]);
 
   const [isShared, setIsShared] = useState(false);
   const [showLeadModal, setShowLeadModal] = useState(false);
@@ -591,6 +706,15 @@ export default function App() {
       ten: tenure.toString(),
       unit: tenureUnit,
       start: loanStartDate,
+      tax: monthlyTax.toString(),
+      ins: monthlyInsurance.toString(),
+      dp: downPayment.toString(),
+      pval: propertyValue.toString(),
+      sdr: customStampDutyRate !== null ? customStampDutyRate.toString() : "",
+      regr:
+        customRegistrationRate !== null
+          ? customRegistrationRate.toString()
+          : "",
       rc: btoa(JSON.stringify(rateChanges)),
       pp: btoa(JSON.stringify(prepayments)),
       curr: currencyCode,
@@ -628,19 +752,6 @@ export default function App() {
     [amount, rate, tenureMonths, startDate, rateChanges, prepayments],
   );
 
-  const originalSummary = useMemo(() => {
-    const totalInterest = originalSchedule.reduce(
-      (sum, row) => sum + row.interest,
-      0,
-    );
-    return {
-      totalInterest,
-      totalPayment: amount + totalInterest,
-      months: originalSchedule.length,
-      emi: originalSchedule[0]?.emi || 0,
-    };
-  }, [originalSchedule, amount]);
-
   const adjustedSummary = useMemo(() => {
     const totalInterest = adjustedSchedule.reduce(
       (sum, row) => sum + row.interest,
@@ -658,8 +769,23 @@ export default function App() {
       emi: adjustedSchedule[0]?.emi || 0,
       monthsPassed,
       remainingMonths,
+      piti: (adjustedSchedule[0]?.emi || 0) + monthlyTax + monthlyInsurance,
     };
-  }, [adjustedSchedule, amount, startDate]);
+  }, [adjustedSchedule, amount, startDate, monthlyTax, monthlyInsurance]);
+
+  const originalSummary = useMemo(() => {
+    const totalInterest = originalSchedule.reduce(
+      (sum, row) => sum + row.interest,
+      0,
+    );
+    return {
+      totalInterest,
+      totalPayment: amount + totalInterest,
+      months: originalSchedule.length,
+      emi: originalSchedule[0]?.emi || 0,
+      piti: (originalSchedule[0]?.emi || 0) + monthlyTax + monthlyInsurance,
+    };
+  }, [originalSchedule, amount, monthlyTax, monthlyInsurance]);
 
   const savings = {
     interest: originalSummary.totalInterest - adjustedSummary.totalInterest,
@@ -683,7 +809,8 @@ export default function App() {
     const doc = new jsPDF();
 
     // Helper to clean currency for PDF (replace ₹ with Rs. since default PDF fonts don't support Unicode ₹)
-    const cleanCurrency = (val: string) => val.replace(/₹/g, "Rs. ");
+    const cleanCurrency = (val: string) =>
+      currency.symbol === "₹" ? val.replace(/₹/g, "Rs. ") : val;
 
     doc.setFontSize(20);
     doc.text("EMI Amortization Schedule", 14, 22);
@@ -988,6 +1115,48 @@ export default function App() {
     return years;
   }, [adjustedSchedule]);
 
+  const upfrontConfig = useMemo(() => {
+    switch (loanType) {
+      case LoanType.CAR:
+        return {
+          title: "Car Purchase Costs",
+          label1: "Road Tax (%)",
+          label2: "Insurance/Fees (%)",
+          labelDP: "Down Payment",
+          summary1: "Road Tax",
+          summary2: "Insurance/Fees",
+        };
+      case LoanType.PERSONAL:
+        return {
+          title: "Personal Loan Fees",
+          label1: "Processing Fee (%)",
+          label2: "Documentation (%)",
+          labelDP: "Initial Charges",
+          summary1: "Processing Fee",
+          summary2: "Documentation",
+        };
+      case LoanType.HOME:
+      default:
+        return {
+          title: "Stamp Duty & Registration Estimator",
+          label1: "Stamp Duty (%)",
+          label2: "Registration (%)",
+          labelDP: "Down Payment",
+          summary1: "Stamp Duty",
+          summary2: "Registration",
+        };
+    }
+  }, [loanType]);
+
+  const currentStampDutyRate =
+    customStampDutyRate ?? (currency.stampDutyRate || 0);
+  const currentRegistrationRate =
+    customRegistrationRate ?? (currency.registrationRate || 0);
+
+  const stampDuty = (propertyValue * currentStampDutyRate) / 100;
+  const registrationFee = (propertyValue * currentRegistrationRate) / 100;
+  const totalUpfront = stampDuty + registrationFee + downPayment;
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans p-4 md:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -1082,7 +1251,11 @@ export default function App() {
                           Loan Amount
                         </label>
                         <span className="text-sm font-extrabold text-emerald-600">
-                          {formatCurrencyFull(amount)}
+                          {formatCurrencyFull(
+                            amount,
+                            currency.code,
+                            currency.locale,
+                          )}
                         </span>
                       </div>
                       <input
@@ -1229,6 +1402,80 @@ export default function App() {
                         Calculations adjust based on this date
                       </p>
                     </div>
+
+                    <div className="space-y-3 w-full">
+                      <div className="flex justify-between">
+                        <label
+                          htmlFor="monthly-tax"
+                          className="text-sm font-bold text-slate-600"
+                        >
+                          Monthly Property Tax
+                        </label>
+                        <span className="text-sm font-extrabold text-indigo-600">
+                          {formatCurrencyFull(
+                            monthlyTax,
+                            currency.code,
+                            currency.locale,
+                          )}
+                        </span>
+                      </div>
+                      <div className="relative">
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center font-bold text-slate-400 leading-none">
+                          {currency.symbol}
+                        </div>
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          id="monthly-tax"
+                          value={monthlyTax || ""}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                              setMonthlyTax(parseNumberInput(e));
+                            }
+                          }}
+                          className="w-full pl-6 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none transition-all"
+                          placeholder="0"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-3 w-full">
+                      <div className="flex justify-between">
+                        <label
+                          htmlFor="monthly-insurance"
+                          className="text-sm font-bold text-slate-600"
+                        >
+                          Monthly Insurance
+                        </label>
+                        <span className="text-sm font-extrabold text-indigo-600">
+                          {formatCurrencyFull(
+                            monthlyInsurance,
+                            currency.code,
+                            currency.locale,
+                          )}
+                        </span>
+                      </div>
+                      <div className="relative">
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center font-bold text-slate-400 leading-none">
+                          {currency.symbol}
+                        </div>
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          id="monthly-insurance"
+                          value={monthlyInsurance || ""}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                              setMonthlyInsurance(parseNumberInput(e));
+                            }
+                          }}
+                          className="w-full pl-6 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none transition-all"
+                          placeholder="0"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </section>
@@ -1316,7 +1563,11 @@ export default function App() {
                         Required Monthly Prepayment
                       </p>
                       <p className="text-2xl font-bold text-emerald-600">
-                        {formatCurrencyFull(calculatedPrepayment)}
+                        {formatCurrencyFull(
+                          calculatedPrepayment,
+                          currency.code,
+                          currency.locale,
+                        )}
                       </p>
                     </div>
                     <button
@@ -1401,10 +1652,10 @@ export default function App() {
                 </h3>
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="space-y-1">
-                    <span className="text-[10px] text-slate-400 uppercase font-bold">
+                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">
                       Monthly EMI
                     </span>
-                    <p className="text-lg font-bold text-slate-900 truncate">
+                    <p className="text-xl font-bold text-slate-900 truncate">
                       {formatCurrencyFull(
                         adjustedSummary.emi,
                         currency.code,
@@ -1413,10 +1664,10 @@ export default function App() {
                     </p>
                   </div>
                   <div className="space-y-1">
-                    <span className="text-[10px] text-slate-400 uppercase font-bold">
+                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">
                       Total Interest
                     </span>
-                    <p className="text-lg font-bold text-slate-900 truncate">
+                    <p className="text-xl font-bold text-slate-900 truncate">
                       {formatCurrencyFull(
                         adjustedSummary.totalInterest,
                         currency.code,
@@ -1424,8 +1675,9 @@ export default function App() {
                       )}
                     </p>
                   </div>
+
                   <div className="space-y-1">
-                    <span className="text-[10px] text-slate-400 uppercase font-bold">
+                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">
                       Already Paid
                     </span>
                     <p className="text-sm font-bold text-slate-700">
@@ -1436,22 +1688,22 @@ export default function App() {
                     </p>
                   </div>
                   <div className="space-y-1">
-                    <span className="text-[10px] text-slate-400 uppercase font-bold">
+                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">
                       Remaining
                     </span>
                     <p className="text-sm font-bold text-emerald-600">
                       {adjustedSummary.remainingMonths} Mo
                       <span className="text-[10px] font-normal text-slate-400 ml-1">
-                        ({(adjustedSummary.remainingMonths / 12).toFixed(1)}{" "}
-                        Yrs)
+                        ({(adjustedSummary.remainingMonths / 12).toFixed(1)} Yrs)
                       </span>
                     </p>
                   </div>
-                  <div className="col-span-2 pt-2 border-t border-slate-100">
-                    <span className="text-[10px] text-slate-400 uppercase font-bold">
+
+                  <div className="col-span-2 pt-4 border-t border-slate-100 mt-2 space-y-1">
+                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">
                       Total Payment (Principal + Interest)
                     </span>
-                    <p className="text-xl font-bold text-emerald-600 truncate">
+                    <p className="text-2xl font-bold text-emerald-600 break-all">
                       {formatCurrencyFull(
                         adjustedSummary.totalPayment,
                         currency.code,
@@ -1537,6 +1789,8 @@ export default function App() {
                 </div>
               </div>
             </div>
+
+            {/* Row 1 Grid Conclusion */}
           </div>
 
           {/* Row 2: Advanced Tools */}
@@ -1617,6 +1871,7 @@ export default function App() {
                     <PrepaymentCard
                       key={p.id}
                       prepayment={p}
+                      currencySymbol={currency.symbol}
                       onUpdate={updatePrepayment}
                       onRemove={removePrepayment}
                     />
@@ -1672,7 +1927,9 @@ export default function App() {
                     axisLine={false}
                     tickLine={false}
                     tick={{ fontSize: 10, fill: "#94a3b8" }}
-                    tickFormatter={(value) => `₹${value / 100000}L`}
+                    tickFormatter={(value) =>
+                      `${currency.symbol}${value / 100000}L`
+                    }
                   />
                   <Tooltip
                     contentStyle={{
@@ -1680,7 +1937,14 @@ export default function App() {
                       border: "none",
                       boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
                     }}
-                    formatter={(value: number) => formatCurrency(value)}
+                    formatter={(value: number) =>
+                      formatCurrency(
+                        value,
+                        currency.code,
+                        currency.locale,
+                        currency.useIndianNotation,
+                      )
+                    }
                   />
                   <Area
                     type="monotone"
@@ -1705,6 +1969,169 @@ export default function App() {
               </ResponsiveContainer>
             </div>
           </div>
+
+          {/* Upfront Costs Estimator */}
+          <section className="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-8">
+            <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+              <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-200 flex-shrink-0">
+                <Calculator className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900 leading-none">
+                  {upfrontConfig.title}
+                </h2>
+                <p className="text-slate-500 text-sm mt-1">
+                  {loanType === LoanType.HOME
+                    ? "Estimate the upfront costs for your property purchase"
+                    : "Estimate your initial out-of-pocket expenses"}
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="space-y-6">
+                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                      {loanType === LoanType.HOME
+                        ? "Property Value"
+                        : "Purchase Price / Total Value"}
+                    </label>
+                    <Target className="w-4 h-4 text-slate-400" />
+                  </div>
+                  <div className="relative">
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center font-bold text-slate-400 text-lg">
+                      {currency.symbol}
+                    </div>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      value={propertyValue || ""}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                          setPropertyValue(parseNumberInput(e));
+                        }
+                      }}
+                      className="w-full pl-8 pr-4 py-2 bg-transparent border-b-2 border-slate-200 text-2xl font-bold text-slate-900 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-300"
+                      placeholder="Enter value..."
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider text-nowrap">
+                      {upfrontConfig.label1}
+                    </label>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      value={currentStampDutyRate}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                          setCustomStampDutyRate(parseNumberInput(e));
+                        }
+                      }}
+                      className="w-full pl-3 pr-9 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none transition-all"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider text-nowrap">
+                      {upfrontConfig.label2}
+                    </label>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      value={currentRegistrationRate}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                          setCustomRegistrationRate(parseNumberInput(e));
+                        }
+                      }}
+                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-indigo-500 outline-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-6 rounded-2xl border border-slate-200 self-start">
+                <div className="flex flex-col justify-center">
+                  <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">
+                    {upfrontConfig.labelDP}
+                  </p>
+                  <div className="relative">
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center font-bold text-slate-400 text-xs">
+                      {currency.symbol}
+                    </div>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      value={downPayment || ""}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                          setDownPayment(parseNumberInput(e));
+                        }
+                      }}
+                      className="w-full pl-5 pr-2 py-1 bg-transparent border-b border-slate-200 text-lg font-bold text-slate-900 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-300"
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col justify-center">
+                  <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">
+                    Total Upfront
+                  </p>
+                  <p className="text-xl font-extrabold text-slate-900 break-all">
+                    {formatCurrencyFull(
+                      totalUpfront,
+                      currency.code,
+                      currency.locale,
+                    )}
+                  </p>
+                </div>
+                <div className="md:col-span-2 pt-4 border-t border-slate-200 mt-2">
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-slate-500">
+                      {upfrontConfig.summary1}
+                    </span>
+                    <span className="font-bold text-slate-700">
+                      {formatCurrencyFull(
+                        stampDuty,
+                        currency.code,
+                        currency.locale,
+                      )}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm mt-1">
+                    <span className="text-slate-500">
+                      {upfrontConfig.summary2}
+                    </span>
+                    <span className="font-bold text-slate-700">
+                      {formatCurrencyFull(
+                        registrationFee,
+                        currency.code,
+                        currency.locale,
+                      )}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 bg-slate-50 rounded-xl border border-dashed border-slate-300">
+              <p className="text-xs text-slate-500 leading-relaxed italic">
+                <Info className="w-3.5 h-3.5 inline mr-1 mb-0.5 text-indigo-500" />
+                Stamp duty and registration fees are estimates based on standard
+                regional rates ({currency.name}). Actual costs may vary by
+                specific state, city, property type, and ownership status.
+                Consult a local legal expert for precise figures.
+              </p>
+            </div>
+          </section>
 
           {/* Row 4: Amortization Table */}
           <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
@@ -1826,27 +2253,53 @@ export default function App() {
                             Annual Summary
                           </td>
                           <td className="px-6 py-4 text-sm font-bold text-slate-700">
-                            {formatCurrency(rows[0].openingBalance)}
+                            {formatCurrency(
+                              rows[0].openingBalance,
+                              currency.code,
+                              currency.locale,
+                              currency.useIndianNotation,
+                            )}
                           </td>
                           <td className="px-6 py-4 text-sm font-bold text-slate-700">
                             {formatCurrency(
                               rows.reduce((sum, r) => sum + r.emi, 0),
+                              currency.code,
+                              currency.locale,
+                              currency.useIndianNotation,
                             )}
                           </td>
                           <td className="px-6 py-4 text-sm font-bold text-amber-600">
-                            {formatCurrency(yearTotalInterest)}
+                            {formatCurrency(
+                              yearTotalInterest,
+                              currency.code,
+                              currency.locale,
+                              currency.useIndianNotation,
+                            )}
                           </td>
                           <td className="px-6 py-4 text-sm font-bold text-emerald-600">
-                            {formatCurrency(yearTotalPrincipal)}
+                            {formatCurrency(
+                              yearTotalPrincipal,
+                              currency.code,
+                              currency.locale,
+                              currency.useIndianNotation,
+                            )}
                           </td>
                           <td className="px-6 py-4 text-sm font-bold text-indigo-600">
                             {yearTotalPrepayment > 0
-                              ? formatCurrency(yearTotalPrepayment)
+                              ? formatCurrency(
+                                  yearTotalPrepayment,
+                                  currency.code,
+                                  currency.locale,
+                                  currency.useIndianNotation,
+                                )
                               : "-"}
                           </td>
                           <td className="px-6 py-4 text-sm font-bold text-slate-700">
                             {formatCurrency(
                               rows[rows.length - 1].closingBalance,
+                              currency.code,
+                              currency.locale,
+                              currency.useIndianNotation,
                             )}
                           </td>
                           <td className="px-6 py-4 text-sm font-bold text-amber-500">
@@ -1868,27 +2321,57 @@ export default function App() {
                               <td className="px-6 py-3 text-xs text-slate-500">
                                 {format(row.date, "MMM yyyy")}
                               </td>
-                              <td className="px-6 py-3 text-xs text-slate-500">
-                                {formatCurrencyFull(row.openingBalance)}
+                              <td className="px-6 py-3 text-sm font-medium text-slate-700">
+                                {formatCurrency(
+                                  row.openingBalance,
+                                  currency.code,
+                                  currency.locale,
+                                  currency.useIndianNotation,
+                                )}
                               </td>
-                              <td className="px-6 py-3 text-xs font-medium text-slate-700">
-                                {formatCurrencyFull(row.emi)}
+                              <td className="px-6 py-3 text-sm font-bold text-slate-900">
+                                {formatCurrency(
+                                  row.emi,
+                                  currency.code,
+                                  currency.locale,
+                                  currency.useIndianNotation,
+                                )}
                               </td>
-                              <td className="px-6 py-3 text-xs text-amber-600">
-                                {formatCurrencyFull(row.interest)}
+                              <td className="px-6 py-3 text-sm text-amber-600 font-medium">
+                                {formatCurrency(
+                                  row.interest,
+                                  currency.code,
+                                  currency.locale,
+                                  currency.useIndianNotation,
+                                )}
                               </td>
-                              <td className="px-6 py-3 text-xs text-emerald-600">
-                                {formatCurrencyFull(row.principal)}
+                              <td className="px-6 py-3 text-sm text-emerald-600 font-medium">
+                                {formatCurrency(
+                                  row.principal,
+                                  currency.code,
+                                  currency.locale,
+                                  currency.useIndianNotation,
+                                )}
                               </td>
-                              <td className="px-6 py-3 text-xs font-bold text-indigo-600">
+                              <td className="px-6 py-3 text-sm text-indigo-600 font-bold">
                                 {row.prepayment > 0
-                                  ? formatCurrencyFull(row.prepayment)
+                                  ? formatCurrency(
+                                      row.prepayment,
+                                      currency.code,
+                                      currency.locale,
+                                      currency.useIndianNotation,
+                                    )
                                   : "-"}
                               </td>
-                              <td className="px-6 py-3 text-xs font-medium text-slate-700">
-                                {formatCurrencyFull(row.closingBalance)}
+                              <td className="px-6 py-3 text-sm font-medium text-slate-700">
+                                {formatCurrency(
+                                  row.closingBalance,
+                                  currency.code,
+                                  currency.locale,
+                                  currency.useIndianNotation,
+                                )}
                               </td>
-                              <td className="px-6 py-3 text-xs font-bold text-amber-500">
+                              <td className="px-6 py-3 text-sm font-bold text-amber-500">
                                 {row.interestRate}%
                               </td>
                             </tr>
@@ -2130,7 +2613,6 @@ export default function App() {
             </p>
           </article>
         </section>
-      </div>
 
       {/* Footer */}
       <footer className="max-w-7xl mx-auto mt-12 pt-8 border-t border-slate-200 text-center text-slate-400 text-sm">
@@ -2155,6 +2637,7 @@ export default function App() {
           background: #cbd5e1;
         }
       `}</style>
+    </div>
     </div>
   );
 }

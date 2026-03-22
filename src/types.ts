@@ -71,4 +71,6 @@ export interface CurrencyConfig {
   name: string;
   taxTips: TaxTip[];
   useIndianNotation: boolean; // For Lakhs/Crores
+  stampDutyRate?: number; // percentage
+  registrationRate?: number; // percentage
 }
