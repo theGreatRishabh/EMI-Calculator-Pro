@@ -1,5 +1,77 @@
 [
   {
+    "slug": "australia-negative-gearing-property-guide",
+    "title": "Property Investment in Australia: Negative Gearing & Capital Works Deductions",
+    "excerpt": "Master the Australian property market with this guide to Negative Gearing and Capital Works deductions for property investors.",
+    "date": "March 22, 2026",
+    "readTime": "6 min read",
+    "category": "Property Investment"
+  },
+  {
+    "slug": "germany-mortgage-interest-deduction-rental",
+    "title": "Mortgage Tax Benefits in Germany: Investment Properties & Energy Efficiency",
+    "excerpt": "A guide for European homeowners on interest deductions and KfW energy bonuses to lower the cost of home ownership.",
+    "date": "March 22, 2026",
+    "readTime": "6 min read",
+    "category": "EU Finance"
+  },
+  {
+    "slug": "india-home-loan-tax-benefits",
+    "title": "Maximizing Home Loan Tax Benefits in India: Section 24(b) & 80C Guide",
+    "excerpt": "Learn how to save up to ₹3.5 Lakhs annually on your home loan through Section 24(b) and 80C. A must-read for Indian homeowners.",
+    "date": "March 22, 2026",
+    "readTime": "6 min read",
+    "category": "Home Loans"
+  },
+  {
+    "slug": "uk-mortgage-guide-first-time-buyers",
+    "title": "UK Home Buying Guide: First-Time Buyer ISA & Rent-a-Room Relief",
+    "excerpt": "Buying a home in the UK? Learn how to maximize government bonuses and tax-free income with these essential schemes.",
+    "date": "March 22, 2026",
+    "readTime": "5 min read",
+    "category": "Buying a Home"
+  },
+  {
+    "slug": "us-mortgage-interest-deduction-guide",
+    "title": "US Mortgage Tax Deductions: How to Save More on Your Home Loan",
+    "excerpt": "Understand the Mortgage Interest Deduction and SALT limits to maximize your tax savings in the United States.",
+    "date": "March 22, 2026",
+    "readTime": "5 min read",
+    "category": "Mortgage Guide"
+  },
+  {
+    "slug": "emi-calculation-formula",
+    "title": "The Math Behind EMI: Complete Formula Derivation",
+    "excerpt": "Ever wondered how banks arrive at your EMI number? We dive into the geometric progression and mathematical logic behind the EMI formula.",
+    "date": "March 10, 2026",
+    "readTime": "8 min read",
+    "category": "Mathematics"
+  },
+  {
+    "slug": "how-to-calculate-emi",
+    "title": "How to Calculate EMI: The Simple Step-by-Step Guide",
+    "excerpt": "Learn the exact formula to calculate your loan EMI. We break down the math so you can plan your finances with 100% accuracy.",
+    "date": "March 10, 2026",
+    "readTime": "5 min read",
+    "category": "Financial Education"
+  },
+  {
+    "slug": "loan-prepayment-strategy",
+    "title": "Loan Prepayment Strategy: The '5% Rule' for Debt Freedom",
+    "excerpt": "Learn how small, strategic prepayments can save you millions in interest. We explain the 5% rule and why early prepayments are most effective.",
+    "date": "March 10, 2026",
+    "readTime": "7 min read",
+    "category": "Wealth Building"
+  },
+  {
+    "slug": "reduce-home-loan-emi",
+    "title": "Top 5 Strategies to Reduce Your Home Loan EMI in 2026",
+    "excerpt": "Is your home loan EMI eating up your savings? Learn 5 proven strategies to lower your monthly burden and save on total interest.",
+    "date": "March 10, 2026",
+    "readTime": "6 min read",
+    "category": "Home Loans"
+  },
+  {
     "slug": "home-loan-emi-guide",
     "title": "How to Plan Your Home Loan EMI: A Complete Guide",
     "excerpt": "Discover the smart way to plan your home loan. Learn how tenure, interest rates, and prepayments affect your overall interest outgo.",
@@ -38,37 +110,5 @@
     "date": "October 24, 2023",
     "readTime": "5 min read",
     "category": "Personal Finance & Insurance"
-  },
-  {
-    "slug": "how-to-calculate-emi",
-    "title": "How to Calculate EMI: The Simple Step-by-Step Guide",
-    "excerpt": "Learn the exact formula to calculate your loan EMI. We break down the math so you can plan your finances with 100% accuracy.",
-    "date": "March 10, 2026",
-    "readTime": "5 min read",
-    "category": "Financial Education"
-  },
-  {
-    "slug": "reduce-home-loan-emi",
-    "title": "Top 5 Strategies to Reduce Your Home Loan EMI in 2026",
-    "excerpt": "Is your home loan EMI eating up your savings? Learn 5 proven strategies to lower your monthly burden and save on total interest.",
-    "date": "March 10, 2026",
-    "readTime": "6 min read",
-    "category": "Home Loans"
-  },
-  {
-    "slug": "loan-prepayment-strategy",
-    "title": "Loan Prepayment Strategy: The '5% Rule' for Debt Freedom",
-    "excerpt": "Learn how small, strategic prepayments can save you millions in interest. We explain the 5% rule and why early prepayments are most effective.",
-    "date": "March 10, 2026",
-    "readTime": "7 min read",
-    "category": "Wealth Building"
-  },
-  {
-    "slug": "emi-calculation-formula",
-    "title": "The Math Behind EMI: Complete Formula Derivation",
-    "excerpt": "Ever wondered how banks arrive at your EMI number? We dive into the geometric progression and mathematical logic behind the EMI formula.",
-    "date": "March 10, 2026",
-    "readTime": "8 min read",
-    "category": "Mathematics"
   }
 ]
