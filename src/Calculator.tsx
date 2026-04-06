@@ -1403,79 +1403,83 @@ export default function App() {
                       </p>
                     </div>
 
-                    <div className="space-y-3 w-full">
-                      <div className="flex justify-between">
-                        <label
-                          htmlFor="monthly-tax"
-                          className="text-sm font-bold text-slate-600"
-                        >
-                          Monthly Property Tax
-                        </label>
-                        <span className="text-sm font-extrabold text-indigo-600">
-                          {formatCurrencyFull(
-                            monthlyTax,
-                            currency.code,
-                            currency.locale,
-                          )}
-                        </span>
-                      </div>
-                      <div className="relative">
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center font-bold text-slate-400 leading-none">
-                          {currency.symbol}
+                    {loanType === LoanType.HOME && (
+                      <>
+                        <div className="space-y-3 w-full">
+                          <div className="flex justify-between">
+                            <label
+                              htmlFor="monthly-tax"
+                              className="text-sm font-bold text-slate-600"
+                            >
+                              Monthly Property Tax
+                            </label>
+                            <span className="text-sm font-extrabold text-indigo-600">
+                              {formatCurrencyFull(
+                                monthlyTax,
+                                currency.code,
+                                currency.locale,
+                              )}
+                            </span>
+                          </div>
+                          <div className="relative">
+                            <div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center font-bold text-slate-400 leading-none">
+                              {currency.symbol}
+                            </div>
+                            <input
+                              type="text"
+                              inputMode="decimal"
+                              id="monthly-tax"
+                              value={monthlyTax || ""}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                                  setMonthlyTax(parseNumberInput(e));
+                                }
+                              }}
+                              className="w-full pl-6 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none transition-all"
+                              placeholder="0"
+                            />
+                          </div>
                         </div>
-                        <input
-                          type="text"
-                          inputMode="decimal"
-                          id="monthly-tax"
-                          value={monthlyTax || ""}
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            if (val === "" || /^\d*\.?\d*$/.test(val)) {
-                              setMonthlyTax(parseNumberInput(e));
-                            }
-                          }}
-                          className="w-full pl-6 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none transition-all"
-                          placeholder="0"
-                        />
-                      </div>
-                    </div>
 
-                    <div className="space-y-3 w-full">
-                      <div className="flex justify-between">
-                        <label
-                          htmlFor="monthly-insurance"
-                          className="text-sm font-bold text-slate-600"
-                        >
-                          Monthly Insurance
-                        </label>
-                        <span className="text-sm font-extrabold text-indigo-600">
-                          {formatCurrencyFull(
-                            monthlyInsurance,
-                            currency.code,
-                            currency.locale,
-                          )}
-                        </span>
-                      </div>
-                      <div className="relative">
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center font-bold text-slate-400 leading-none">
-                          {currency.symbol}
+                        <div className="space-y-3 w-full">
+                          <div className="flex justify-between">
+                            <label
+                              htmlFor="monthly-insurance"
+                              className="text-sm font-bold text-slate-600"
+                            >
+                              Monthly Insurance
+                            </label>
+                            <span className="text-sm font-extrabold text-indigo-600">
+                              {formatCurrencyFull(
+                                monthlyInsurance,
+                                currency.code,
+                                currency.locale,
+                              )}
+                            </span>
+                          </div>
+                          <div className="relative">
+                            <div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center font-bold text-slate-400 leading-none">
+                              {currency.symbol}
+                            </div>
+                            <input
+                              type="text"
+                              inputMode="decimal"
+                              id="monthly-insurance"
+                              value={monthlyInsurance || ""}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                                  setMonthlyInsurance(parseNumberInput(e));
+                                }
+                              }}
+                              className="w-full pl-6 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none transition-all"
+                              placeholder="0"
+                            />
+                          </div>
                         </div>
-                        <input
-                          type="text"
-                          inputMode="decimal"
-                          id="monthly-insurance"
-                          value={monthlyInsurance || ""}
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            if (val === "" || /^\d*\.?\d*$/.test(val)) {
-                              setMonthlyInsurance(parseNumberInput(e));
-                            }
-                          }}
-                          className="w-full pl-6 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none transition-all"
-                          placeholder="0"
-                        />
-                      </div>
-                    </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </section>
