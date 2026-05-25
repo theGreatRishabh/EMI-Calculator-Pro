@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { ArrowLeft, Calendar, Clock } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, ArrowRight } from "lucide-react";
 import { useDocumentMeta } from "../hooks/useDocumentMeta";
 import blogPosts from "../blogMeta.json";
 
@@ -20,6 +20,18 @@ export default function BlogPost() {
 
   const [meta, setMeta] = useState<any>(postMeta);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Find related posts (same category first, fallback to recent posts, max 3)
+  const relatedPosts = (() => {
+    const otherPosts = blogPosts.filter((p) => p.slug !== slug);
+    const sameCategory = otherPosts.filter((p) => p.category === meta.category);
+    const differentCategory = otherPosts.filter((p) => p.category !== meta.category);
+    
+    // Sort different category by date to get recent ones
+    differentCategory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    return [...sameCategory, ...differentCategory].slice(0, 3);
+  })();
 
   // Fallback for metadata
   useDocumentMeta({
@@ -175,6 +187,36 @@ export default function BlogPost() {
             Open Calculator
           </Link>
         </div>
+
+        {relatedPosts.length > 0 && (
+          <div className="mt-16 pt-12 border-t border-slate-200">
+            <h3 className="text-2xl font-extrabold text-slate-900 mb-8">
+              Recommended for You
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {relatedPosts.map((post) => (
+                <Link
+                  key={post.slug}
+                  to={`/blog/${post.slug}`}
+                  className="flex flex-col bg-white p-5 rounded-2xl border border-slate-200 hover:border-emerald-200 hover:shadow-md transition-all group h-full"
+                >
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full self-start mb-3">
+                    {post.category || "Insights"}
+                  </span>
+                  <h4 className="text-base font-bold text-slate-900 mb-2 group-hover:text-emerald-700 transition-colors line-clamp-2 leading-snug">
+                    {post.title}
+                  </h4>
+                  <p className="text-xs text-slate-500 line-clamp-3 mb-4 leading-relaxed flex-grow">
+                    {post.excerpt}
+                  </p>
+                  <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 group-hover:text-emerald-700 mt-auto">
+                    Read Article <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </article>
   );
