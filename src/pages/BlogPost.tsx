@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import { useDocumentMeta } from "../hooks/useDocumentMeta";
 import blogPosts from "../blogMeta.json";
@@ -118,7 +119,45 @@ export default function BlogPost() {
       </header>
 
       <div className="prose prose-slate prose-lg prose-emerald max-w-none text-slate-700">
-        <ReactMarkdown>{content}</ReactMarkdown>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            table: ({ children }) => (
+              <div className="overflow-x-auto my-8 rounded-xl border border-slate-200 shadow-sm max-w-full">
+                <table className="w-full text-sm text-left text-slate-600 border-collapse">
+                  {children}
+                </table>
+              </div>
+            ),
+            thead: ({ children }) => (
+              <thead className="text-xs uppercase bg-slate-50 text-slate-700 border-b border-slate-200 font-bold">
+                {children}
+              </thead>
+            ),
+            tbody: ({ children }) => (
+              <tbody className="divide-y divide-slate-100 bg-white">
+                {children}
+              </tbody>
+            ),
+            tr: ({ children }) => (
+              <tr className="hover:bg-slate-50 transition-colors">
+                {children}
+              </tr>
+            ),
+            th: ({ children }) => (
+              <th className="px-6 py-4 font-semibold text-slate-900 border-r border-slate-100 last:border-r-0">
+                {children}
+              </th>
+            ),
+            td: ({ children }) => (
+              <td className="px-6 py-4 border-r border-slate-100 last:border-r-0 text-slate-700 font-medium">
+                {children}
+              </td>
+            ),
+          }}
+        >
+          {content}
+        </ReactMarkdown>
 
         <hr className="my-10 border-slate-200" />
 
