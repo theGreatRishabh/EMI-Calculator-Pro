@@ -45,7 +45,8 @@ export function generateAmortizationSchedule(
   initialTenureMonths: number,
   startDate: Date,
   rateChanges: RateChange[] = [],
-  prepayments: Prepayment[] = []
+  prepayments: Prepayment[] = [],
+  emiStepUpPercent: number = 0
 ): AmortizationRow[] {
   const schedule: AmortizationRow[] = [];
   let currentBalance = principal;
@@ -58,6 +59,11 @@ export function generateAmortizationSchedule(
 
   while (currentBalance > 0.01 && month <= 600) { // Safety break at 50 years
     const currentDate = addMonths(startDate, month - 1);
+
+    // Apply EMI step-up every 12 months (before rate change, on anniversary)
+    if (emiStepUpPercent > 0 && month > 1 && (month - 1) % 12 === 0) {
+      currentEmi = currentEmi * (1 + emiStepUpPercent / 100);
+    }
 
     // Check for rate changes
     const rateChange = sortedRateChanges.find(rc => {

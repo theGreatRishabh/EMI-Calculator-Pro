@@ -481,6 +481,7 @@ export default function App() {
 
   const [rateChanges, setRateChanges] = useState<RateChange[]>([]);
   const [prepayments, setPrepayments] = useState<Prepayment[]>([]);
+  const [emiStepUpPercent, setEmiStepUpPercent] = useState(0);
 
   const [monthlyTax, setMonthlyTax] = useState(0);
   const [monthlyInsurance, setMonthlyInsurance] = useState(0);
@@ -551,6 +552,7 @@ export default function App() {
     const rc = params.get("rc");
     const pp = params.get("pp");
     const curr = params.get("curr");
+    const emiSU = params.get("emiSU");
 
     // Load from LocalStorage if URL is empty
     const savedState = !window.location.search
@@ -634,6 +636,12 @@ export default function App() {
     } else if (local?.prepayments) {
       setPrepayments(local.prepayments);
     }
+
+    if (emiSU) {
+      setEmiStepUpPercent(Number(emiSU));
+    } else if (local?.emiStepUpPercent !== undefined) {
+      setEmiStepUpPercent(local.emiStepUpPercent);
+    }
   }, []);
 
   // Save to LocalStorage
@@ -654,6 +662,7 @@ export default function App() {
       rateChanges,
       prepayments,
       currencyCode,
+      emiStepUpPercent,
     };
     localStorage.setItem("emi_calculator_state", JSON.stringify(state));
   }, [
@@ -672,6 +681,7 @@ export default function App() {
     rateChanges,
     prepayments,
     currencyCode,
+    emiStepUpPercent,
   ]);
 
   const [isShared, setIsShared] = useState(false);
@@ -718,6 +728,7 @@ export default function App() {
       rc: btoa(JSON.stringify(rateChanges)),
       pp: btoa(JSON.stringify(prepayments)),
       curr: currencyCode,
+      emiSU: emiStepUpPercent.toString(),
     });
     const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
     navigator.clipboard.writeText(url);
@@ -748,8 +759,9 @@ export default function App() {
         startDate,
         rateChanges,
         prepayments,
+        emiStepUpPercent,
       ),
-    [amount, rate, tenureMonths, startDate, rateChanges, prepayments],
+    [amount, rate, tenureMonths, startDate, rateChanges, prepayments, emiStepUpPercent],
   );
 
   const adjustedSummary = useMemo(() => {
@@ -792,6 +804,26 @@ export default function App() {
     months: originalSummary.months - adjustedSummary.months,
   };
 
+  // Isolate savings contribution from prepayments alone
+  const prepaymentOnlySchedule = useMemo(
+    () => generateAmortizationSchedule(amount, rate, tenureMonths, startDate, [], prepayments, 0),
+    [amount, rate, tenureMonths, startDate, prepayments],
+  );
+  const prepaymentSavings = useMemo(() => ({
+    interest: originalSummary.totalInterest - prepaymentOnlySchedule.reduce((s, r) => s + r.interest, 0),
+    months: originalSummary.months - prepaymentOnlySchedule.length,
+  }), [originalSummary, prepaymentOnlySchedule]);
+
+  // Isolate savings contribution from rate changes alone
+  const rateChangeOnlySchedule = useMemo(
+    () => generateAmortizationSchedule(amount, rate, tenureMonths, startDate, rateChanges, [], 0),
+    [amount, rate, tenureMonths, startDate, rateChanges],
+  );
+  const rateChangeSavings = useMemo(() => ({
+    interest: originalSummary.totalInterest - rateChangeOnlySchedule.reduce((s, r) => s + r.interest, 0),
+    months: originalSummary.months - rateChangeOnlySchedule.length,
+  }), [originalSummary, rateChangeOnlySchedule]);
+
   const handleLoanTypeChange = (type: LoanType) => {
     setLoanType(type);
     setAmount(LOAN_DEFAULTS[type].amount);
@@ -801,6 +833,7 @@ export default function App() {
     setLoanStartDate(format(new Date(), "yyyy-MM-dd"));
     setRateChanges([]);
     setPrepayments([]);
+    setEmiStepUpPercent(0);
   };
 
   const exportToPDF = async () => {
@@ -1703,6 +1736,24 @@ export default function App() {
                     </p>
                   </div>
 
+                  {/* Combined savings row — only shown when any strategy is active */}
+                  {(savings.months > 0 || savings.interest > 0) && (
+                    <div className="col-span-2 p-3 bg-emerald-50 rounded-xl border border-emerald-100 flex items-center justify-between gap-3">
+                      <div className="space-y-0.5">
+                        <span className="text-[10px] text-emerald-600 uppercase font-bold tracking-wider">Combined Savings</span>
+                        <p className="text-sm font-bold text-emerald-700">
+                          {formatCurrencyFull(savings.interest, currency.code, currency.locale)}
+                        </p>
+                      </div>
+                      <div className="text-right space-y-0.5">
+                        <span className="text-[10px] text-emerald-600 uppercase font-bold tracking-wider">Time Saved</span>
+                        <p className="text-sm font-bold text-emerald-700">
+                          {Math.floor(savings.months / 12)}y {savings.months % 12}m
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="col-span-2 pt-4 border-t border-slate-100 mt-2 space-y-1">
                     <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">
                       Total Payment (Principal + Interest)
@@ -1716,6 +1767,7 @@ export default function App() {
                     </p>
                   </div>
                 </div>
+
                 <div className="flex-1 min-h-[200px] relative">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -1839,6 +1891,34 @@ export default function App() {
                   ))}
                 </AnimatePresence>
               </div>
+
+              {/* Rate Change savings summary */}
+              {rateChanges.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={cn(
+                    "flex items-center justify-between px-4 py-3 rounded-xl border text-sm",
+                    rateChangeSavings.interest >= 0
+                      ? "bg-amber-50 border-amber-100"
+                      : "bg-red-50 border-red-100"
+                  )}
+                >
+                  <div className="space-y-0.5">
+                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Rate Changes Impact</p>
+                    <p className={cn("font-bold text-base", rateChangeSavings.interest >= 0 ? "text-amber-700" : "text-red-600")}>
+                      {rateChangeSavings.interest >= 0 ? "Saves " : "Costs "}
+                      {formatCurrencyFull(Math.abs(rateChangeSavings.interest), currency.code, currency.locale)}
+                    </p>
+                  </div>
+                  <div className="text-right space-y-0.5">
+                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Tenure {rateChangeSavings.months >= 0 ? "Reduced" : "Added"}</p>
+                    <p className={cn("font-bold text-base", rateChangeSavings.months >= 0 ? "text-amber-700" : "text-red-600")}>
+                      {Math.floor(Math.abs(rateChangeSavings.months) / 12)}y {Math.abs(rateChangeSavings.months) % 12}m
+                    </p>
+                  </div>
+                </motion.div>
+              )}
             </section>
 
             {/* Prepayment Planner */}
@@ -1882,24 +1962,250 @@ export default function App() {
                   ))}
                 </AnimatePresence>
               </div>
+
+              {/* Prepayment savings summary */}
+              {prepayments.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-center justify-between px-4 py-3 bg-emerald-50 rounded-xl border border-emerald-100 text-sm"
+                >
+                  <div className="space-y-0.5">
+                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Prepayments Impact</p>
+                    <p className="font-bold text-base text-emerald-700">
+                      Saves {formatCurrencyFull(prepaymentSavings.interest, currency.code, currency.locale)}
+                    </p>
+                  </div>
+                  <div className="text-right space-y-0.5">
+                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Tenure Reduced</p>
+                    <p className="font-bold text-base text-emerald-700">
+                      {Math.floor(prepaymentSavings.months / 12)}y {prepaymentSavings.months % 12}m
+                    </p>
+                  </div>
+                </motion.div>
+              )}
             </section>
           </div>
 
-          {/* Row 3: Balance Chart */}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+          {/* EMI Step-Up Planner */}
+          <section
+            aria-labelledby="step-up-title"
+            className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5"
+          >
             <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <Zap className="w-4 h-4 text-purple-600" />
+                </div>
+                <div>
+                  <h2 id="step-up-title" className="text-lg font-semibold text-slate-800">
+                    EMI Step-Up Planner
+                  </h2>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Simulate annual EMI increases as your income grows — pay off faster
+                  </p>
+                </div>
+              </div>
+              {emiStepUpPercent > 0 && (
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  onClick={() => setEmiStepUpPercent(0)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-500 rounded-lg hover:bg-red-100 transition-colors text-xs font-bold"
+                >
+                  <X className="w-3 h-3" />
+                  Disable
+                </motion.button>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Left: Controls */}
+              <div className="space-y-5">
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <label htmlFor="emi-step-up-slider" className="text-sm font-bold text-slate-600">
+                      Annual Step-Up Rate
+                    </label>
+                    <span className={cn(
+                      "text-sm font-extrabold px-2 py-0.5 rounded-md",
+                      emiStepUpPercent === 0
+                        ? "text-slate-400 bg-slate-100"
+                        : "text-purple-700 bg-purple-100"
+                    )}>
+                      {emiStepUpPercent === 0 ? "Disabled" : `+${emiStepUpPercent}% / year`}
+                    </span>
+                  </div>
+                  <input
+                    id="emi-step-up-slider"
+                    type="range"
+                    min={0}
+                    max={20}
+                    step={0.5}
+                    value={emiStepUpPercent}
+                    onChange={(e) => setEmiStepUpPercent(Number(e.target.value))}
+                    className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                  />
+                  <div className="flex justify-between text-[10px] text-slate-400 font-medium px-0.5">
+                    <span>0%</span>
+                    <span>5%</span>
+                    <span>10%</span>
+                    <span>15%</span>
+                    <span>20%</span>
+                  </div>
+                </div>
+
+                {/* Quick Presets */}
+                <div className="space-y-2">
+                  <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Quick Presets</p>
+                  <div className="flex flex-wrap gap-2">
+                    {[0, 5, 7, 10, 15].map((preset) => (
+                      <button
+                        key={preset}
+                        onClick={() => setEmiStepUpPercent(preset)}
+                        className={cn(
+                          "px-3 py-1.5 rounded-lg text-xs font-bold transition-all border",
+                          emiStepUpPercent === preset
+                            ? "bg-purple-600 text-white border-purple-600 shadow-md shadow-purple-200"
+                            : "bg-slate-50 text-slate-600 border-slate-200 hover:border-purple-300 hover:text-purple-600 hover:bg-purple-50"
+                        )}
+                      >
+                        {preset === 0 ? "No Step-Up" : `+${preset}%`}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Savings Summary */}
+                {emiStepUpPercent > 0 && (
+                  <motion.div
+                    key={emiStepUpPercent}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-4 bg-purple-50 rounded-xl border border-purple-100 space-y-3"
+                  >
+                    <p className="text-[10px] uppercase font-bold text-purple-600 tracking-wider">Step-Up Impact</p>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wide">Tenure Saved</p>
+                        <p className="text-xl font-bold text-purple-700">
+                          {Math.floor(savings.months / 12)}y {savings.months % 12}m
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wide">Interest Saved</p>
+                        <p className="text-xl font-bold text-purple-700">
+                          {formatCurrencyFull(savings.interest, currency.code, currency.locale)}
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+
+              {/* Right: Year-by-Year EMI Preview */}
+              <div className="space-y-3">
+                <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                  Year-by-Year EMI Preview
+                </p>
+                <div className="space-y-2 max-h-[280px] overflow-y-auto pr-1 custom-scrollbar">
+                  {(() => {
+                    const rows: React.ReactNode[] = [];
+                    const baseEmi = adjustedSchedule[0]?.emi || 0;
+                    const maxYears = Math.ceil(adjustedSchedule.length / 12);
+                    for (let y = 0; y < Math.min(maxYears, 10); y++) {
+                      const monthIdx = y * 12;
+                      const rowEmi = adjustedSchedule[monthIdx]?.emi;
+                      if (rowEmi === undefined) break;
+                      const increase = rowEmi - baseEmi;
+                      const pct = baseEmi > 0 ? (increase / baseEmi) * 100 : 0;
+                      rows.push(
+                        <div
+                          key={y}
+                          className={cn(
+                            "flex items-center justify-between px-4 py-2.5 rounded-xl border text-sm transition-all",
+                            y === 0
+                              ? "bg-slate-50 border-slate-200"
+                              : "bg-purple-50/60 border-purple-100 hover:border-purple-200"
+                          )}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className={cn(
+                              "w-6 h-6 flex items-center justify-center rounded-full text-[10px] font-bold",
+                              y === 0 ? "bg-slate-200 text-slate-600" : "bg-purple-200 text-purple-700"
+                            )}>
+                              {y + 1}
+                            </span>
+                            <span className="font-medium text-slate-700">
+                              Year {y + 1}
+                            </span>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-bold text-slate-800">
+                              {formatCurrency(rowEmi, currency.code, currency.locale, currency.useIndianNotation)}
+                            </p>
+                            {pct > 0 && (
+                              <p className="text-[10px] text-purple-600 font-semibold">
+                                +{pct.toFixed(1)}% from base
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    }
+                    if (emiStepUpPercent === 0) {
+                      return (
+                        <div className="flex flex-col items-center justify-center py-10 text-slate-400 border-2 border-dashed border-slate-100 rounded-xl">
+                          <Zap className="w-8 h-8 mb-2 opacity-20" />
+                          <p className="text-sm italic">Enable step-up to see year-wise EMI</p>
+                        </div>
+                      );
+                    }
+                    return rows;
+                  })()}
+                </div>
+              </div>
+            </div>
+
+            <div className="p-3 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+              <p className="text-xs text-slate-500 leading-relaxed italic">
+                <Info className="w-3.5 h-3.5 inline mr-1 mb-0.5 text-purple-500" />
+                EMI increases by the step-up rate each year on the loan anniversary. Works alongside prepayments and rate changes to give you the most accurate projection of your repayment strategy.
+              </p>
+            </div>
+          </section>
+
+
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">
                 Loan Balance Projection
               </h3>
-              <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest">
-                <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-0.5 bg-slate-300 border-t-2 border-dashed border-slate-300" />
-                  <span className="text-slate-400">Original</span>
+              <div className="flex flex-wrap items-center gap-3">
+                {/* Legend */}
+                <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-3 h-0.5 bg-slate-300 border-t-2 border-dashed border-slate-300" />
+                    <span className="text-slate-400">Original</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-3 h-0.5 bg-emerald-500" />
+                    <span className="text-emerald-500">Adjusted</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-0.5 bg-emerald-500" />
-                  <span className="text-emerald-500">Adjusted</span>
-                </div>
+                {/* Collective savings chips */}
+                {savings.interest !== 0 && (
+                  <div className="flex items-center gap-2">
+                    <div className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-bold flex items-center gap-1">
+                      <TrendingUp className="w-3 h-3" />
+                      {formatCurrencyFull(savings.interest, currency.code, currency.locale)} saved
+                    </div>
+                    <div className="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-[10px] font-bold flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {Math.floor(savings.months / 12)}y {savings.months % 12}m faster
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             <div className="h-[300px] w-full">
