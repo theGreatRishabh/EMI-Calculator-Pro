@@ -1,4 +1,10 @@
-import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import Calculator from "./Calculator";
@@ -6,8 +12,12 @@ import Calculator from "./Calculator";
 // Mock recharts fully to avoid layout warnings and elements in jsdom
 vi.mock("recharts", () => {
   return {
-    ResponsiveContainer: ({ children }: any) => <div data-testid="chart-container">{children}</div>,
-    PieChart: ({ children }: any) => <div data-testid="pie-chart">{children}</div>,
+    ResponsiveContainer: ({ children }: any) => (
+      <div data-testid="chart-container">{children}</div>
+    ),
+    PieChart: ({ children }: any) => (
+      <div data-testid="pie-chart">{children}</div>
+    ),
     Pie: ({ children, label }: any) => {
       if (typeof label === "function") {
         label({ percent: 0.45 });
@@ -21,7 +31,9 @@ vi.mock("recharts", () => {
       }
       return <div data-testid="tooltip" />;
     },
-    AreaChart: ({ children }: any) => <div data-testid="area-chart">{children}</div>,
+    AreaChart: ({ children }: any) => (
+      <div data-testid="area-chart">{children}</div>
+    ),
     Area: () => <div data-testid="area" />,
     XAxis: () => <div data-testid="xaxis" />,
     YAxis: ({ tickFormatter }: any) => {
@@ -39,8 +51,12 @@ vi.mock("recharts", () => {
 vi.mock("framer-motion", () => ({
   motion: {
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    section: ({ children, ...props }: any) => <section {...props}>{children}</section>,
-    button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+    section: ({ children, ...props }: any) => (
+      <section {...props}>{children}</section>
+    ),
+    button: ({ children, ...props }: any) => (
+      <button {...props}>{children}</button>
+    ),
     span: ({ children, ...props }: any) => <span {...props}>{children}</span>,
   },
   AnimatePresence: ({ children }: any) => <>{children}</>,
@@ -57,7 +73,7 @@ vi.mock("jspdf", () => {
       text = mockText;
       setFontSize = mockSetFontSize;
       save = mockSave;
-    }
+    },
   };
 });
 
@@ -92,7 +108,7 @@ vi.mock("exceljs", () => {
       writeBuffer: mockWriteBuffer,
     };
   }
-  
+
   const mockModule = {
     Workbook,
   };
@@ -122,14 +138,18 @@ describe("Calculator Component", () => {
     render(
       <MemoryRouter>
         <Calculator initialLoanType="HOME" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // Verify inputs display default values (50,000,000 amount, 8.5% rate, 20 years tenure)
-    const amountInput = screen.getByLabelText("Loan Amount") as HTMLInputElement;
+    const amountInput = screen.getByLabelText(
+      "Loan Amount",
+    ) as HTMLInputElement;
     expect(amountInput.value).toBe("5000000");
 
-    const rateInput = screen.getByLabelText("Interest Rate (% p.a.)") as HTMLInputElement;
+    const rateInput = screen.getByLabelText(
+      "Interest Rate (% p.a.)",
+    ) as HTMLInputElement;
     expect(rateInput.value).toBe("8.5");
 
     const tenureInput = screen.getByLabelText("Tenure") as HTMLInputElement;
@@ -144,11 +164,15 @@ describe("Calculator Component", () => {
     render(
       <MemoryRouter>
         <Calculator initialLoanType="HOME" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
-    const amountInput = screen.getByLabelText("Loan Amount") as HTMLInputElement;
-    const rateInput = screen.getByLabelText("Interest Rate (% p.a.)") as HTMLInputElement;
+    const amountInput = screen.getByLabelText(
+      "Loan Amount",
+    ) as HTMLInputElement;
+    const rateInput = screen.getByLabelText(
+      "Interest Rate (% p.a.)",
+    ) as HTMLInputElement;
     const tenureInput = screen.getByLabelText("Tenure") as HTMLInputElement;
 
     // Simulate changing values: Amount = 100,000, Rate = 10%, Tenure = 1 year
@@ -171,13 +195,17 @@ describe("Calculator Component", () => {
     render(
       <MemoryRouter>
         <Calculator initialLoanType="CAR" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
-    const amountInput = screen.getByLabelText("Loan Amount") as HTMLInputElement;
+    const amountInput = screen.getByLabelText(
+      "Loan Amount",
+    ) as HTMLInputElement;
     expect(amountInput.value).toBe("1000000");
 
-    const rateInput = screen.getByLabelText("Interest Rate (% p.a.)") as HTMLInputElement;
+    const rateInput = screen.getByLabelText(
+      "Interest Rate (% p.a.)",
+    ) as HTMLInputElement;
     expect(rateInput.value).toBe("9.5");
 
     const tenureInput = screen.getByLabelText("Tenure") as HTMLInputElement;
@@ -188,13 +216,17 @@ describe("Calculator Component", () => {
     render(
       <MemoryRouter>
         <Calculator initialLoanType="PERSONAL" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
-    const amountInput = screen.getByLabelText("Loan Amount") as HTMLInputElement;
+    const amountInput = screen.getByLabelText(
+      "Loan Amount",
+    ) as HTMLInputElement;
     expect(amountInput.value).toBe("500000");
 
-    const rateInput = screen.getByLabelText("Interest Rate (% p.a.)") as HTMLInputElement;
+    const rateInput = screen.getByLabelText(
+      "Interest Rate (% p.a.)",
+    ) as HTMLInputElement;
     expect(rateInput.value).toBe("12");
 
     const tenureInput = screen.getByLabelText("Tenure") as HTMLInputElement;
@@ -205,7 +237,7 @@ describe("Calculator Component", () => {
     render(
       <MemoryRouter>
         <Calculator initialLoanType="HOME" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // Default target months is 240. Let's change target months to 180 (15 years)
@@ -214,7 +246,9 @@ describe("Calculator Component", () => {
     expect(goalInput.value).toBe("180");
 
     // Click "Calculate Required Prepayment"
-    const calcBtn = screen.getByRole("button", { name: /Calculate Required Prepayment/i });
+    const calcBtn = screen.getByRole("button", {
+      name: /Calculate Required Prepayment/i,
+    });
     fireEvent.click(calcBtn);
 
     // Verify that required monthly prepayment is shown (should render the result block)
@@ -232,11 +266,13 @@ describe("Calculator Component", () => {
     render(
       <MemoryRouter>
         <Calculator initialLoanType="HOME" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // Click "Add Prepayment"
-    const addPrepayBtn = screen.getByRole("button", { name: /Add Prepayment/i });
+    const addPrepayBtn = screen.getByRole("button", {
+      name: /Add Prepayment/i,
+    });
     fireEvent.click(addPrepayBtn);
 
     // Verify card is added
@@ -254,11 +290,13 @@ describe("Calculator Component", () => {
     render(
       <MemoryRouter>
         <Calculator initialLoanType="HOME" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // 1. Step-Up
-    const stepUpSlider = document.getElementById("emi-step-up-slider") as HTMLInputElement;
+    const stepUpSlider = document.getElementById(
+      "emi-step-up-slider",
+    ) as HTMLInputElement;
     fireEvent.change(stepUpSlider, { target: { value: "5" } });
     expect(stepUpSlider.value).toBe("5");
 
@@ -268,18 +306,22 @@ describe("Calculator Component", () => {
     expect(currencySelect.value).toBe("USD");
 
     // Check that tax tips heading has updated to reflect USD currency (which maps to USA (Washington D.C.))
-    expect(screen.getByText(/Tax Benefit Estimator \(USA \(Washington D.C.\)\)/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Tax Benefit Estimator \(USA \(Washington D.C.\)\)/i),
+    ).toBeInTheDocument();
   });
 
   it("supports expanding year rows in the amortization schedule table", () => {
     render(
       <MemoryRouter>
         <Calculator initialLoanType="HOME" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // Find the toggle button representing the annual summary rows
-    const expandButtons = screen.getAllByRole("button", { name: /Annual Summary/i });
+    const expandButtons = screen.getAllByRole("button", {
+      name: /Annual Summary/i,
+    });
     expect(expandButtons.length).toBeGreaterThan(0);
 
     // Click to expand the first year's rows
@@ -297,7 +339,7 @@ describe("Calculator Component", () => {
     render(
       <MemoryRouter>
         <Calculator initialLoanType="HOME" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // Click Export PDF button
@@ -326,11 +368,13 @@ describe("Calculator Component", () => {
     render(
       <MemoryRouter>
         <Calculator initialLoanType="HOME" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // Verify consultancy section renders "Request a Feature" button
-    const requestFeatureBtn = screen.getByRole("button", { name: /Request a Feature/i });
+    const requestFeatureBtn = screen.getByRole("button", {
+      name: /Request a Feature/i,
+    });
     expect(requestFeatureBtn).toBeInTheDocument();
 
     // The modal should not be visible initially
@@ -352,7 +396,9 @@ describe("Calculator Component", () => {
     fireEvent.change(phoneInput, { target: { value: "+1 555 12345" } });
 
     // Submit form
-    const submitBtn = screen.getByRole("button", { name: /Unlock Roadmap Now/i });
+    const submitBtn = screen.getByRole("button", {
+      name: /Unlock Roadmap Now/i,
+    });
     fireEvent.submit(submitBtn);
 
     // Verify it captures lead and displays success view
@@ -364,7 +410,9 @@ describe("Calculator Component", () => {
 
     // Verify modal is closed
     await waitFor(() => {
-      expect(screen.queryByText("Let's Build Software")).not.toBeInTheDocument();
+      expect(
+        screen.queryByText("Let's Build Software"),
+      ).not.toBeInTheDocument();
     });
   });
 
@@ -372,7 +420,7 @@ describe("Calculator Component", () => {
     render(
       <MemoryRouter>
         <Calculator initialLoanType="HOME" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // Find custom stamp duty rate input (default display value "6")
@@ -382,7 +430,9 @@ describe("Calculator Component", () => {
 
     // Find the down payment input (its placeholder is "0" and it doesn't have an ID)
     const inputs0 = screen.getAllByPlaceholderText("0") as HTMLInputElement[];
-    const dpInput = inputs0.find(input => input.id !== "monthly-tax" && input.id !== "monthly-insurance");
+    const dpInput = inputs0.find(
+      (input) => input.id !== "monthly-tax" && input.id !== "monthly-insurance",
+    );
     expect(dpInput).toBeDefined();
 
     fireEvent.change(dpInput!, { target: { value: "800000" } });
@@ -390,28 +440,53 @@ describe("Calculator Component", () => {
   });
 
   it("initializes state from URL query parameters correctly", () => {
-    const rateChangesBase64 = btoa(JSON.stringify([{ id: "rc1", effectiveDate: "2026-08-01", newRate: 9.0, mode: "KEEP_EMI" }]));
-    const prepaymentsBase64 = btoa(JSON.stringify([{ id: "pp1", amount: 100000, startDate: "2026-09-01", type: "ONE_TIME", reduction: "TENURE" }]));
+    const rateChangesBase64 = btoa(
+      JSON.stringify([
+        {
+          id: "rc1",
+          effectiveDate: "2026-08-01",
+          newRate: 9.0,
+          mode: "KEEP_EMI",
+        },
+      ]),
+    );
+    const prepaymentsBase64 = btoa(
+      JSON.stringify([
+        {
+          id: "pp1",
+          amount: 100000,
+          startDate: "2026-09-01",
+          type: "ONE_TIME",
+          reduction: "TENURE",
+        },
+      ]),
+    );
     const url = `http://localhost/?type=CAR&amt=1200000&rate=9.5&ten=4&unit=Y&start=2026-07-01&tax=100&ins=200&dp=300000&pval=1500000&sdr=5.0&regr=1.0&emiSU=2&curr=USD&rc=${rateChangesBase64}&pp=${prepaymentsBase64}`;
-    
+
     vi.stubGlobal("location", new URL(url));
 
     render(
       <MemoryRouter>
         <Calculator initialLoanType="HOME" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
-    const amountInput = screen.getByLabelText("Loan Amount") as HTMLInputElement;
+    const amountInput = screen.getByLabelText(
+      "Loan Amount",
+    ) as HTMLInputElement;
     expect(amountInput.value).toBe("1200000");
 
-    const rateInput = screen.getByLabelText("Interest Rate (% p.a.)") as HTMLInputElement;
+    const rateInput = screen.getByLabelText(
+      "Interest Rate (% p.a.)",
+    ) as HTMLInputElement;
     expect(rateInput.value).toBe("9.5");
 
     const tenureInput = screen.getByLabelText("Tenure") as HTMLInputElement;
     expect(tenureInput.value).toBe("4");
 
-    const currencySelect = document.querySelector("select[class*='text-emerald-700']") as HTMLSelectElement;
+    const currencySelect = document.querySelector(
+      "select[class*='text-emerald-700']",
+    ) as HTMLSelectElement;
     expect(currencySelect.value).toBe("USD");
 
     vi.unstubAllGlobals();
@@ -419,12 +494,17 @@ describe("Calculator Component", () => {
 
   it("handles malformed base64 parameters in URL and falls back", () => {
     const spy = vi.spyOn(console, "error").mockImplementation(() => {});
-    vi.stubGlobal("location", new URL("http://localhost/?type=HOME&rc=invalid-base-64&pp=invalid-base-64"));
-    
+    vi.stubGlobal(
+      "location",
+      new URL(
+        "http://localhost/?type=HOME&rc=invalid-base-64&pp=invalid-base-64",
+      ),
+    );
+
     render(
       <MemoryRouter>
         <Calculator initialLoanType="HOME" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(spy).toHaveBeenCalled();
@@ -447,8 +527,24 @@ describe("Calculator Component", () => {
       customStampDutyRate: 4.5,
       customRegistrationRate: 0.5,
       currencyCode: "EUR",
-      rateChanges: [{ id: "lrc1", effectiveDate: "2026-12-01", newRate: 7.5, mode: "KEEP_TENURE" }],
-      prepayments: [{ id: "lpp1", amount: 20000, startDate: "2027-01-01", type: "RECURRING", reduction: "EMI", frequency: 12 }],
+      rateChanges: [
+        {
+          id: "lrc1",
+          effectiveDate: "2026-12-01",
+          newRate: 7.5,
+          mode: "KEEP_TENURE",
+        },
+      ],
+      prepayments: [
+        {
+          id: "lpp1",
+          amount: 20000,
+          startDate: "2027-01-01",
+          type: "RECURRING",
+          reduction: "EMI",
+          frequency: 12,
+        },
+      ],
       emiStepUpPercent: 3,
     };
     localStorage.setItem("emi_calculator_state", JSON.stringify(localState));
@@ -457,16 +553,22 @@ describe("Calculator Component", () => {
     render(
       <MemoryRouter>
         <Calculator initialLoanType="HOME" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
-    const amountInput = screen.getByLabelText("Loan Amount") as HTMLInputElement;
+    const amountInput = screen.getByLabelText(
+      "Loan Amount",
+    ) as HTMLInputElement;
     expect(amountInput.value).toBe("4500000");
 
-    const rateInput = screen.getByLabelText("Interest Rate (% p.a.)") as HTMLInputElement;
+    const rateInput = screen.getByLabelText(
+      "Interest Rate (% p.a.)",
+    ) as HTMLInputElement;
     expect(rateInput.value).toBe("7.2");
 
-    const currencySelect = document.querySelector("select[class*='text-emerald-700']") as HTMLSelectElement;
+    const currencySelect = document.querySelector(
+      "select[class*='text-emerald-700']",
+    ) as HTMLSelectElement;
     expect(currencySelect.value).toBe("EUR");
 
     vi.unstubAllGlobals();
@@ -476,15 +578,21 @@ describe("Calculator Component", () => {
     render(
       <MemoryRouter>
         <Calculator initialLoanType="HOME" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const addRateBtn = screen.getByRole("button", { name: /Add Change/i });
     fireEvent.click(addRateBtn);
 
-    const dateInput = document.querySelector("input[id^='rate-date-']") as HTMLInputElement;
-    const newRateInput = document.querySelector("input[id^='rate-input-']") as HTMLInputElement;
-    const modeSelect = document.querySelector("[class*='hover:border-amber-200'] select") as HTMLSelectElement;
+    const dateInput = document.querySelector(
+      "input[id^='rate-date-']",
+    ) as HTMLInputElement;
+    const newRateInput = document.querySelector(
+      "input[id^='rate-input-']",
+    ) as HTMLInputElement;
+    const modeSelect = document.querySelector(
+      "[class*='hover:border-amber-200'] select",
+    ) as HTMLSelectElement;
 
     fireEvent.change(dateInput, { target: { value: "2027-06-01" } });
     fireEvent.blur(dateInput);
@@ -502,11 +610,15 @@ describe("Calculator Component", () => {
     fireEvent.blur(modeSelect);
     expect(modeSelect.value).toBe("KEEP_EMI");
 
-    const removeBtn = screen.getByRole("button", { name: "Remove rate change" });
+    const removeBtn = screen.getByRole("button", {
+      name: "Remove rate change",
+    });
     fireEvent.click(removeBtn);
 
     await waitFor(() => {
-      expect(document.querySelector("input[id^='rate-input-']")).not.toBeInTheDocument();
+      expect(
+        document.querySelector("input[id^='rate-input-']"),
+      ).not.toBeInTheDocument();
     });
   });
 
@@ -514,20 +626,32 @@ describe("Calculator Component", () => {
     render(
       <MemoryRouter>
         <Calculator initialLoanType="HOME" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
-    const addPrepayBtn = screen.getByRole("button", { name: /Add Prepayment/i });
+    const addPrepayBtn = screen.getByRole("button", {
+      name: /Add Prepayment/i,
+    });
     fireEvent.click(addPrepayBtn);
 
-    const amountInput = document.querySelector("input[id^='prepay-amount-']") as HTMLInputElement;
-    const startDateInput = document.querySelector("input[id^='prepay-date-']") as HTMLInputElement;
-    const typeSelect = document.querySelector("select[id^='prepay-type-']") as HTMLSelectElement;
-    const reductionSelect = document.querySelector("select[id^='prepay-reduction-']") as HTMLSelectElement;
+    const amountInput = document.querySelector(
+      "input[id^='prepay-amount-']",
+    ) as HTMLInputElement;
+    const startDateInput = document.querySelector(
+      "input[id^='prepay-date-']",
+    ) as HTMLInputElement;
+    const typeSelect = document.querySelector(
+      "select[id^='prepay-type-']",
+    ) as HTMLSelectElement;
+    const reductionSelect = document.querySelector(
+      "select[id^='prepay-reduction-']",
+    ) as HTMLSelectElement;
 
     // Change amount and click Apply Changes manually
     fireEvent.change(amountInput, { target: { value: "75000" } });
-    const applyChangesBtn = screen.getByRole("button", { name: "Apply Changes" });
+    const applyChangesBtn = screen.getByRole("button", {
+      name: "Apply Changes",
+    });
     fireEvent.click(applyChangesBtn);
     expect(amountInput.value).toBe("75000");
 
@@ -543,7 +667,9 @@ describe("Calculator Component", () => {
     fireEvent.blur(typeSelect);
     expect(typeSelect.value).toBe("RECURRING");
 
-    const freqInput = document.querySelector("input[id^='prepay-frequency-']") as HTMLInputElement;
+    const freqInput = document.querySelector(
+      "input[id^='prepay-frequency-']",
+    ) as HTMLInputElement;
     fireEvent.change(freqInput, { target: { value: "6" } });
     fireEvent.blur(freqInput);
     expect(freqInput.value).toBe("6");
@@ -552,7 +678,9 @@ describe("Calculator Component", () => {
     fireEvent.click(removeBtn);
 
     await waitFor(() => {
-      expect(document.querySelector("input[id^='prepay-amount-']")).not.toBeInTheDocument();
+      expect(
+        document.querySelector("input[id^='prepay-amount-']"),
+      ).not.toBeInTheDocument();
     });
   }, 15000);
 
@@ -560,7 +688,7 @@ describe("Calculator Component", () => {
     render(
       <MemoryRouter>
         <Calculator initialLoanType="HOME" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const goalInput = screen.getByDisplayValue("240") as HTMLInputElement;
@@ -572,11 +700,13 @@ describe("Calculator Component", () => {
 
     const loanStartDateInput = inputs[0] as HTMLInputElement;
     fireEvent.change(loanStartDateInput, { target: { value: "2026-06-07" } });
-    
+
     fireEvent.change(goalStartDateInput, { target: { value: "2027-06-07" } });
     expect(goalStartDateInput.value).toBe("2027-06-07");
 
-    const calcBtn = screen.getByRole("button", { name: /Calculate Required Prepayment/i });
+    const calcBtn = screen.getByRole("button", {
+      name: /Calculate Required Prepayment/i,
+    });
     fireEvent.click(calcBtn);
 
     expect(screen.getByText("Required Monthly Prepayment")).toBeInTheDocument();
@@ -586,13 +716,15 @@ describe("Calculator Component", () => {
     render(
       <MemoryRouter>
         <Calculator initialLoanType="HOME" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const presetBtn = screen.getByRole("button", { name: "+10%" });
     fireEvent.click(presetBtn);
 
-    const stepUpSlider = document.getElementById("emi-step-up-slider") as HTMLInputElement;
+    const stepUpSlider = document.getElementById(
+      "emi-step-up-slider",
+    ) as HTMLInputElement;
     expect(stepUpSlider.value).toBe("10");
 
     const disableBtn = screen.getByRole("button", { name: /Disable/i });
@@ -605,7 +737,7 @@ describe("Calculator Component", () => {
     render(
       <MemoryRouter>
         <Calculator initialLoanType="HOME" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const mosBtn = screen.getByRole("button", { name: "Mo" });
@@ -618,15 +750,21 @@ describe("Calculator Component", () => {
     fireEvent.click(yrsBtn);
     expect(tenureInput.value).toBe("20");
 
-    const amountSlider = screen.getByLabelText("Loan Amount Slider") as HTMLInputElement;
+    const amountSlider = screen.getByLabelText(
+      "Loan Amount Slider",
+    ) as HTMLInputElement;
     fireEvent.change(amountSlider, { target: { value: "3000000" } });
     expect(amountSlider.value).toBe("3000000");
 
-    const rateSlider = screen.getByLabelText("Interest Rate Slider") as HTMLInputElement;
+    const rateSlider = screen.getByLabelText(
+      "Interest Rate Slider",
+    ) as HTMLInputElement;
     fireEvent.change(rateSlider, { target: { value: "7.5" } });
     expect(rateSlider.value).toBe("7.5");
 
-    const tenureSlider = screen.getByLabelText("Loan Tenure Slider") as HTMLInputElement;
+    const tenureSlider = screen.getByLabelText(
+      "Loan Tenure Slider",
+    ) as HTMLInputElement;
     fireEvent.change(tenureSlider, { target: { value: "15" } });
     expect(tenureSlider.value).toBe("15");
   }, 15000);
@@ -635,19 +773,25 @@ describe("Calculator Component", () => {
     render(
       <MemoryRouter>
         <Calculator initialLoanType="CAR" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
-    const onRoadInput = screen.getByPlaceholderText("Enter value...") as HTMLInputElement;
+    const onRoadInput = screen.getByPlaceholderText(
+      "Enter value...",
+    ) as HTMLInputElement;
     fireEvent.change(onRoadInput, { target: { value: "1200000" } });
     expect(onRoadInput.value).toBe("1200000");
 
-    const upfrontInputs = document.querySelectorAll("input[inputMode='decimal']");
+    const upfrontInputs = document.querySelectorAll(
+      "input[inputMode='decimal']",
+    );
     const insuranceInput = upfrontInputs[1] as HTMLInputElement;
     fireEvent.change(insuranceInput, { target: { value: "45000" } });
     expect(insuranceInput.value).toBe("45000");
-    
-    const tenureSlider = screen.getByLabelText("Loan Tenure Slider") as HTMLInputElement;
+
+    const tenureSlider = screen.getByLabelText(
+      "Loan Tenure Slider",
+    ) as HTMLInputElement;
     fireEvent.change(tenureSlider, { target: { value: "1" } });
   });
 
@@ -655,10 +799,12 @@ describe("Calculator Component", () => {
     render(
       <MemoryRouter>
         <Calculator initialLoanType="PERSONAL" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
-    const upfrontInputs = document.querySelectorAll("input[inputMode='decimal']");
+    const upfrontInputs = document.querySelectorAll(
+      "input[inputMode='decimal']",
+    );
     const filingInput = upfrontInputs[0] as HTMLInputElement;
     fireEvent.change(filingInput, { target: { value: "4000" } });
     expect(filingInput.value).toBe("4000");
@@ -679,7 +825,7 @@ describe("Calculator Component", () => {
     render(
       <MemoryRouter>
         <Calculator initialLoanType="HOME" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const shareBtn = screen.getByRole("button", { name: /^Share$/ });
@@ -688,9 +834,12 @@ describe("Calculator Component", () => {
     expect(mockWriteText).toHaveBeenCalled();
     expect(screen.getByText("Copied!")).toBeInTheDocument();
 
-    await waitFor(() => {
-      expect(screen.queryByText("Copied!")).not.toBeInTheDocument();
-    }, { timeout: 3500 });
+    await waitFor(
+      () => {
+        expect(screen.queryByText("Copied!")).not.toBeInTheDocument();
+      },
+      { timeout: 3500 },
+    );
   });
 
   it("automatically closes lead modal after successful submission", async () => {
@@ -699,10 +848,12 @@ describe("Calculator Component", () => {
     render(
       <MemoryRouter>
         <Calculator initialLoanType="HOME" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
-    const requestFeatureBtn = screen.getByRole("button", { name: /Request a Feature/i });
+    const requestFeatureBtn = screen.getByRole("button", {
+      name: /Request a Feature/i,
+    });
     fireEvent.click(requestFeatureBtn);
 
     const nameInput = screen.getByPlaceholderText("John Doe");
@@ -713,13 +864,20 @@ describe("Calculator Component", () => {
     fireEvent.change(emailInput, { target: { value: "test@example.com" } });
     fireEvent.change(phoneInput, { target: { value: "+1 555 12345" } });
 
-    const submitBtn = screen.getByRole("button", { name: /Unlock Roadmap Now/i });
+    const submitBtn = screen.getByRole("button", {
+      name: /Unlock Roadmap Now/i,
+    });
     fireEvent.click(submitBtn);
 
     expect(screen.getByText("Request Received!")).toBeInTheDocument();
 
-    await waitFor(() => {
-      expect(screen.queryByText("Let's Build Software")).not.toBeInTheDocument();
-    }, { timeout: 3500 });
+    await waitFor(
+      () => {
+        expect(
+          screen.queryByText("Let's Build Software"),
+        ).not.toBeInTheDocument();
+      },
+      { timeout: 3500 },
+    );
   });
 });

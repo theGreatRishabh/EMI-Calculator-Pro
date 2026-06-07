@@ -11,7 +11,7 @@ vi.mock("../blogMeta.json", () => ({
       excerpt: "Test excerpt 1",
       date: "May 25, 2026",
       readTime: "6 min read",
-      category: "Test Category"
+      category: "Test Category",
     },
     {
       slug: "test-post-2",
@@ -19,9 +19,9 @@ vi.mock("../blogMeta.json", () => ({
       excerpt: "Test excerpt 2",
       date: "May 26, 2026",
       readTime: "5 min read",
-      category: "Test Category"
-    }
-  ]
+      category: "Test Category",
+    },
+  ],
 }));
 
 describe("BlogPost Component", () => {
@@ -44,7 +44,7 @@ And some more text about loans.
 
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
-      text: () => Promise.resolve(mockMarkdown)
+      text: () => Promise.resolve(mockMarkdown),
     } as Response);
 
     render(
@@ -52,29 +52,36 @@ And some more text about loans.
         <Routes>
           <Route path="/blog/:slug" element={<BlogPost />} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // Wait for the blog content to render using async query
-    const heading = await screen.findByRole("heading", { name: "Test Blog Title 1", level: 1 });
+    const heading = await screen.findByRole("heading", {
+      name: "Test Blog Title 1",
+      level: 1,
+    });
     expect(heading).toBeInTheDocument();
-    
-    expect(screen.getByText("This is my test blog markdown body")).toBeInTheDocument();
-    expect(screen.getByText("And some more text about loans.")).toBeInTheDocument();
+
+    expect(
+      screen.getByText("This is my test blog markdown body"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("And some more text about loans."),
+    ).toBeInTheDocument();
 
     // Verify markdown table elements rendered correctly
     expect(screen.getByText("Heading One")).toBeInTheDocument();
     expect(screen.getByText("Heading Two")).toBeInTheDocument();
     expect(screen.getByText("Table Cell A")).toBeInTheDocument();
     expect(screen.getByText("Table Cell B")).toBeInTheDocument();
-    
+
     // Check related post recommendation
     expect(screen.getByText("Test Blog Title 2")).toBeInTheDocument();
   });
 
   it("renders 'Post Not Found' when fetch fails", async () => {
     global.fetch = vi.fn().mockResolvedValue({
-      ok: false
+      ok: false,
     } as Response);
 
     render(
@@ -82,12 +89,19 @@ And some more text about loans.
         <Routes>
           <Route path="/blog/:slug" element={<BlogPost />} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // Wait for the error page to render
-    const notFoundHeading = await screen.findByRole("heading", { name: "Post Not Found", level: 1 });
+    const notFoundHeading = await screen.findByRole("heading", {
+      name: "Post Not Found",
+      level: 1,
+    });
     expect(notFoundHeading).toBeInTheDocument();
-    expect(screen.getByText("Sorry, the article you are looking for does not exist.")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Sorry, the article you are looking for does not exist.",
+      ),
+    ).toBeInTheDocument();
   });
 });

@@ -6,7 +6,8 @@ import { useDocumentMeta } from "../hooks/useDocumentMeta";
 export default function PrivacyPolicy() {
   useDocumentMeta({
     title: "Privacy Policy | Smart EMI Planner",
-    description: "Read our privacy policy. Learn how we handle your data securely and why all calculations are performed locally in your browser.",
+    description:
+      "Read our privacy policy. Learn how we handle your data securely and why all calculations are performed locally in your browser.",
   });
 
   return (
@@ -40,14 +41,17 @@ export default function PrivacyPolicy() {
               1. 100% Client-Side Calculations (Zero Data Collection)
             </h2>
             <p className="leading-relaxed">
-              At <strong>Smart EMI Planner</strong>, we value your privacy above everything else.
-              We believe your financial planning is your personal business. Consequently, all
-              loan calculations, prepayment simulations, interest rate changes, and optimizations
-              are processed <strong>entirely inside your web browser</strong> using client-side JavaScript.
+              At <strong>Smart EMI Planner</strong>, we value your privacy above
+              everything else. We believe your financial planning is your
+              personal business. Consequently, all loan calculations, prepayment
+              simulations, interest rate changes, and optimizations are
+              processed <strong>entirely inside your web browser</strong> using
+              client-side JavaScript.
             </p>
             <p className="leading-relaxed">
-              None of the financial inputs you enter (such as your loan amount, interest rate,
-              property value, or tenure) are transmitted to or stored on our servers.
+              None of the financial inputs you enter (such as your loan amount,
+              interest rate, property value, or tenure) are transmitted to or
+              stored on our servers.
             </p>
           </section>
 
@@ -61,15 +65,18 @@ export default function PrivacyPolicy() {
             </p>
             <ul className="list-disc pl-6 space-y-2">
               <li>
-                <strong>Browser Local Storage:</strong> The calculator saves your latest inputs locally in
-                your own browser's storage (`localStorage`) so that when you reload the page, you don't
-                have to re-enter your parameters. You can clear this data at any time by clearing your
-                browser's cache.
+                <strong>Browser Local Storage:</strong> The calculator saves
+                your latest inputs locally in your own browser's storage
+                (`localStorage`) so that when you reload the page, you don't
+                have to re-enter your parameters. You can clear this data at any
+                time by clearing your browser's cache.
               </li>
               <li>
-                <strong>Share URL Generation:</strong> When you click the "Share" button, the app encodes your
-                current inputs directly into the URL query parameters. This allows you to copy and share the link
-                or bookmark it to return to your calculations. We do not store these shared links on our backend.
+                <strong>Share URL Generation:</strong> When you click the
+                "Share" button, the app encodes your current inputs directly
+                into the URL query parameters. This allows you to copy and share
+                the link or bookmark it to return to your calculations. We do
+                not store these shared links on our backend.
               </li>
             </ul>
           </section>
@@ -80,10 +87,12 @@ export default function PrivacyPolicy() {
               3. Analytics & Third-Party Cookies
             </h2>
             <p className="leading-relaxed">
-              We may use privacy-centric website analytics (such as Google Analytics) to monitor website traffic,
-              page load speeds, and user interactions to help improve our tools. These services collect anonymous
-              aggregate data like browser types, screen resolutions, and general geographic locations. They do not
-              access or capture any values you enter in the calculator.
+              We may use privacy-centric website analytics (such as Google
+              Analytics) to monitor website traffic, page load speeds, and user
+              interactions to help improve our tools. These services collect
+              anonymous aggregate data like browser types, screen resolutions,
+              and general geographic locations. They do not access or capture
+              any values you enter in the calculator.
             </p>
           </section>
 
@@ -92,9 +101,10 @@ export default function PrivacyPolicy() {
               4. External Links
             </h2>
             <p className="leading-relaxed">
-              Our website contains links to other websites (for example, our development company
-              OmegaAlphaTech's site). We are not responsible for the privacy practices or content
-              of external websites. We encourage you to read the privacy policies of any site you visit.
+              Our website contains links to other websites (for example, our
+              development company OmegaAlphaTech's site). We are not responsible
+              for the privacy practices or content of external websites. We
+              encourage you to read the privacy policies of any site you visit.
             </p>
           </section>
 
@@ -103,18 +113,16 @@ export default function PrivacyPolicy() {
               5. Updates to this Policy
             </h2>
             <p className="leading-relaxed">
-              We may update our Privacy Policy from time to time. Any changes will be posted on this page with the
-              updated revision date.
+              We may update our Privacy Policy from time to time. Any changes
+              will be posted on this page with the updated revision date.
             </p>
           </section>
 
           <section className="space-y-4 pt-6 border-t border-slate-100">
-            <h2 className="text-xl font-bold text-slate-900">
-              Contact Us
-            </h2>
+            <h2 className="text-xl font-bold text-slate-900">Contact Us</h2>
             <p className="leading-relaxed">
-              If you have any questions or feedback about our privacy practices, feel free to contact us through
-              our parent agency website at{" "}
+              If you have any questions or feedback about our privacy practices,
+              feel free to contact us through our parent agency website at{" "}
               <a
                 href="https://www.omegaalphatech.com/contact"
                 target="_blank"

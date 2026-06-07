@@ -155,13 +155,15 @@ const CURRENCY_CONFIGS: Record<string, CurrencyConfig> = {
         title: "Home Office Allowance",
         amount: 1250,
         limitLabel: "Limit: €1,250",
-        description: "Deduct home office expenses from your professional income.",
+        description:
+          "Deduct home office expenses from your professional income.",
       },
       {
         title: "Professional Workspace",
         amount: 0,
         limitLabel: "Investment Property",
-        description: "Interest on investment properties is often tax-deductible.",
+        description:
+          "Interest on investment properties is often tax-deductible.",
       },
     ],
   },
@@ -470,33 +472,49 @@ function PrepaymentCard({
   );
 }
 
-const LOAN_TYPE_META: Record<string, { title: string; description: string; slug: string }> = {
+const LOAN_TYPE_META: Record<
+  string,
+  { title: string; description: string; slug: string }
+> = {
   HOME: {
     slug: "/home-loan",
     title: "Home Loan EMI Calculator - Smart EMI Planner",
-    description: "Calculate your Home Loan EMI instantly. Simulate prepayments, rate changes, and EMI step-ups. Free amortization schedule with tax benefits for India.",
+    description:
+      "Calculate your Home Loan EMI instantly. Simulate prepayments, rate changes, and EMI step-ups. Free amortization schedule with tax benefits for India.",
   },
   CAR: {
     slug: "/car-loan",
     title: "Car Loan EMI Calculator - Smart EMI Planner",
-    description: "Calculate your Car Loan EMI with on-road price breakdown including insurance. Plan prepayments and see your payoff date. Free car loan amortization schedule.",
+    description:
+      "Calculate your Car Loan EMI with on-road price breakdown including insurance. Plan prepayments and see your payoff date. Free car loan amortization schedule.",
   },
   PERSONAL: {
     slug: "/personal-loan",
     title: "Personal Loan EMI Calculator - Smart EMI Planner",
-    description: "Calculate Personal Loan EMI with processing fee breakdown. Simulate prepayments and rate changes. Free personal loan amortization schedule.",
+    description:
+      "Calculate Personal Loan EMI with processing fee breakdown. Simulate prepayments and rate changes. Free personal loan amortization schedule.",
   },
 };
 
-export default function App({ initialLoanType = "HOME" }: { initialLoanType?: string }) {
+export default function App({
+  initialLoanType = "HOME",
+}: {
+  initialLoanType?: string;
+}) {
   const navigate = useNavigate();
-  const resolvedInitialType = (Object.values(LoanType).includes(initialLoanType as LoanType)
-    ? initialLoanType
-    : "HOME") as LoanType;
+  const resolvedInitialType = (
+    Object.values(LoanType).includes(initialLoanType as LoanType)
+      ? initialLoanType
+      : "HOME"
+  ) as LoanType;
   const [loanType, setLoanType] = useState<LoanType>(resolvedInitialType);
-  const [amount, setAmount] = useState(LOAN_DEFAULTS[resolvedInitialType].amount);
+  const [amount, setAmount] = useState(
+    LOAN_DEFAULTS[resolvedInitialType].amount,
+  );
   const [rate, setRate] = useState(LOAN_DEFAULTS[resolvedInitialType].rate);
-  const [tenure, setTenure] = useState(LOAN_DEFAULTS[resolvedInitialType].tenure);
+  const [tenure, setTenure] = useState(
+    LOAN_DEFAULTS[resolvedInitialType].tenure,
+  );
   const [tenureUnit, setTenureUnit] = useState<"Y" | "M">("Y");
   const [loanStartDate, setLoanStartDate] = useState(
     format(new Date(), "yyyy-MM-dd"),
@@ -529,9 +547,13 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
   useEffect(() => {
     const meta = LOAN_TYPE_META[loanType] || LOAN_TYPE_META.HOME;
     document.title = meta.title;
-    const desc = document.querySelector<HTMLMetaElement>("meta[name='description']");
+    const desc = document.querySelector<HTMLMetaElement>(
+      "meta[name='description']",
+    );
     if (desc) desc.content = meta.description;
-    const canonical = document.querySelector<HTMLLinkElement>("link[rel='canonical']");
+    const canonical = document.querySelector<HTMLLinkElement>(
+      "link[rel='canonical']",
+    );
     if (canonical) canonical.href = `https://smartemiplanner.com${meta.slug}`;
   }, [loanType]);
 
@@ -732,7 +754,9 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
 
   const isConsultancyEnabled =
     (import.meta as any).env.VITE_ENABLE_CONSULTANCY === "true" ||
-    (typeof process !== "undefined" && process.env && process.env.VITE_ENABLE_CONSULTANCY === "true");
+    (typeof process !== "undefined" &&
+      process.env &&
+      process.env.VITE_ENABLE_CONSULTANCY === "true");
 
   const handleLeadSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -798,7 +822,15 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
         prepayments,
         emiStepUpPercent,
       ),
-    [amount, rate, tenureMonths, startDate, rateChanges, prepayments, emiStepUpPercent],
+    [
+      amount,
+      rate,
+      tenureMonths,
+      startDate,
+      rateChanges,
+      prepayments,
+      emiStepUpPercent,
+    ],
   );
 
   const adjustedSummary = useMemo(() => {
@@ -843,23 +875,51 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
 
   // Isolate savings contribution from prepayments alone
   const prepaymentOnlySchedule = useMemo(
-    () => generateAmortizationSchedule(amount, rate, tenureMonths, startDate, [], prepayments, 0),
+    () =>
+      generateAmortizationSchedule(
+        amount,
+        rate,
+        tenureMonths,
+        startDate,
+        [],
+        prepayments,
+        0,
+      ),
     [amount, rate, tenureMonths, startDate, prepayments],
   );
-  const prepaymentSavings = useMemo(() => ({
-    interest: originalSummary.totalInterest - prepaymentOnlySchedule.reduce((s, r) => s + r.interest, 0),
-    months: originalSummary.months - prepaymentOnlySchedule.length,
-  }), [originalSummary, prepaymentOnlySchedule]);
+  const prepaymentSavings = useMemo(
+    () => ({
+      interest:
+        originalSummary.totalInterest -
+        prepaymentOnlySchedule.reduce((s, r) => s + r.interest, 0),
+      months: originalSummary.months - prepaymentOnlySchedule.length,
+    }),
+    [originalSummary, prepaymentOnlySchedule],
+  );
 
   // Isolate savings contribution from rate changes alone
   const rateChangeOnlySchedule = useMemo(
-    () => generateAmortizationSchedule(amount, rate, tenureMonths, startDate, rateChanges, [], 0),
+    () =>
+      generateAmortizationSchedule(
+        amount,
+        rate,
+        tenureMonths,
+        startDate,
+        rateChanges,
+        [],
+        0,
+      ),
     [amount, rate, tenureMonths, startDate, rateChanges],
   );
-  const rateChangeSavings = useMemo(() => ({
-    interest: originalSummary.totalInterest - rateChangeOnlySchedule.reduce((s, r) => s + r.interest, 0),
-    months: originalSummary.months - rateChangeOnlySchedule.length,
-  }), [originalSummary, rateChangeOnlySchedule]);
+  const rateChangeSavings = useMemo(
+    () => ({
+      interest:
+        originalSummary.totalInterest -
+        rateChangeOnlySchedule.reduce((s, r) => s + r.interest, 0),
+      months: originalSummary.months - rateChangeOnlySchedule.length,
+    }),
+    [originalSummary, rateChangeOnlySchedule],
+  );
 
   const handleLoanTypeChange = (type: LoanType) => {
     // Navigate to the SEO URL for that loan type
@@ -1231,15 +1291,15 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
     loanType === LoanType.CAR
       ? 0
       : loanType === LoanType.PERSONAL
-      ? (customStampDutyRate ?? Math.round(amount * 0.01))
-      : (propertyValue * currentStampDutyRate) / 100;
+        ? (customStampDutyRate ?? Math.round(amount * 0.01))
+        : (propertyValue * currentStampDutyRate) / 100;
 
   const registrationFee =
     loanType === LoanType.CAR
       ? (customRegistrationRate ?? Math.round(propertyValue * 0.04))
       : loanType === LoanType.PERSONAL
-      ? (customRegistrationRate ?? 1000)
-      : (propertyValue * currentRegistrationRate) / 100;
+        ? (customRegistrationRate ?? 1000)
+        : (propertyValue * currentRegistrationRate) / 100;
 
   const totalUpfront = stampDuty + registrationFee + downPayment;
 
@@ -1439,7 +1499,11 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                         aria-label="Loan Tenure Slider"
                         type="range"
                         min="1"
-                        max={tenureUnit === "Y" ? LOAN_DEFAULTS[loanType].maxTenure : LOAN_DEFAULTS[loanType].maxTenure * 12}
+                        max={
+                          tenureUnit === "Y"
+                            ? LOAN_DEFAULTS[loanType].maxTenure
+                            : LOAN_DEFAULTS[loanType].maxTenure * 12
+                        }
                         step="1"
                         value={tenure}
                         onChange={(e) => setTenure(Number(e.target.value))}
@@ -1777,7 +1841,8 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                     <p className="text-sm font-bold text-emerald-600">
                       {adjustedSummary.remainingMonths} Mo
                       <span className="text-[10px] font-normal text-slate-400 ml-1">
-                        ({(adjustedSummary.remainingMonths / 12).toFixed(1)} Yrs)
+                        ({(adjustedSummary.remainingMonths / 12).toFixed(1)}{" "}
+                        Yrs)
                       </span>
                     </p>
                   </div>
@@ -1786,15 +1851,24 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                   {(savings.months > 0 || savings.interest > 0) && (
                     <div className="col-span-2 p-3 bg-emerald-50 rounded-xl border border-emerald-100 flex items-center justify-between gap-3">
                       <div className="space-y-0.5">
-                        <span className="text-[10px] text-emerald-600 uppercase font-bold tracking-wider">Combined Savings</span>
+                        <span className="text-[10px] text-emerald-600 uppercase font-bold tracking-wider">
+                          Combined Savings
+                        </span>
                         <p className="text-sm font-bold text-emerald-700">
-                          {formatCurrencyFull(savings.interest, currency.code, currency.locale)}
+                          {formatCurrencyFull(
+                            savings.interest,
+                            currency.code,
+                            currency.locale,
+                          )}
                         </p>
                       </div>
                       <div className="text-right space-y-0.5">
-                        <span className="text-[10px] text-emerald-600 uppercase font-bold tracking-wider">Time Saved</span>
+                        <span className="text-[10px] text-emerald-600 uppercase font-bold tracking-wider">
+                          Time Saved
+                        </span>
                         <p className="text-sm font-bold text-emerald-700">
-                          {Math.floor(savings.months / 12)}y {savings.months % 12}m
+                          {Math.floor(savings.months / 12)}y{" "}
+                          {savings.months % 12}m
                         </p>
                       </div>
                     </div>
@@ -1947,20 +2021,44 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                     "flex items-center justify-between px-4 py-3 rounded-xl border text-sm",
                     rateChangeSavings.interest >= 0
                       ? "bg-amber-50 border-amber-100"
-                      : "bg-red-50 border-red-100"
+                      : "bg-red-50 border-red-100",
                   )}
                 >
                   <div className="space-y-0.5">
-                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Rate Changes Impact</p>
-                    <p className={cn("font-bold text-base", rateChangeSavings.interest >= 0 ? "text-amber-700" : "text-red-600")}>
+                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                      Rate Changes Impact
+                    </p>
+                    <p
+                      className={cn(
+                        "font-bold text-base",
+                        rateChangeSavings.interest >= 0
+                          ? "text-amber-700"
+                          : "text-red-600",
+                      )}
+                    >
                       {rateChangeSavings.interest >= 0 ? "Saves " : "Costs "}
-                      {formatCurrencyFull(Math.abs(rateChangeSavings.interest), currency.code, currency.locale)}
+                      {formatCurrencyFull(
+                        Math.abs(rateChangeSavings.interest),
+                        currency.code,
+                        currency.locale,
+                      )}
                     </p>
                   </div>
                   <div className="text-right space-y-0.5">
-                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Tenure {rateChangeSavings.months >= 0 ? "Reduced" : "Added"}</p>
-                    <p className={cn("font-bold text-base", rateChangeSavings.months >= 0 ? "text-amber-700" : "text-red-600")}>
-                      {Math.floor(Math.abs(rateChangeSavings.months) / 12)}y {Math.abs(rateChangeSavings.months) % 12}m
+                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                      Tenure{" "}
+                      {rateChangeSavings.months >= 0 ? "Reduced" : "Added"}
+                    </p>
+                    <p
+                      className={cn(
+                        "font-bold text-base",
+                        rateChangeSavings.months >= 0
+                          ? "text-amber-700"
+                          : "text-red-600",
+                      )}
+                    >
+                      {Math.floor(Math.abs(rateChangeSavings.months) / 12)}y{" "}
+                      {Math.abs(rateChangeSavings.months) % 12}m
                     </p>
                   </div>
                 </motion.div>
@@ -2017,15 +2115,25 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                   className="flex items-center justify-between px-4 py-3 bg-emerald-50 rounded-xl border border-emerald-100 text-sm"
                 >
                   <div className="space-y-0.5">
-                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Prepayments Impact</p>
+                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                      Prepayments Impact
+                    </p>
                     <p className="font-bold text-base text-emerald-700">
-                      Saves {formatCurrencyFull(prepaymentSavings.interest, currency.code, currency.locale)}
+                      Saves{" "}
+                      {formatCurrencyFull(
+                        prepaymentSavings.interest,
+                        currency.code,
+                        currency.locale,
+                      )}
                     </p>
                   </div>
                   <div className="text-right space-y-0.5">
-                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Tenure Reduced</p>
+                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                      Tenure Reduced
+                    </p>
                     <p className="font-bold text-base text-emerald-700">
-                      {Math.floor(prepaymentSavings.months / 12)}y {prepaymentSavings.months % 12}m
+                      {Math.floor(prepaymentSavings.months / 12)}y{" "}
+                      {prepaymentSavings.months % 12}m
                     </p>
                   </div>
                 </motion.div>
@@ -2044,11 +2152,15 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                   <Zap className="w-4 h-4 text-purple-600" />
                 </div>
                 <div>
-                  <h2 id="step-up-title" className="text-lg font-semibold text-slate-800">
+                  <h2
+                    id="step-up-title"
+                    className="text-lg font-semibold text-slate-800"
+                  >
                     EMI Step-Up Planner
                   </h2>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Simulate annual EMI increases as your income grows — pay off faster
+                    Simulate annual EMI increases as your income grows — pay off
+                    faster
                   </p>
                 </div>
               </div>
@@ -2070,16 +2182,23 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
               <div className="space-y-5">
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <label htmlFor="emi-step-up-slider" className="text-sm font-bold text-slate-600">
+                    <label
+                      htmlFor="emi-step-up-slider"
+                      className="text-sm font-bold text-slate-600"
+                    >
                       Annual Step-Up Rate
                     </label>
-                    <span className={cn(
-                      "text-sm font-extrabold px-2 py-0.5 rounded-md",
-                      emiStepUpPercent === 0
-                        ? "text-slate-400 bg-slate-100"
-                        : "text-purple-700 bg-purple-100"
-                    )}>
-                      {emiStepUpPercent === 0 ? "Disabled" : `+${emiStepUpPercent}% / year`}
+                    <span
+                      className={cn(
+                        "text-sm font-extrabold px-2 py-0.5 rounded-md",
+                        emiStepUpPercent === 0
+                          ? "text-slate-400 bg-slate-100"
+                          : "text-purple-700 bg-purple-100",
+                      )}
+                    >
+                      {emiStepUpPercent === 0
+                        ? "Disabled"
+                        : `+${emiStepUpPercent}% / year`}
                     </span>
                   </div>
                   <input
@@ -2089,7 +2208,9 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                     max={20}
                     step={0.5}
                     value={emiStepUpPercent}
-                    onChange={(e) => setEmiStepUpPercent(Number(e.target.value))}
+                    onChange={(e) =>
+                      setEmiStepUpPercent(Number(e.target.value))
+                    }
                     className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
                   />
                   <div className="flex justify-between text-[10px] text-slate-400 font-medium px-0.5">
@@ -2103,7 +2224,9 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
 
                 {/* Quick Presets */}
                 <div className="space-y-2">
-                  <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Quick Presets</p>
+                  <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                    Quick Presets
+                  </p>
                   <div className="flex flex-wrap gap-2">
                     {[0, 5, 7, 10, 15].map((preset) => (
                       <button
@@ -2113,7 +2236,7 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                           "px-3 py-1.5 rounded-lg text-xs font-bold transition-all border",
                           emiStepUpPercent === preset
                             ? "bg-purple-600 text-white border-purple-600 shadow-md shadow-purple-200"
-                            : "bg-slate-50 text-slate-600 border-slate-200 hover:border-purple-300 hover:text-purple-600 hover:bg-purple-50"
+                            : "bg-slate-50 text-slate-600 border-slate-200 hover:border-purple-300 hover:text-purple-600 hover:bg-purple-50",
                         )}
                       >
                         {preset === 0 ? "No Step-Up" : `+${preset}%`}
@@ -2130,18 +2253,29 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                     animate={{ opacity: 1, y: 0 }}
                     className="p-4 bg-purple-50 rounded-xl border border-purple-100 space-y-3"
                   >
-                    <p className="text-[10px] uppercase font-bold text-purple-600 tracking-wider">Step-Up Impact</p>
+                    <p className="text-[10px] uppercase font-bold text-purple-600 tracking-wider">
+                      Step-Up Impact
+                    </p>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wide">Tenure Saved</p>
+                        <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wide">
+                          Tenure Saved
+                        </p>
                         <p className="text-xl font-bold text-purple-700">
-                          {Math.floor(savings.months / 12)}y {savings.months % 12}m
+                          {Math.floor(savings.months / 12)}y{" "}
+                          {savings.months % 12}m
                         </p>
                       </div>
                       <div>
-                        <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wide">Interest Saved</p>
+                        <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wide">
+                          Interest Saved
+                        </p>
                         <p className="text-xl font-bold text-purple-700">
-                          {formatCurrencyFull(savings.interest, currency.code, currency.locale)}
+                          {formatCurrencyFull(
+                            savings.interest,
+                            currency.code,
+                            currency.locale,
+                          )}
                         </p>
                       </div>
                     </div>
@@ -2172,14 +2306,18 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                             "flex items-center justify-between px-4 py-2.5 rounded-xl border text-sm transition-all",
                             y === 0
                               ? "bg-slate-50 border-slate-200"
-                              : "bg-purple-50/60 border-purple-100 hover:border-purple-200"
+                              : "bg-purple-50/60 border-purple-100 hover:border-purple-200",
                           )}
                         >
                           <div className="flex items-center gap-3">
-                            <span className={cn(
-                              "w-6 h-6 flex items-center justify-center rounded-full text-[10px] font-bold",
-                              y === 0 ? "bg-slate-200 text-slate-600" : "bg-purple-200 text-purple-700"
-                            )}>
+                            <span
+                              className={cn(
+                                "w-6 h-6 flex items-center justify-center rounded-full text-[10px] font-bold",
+                                y === 0
+                                  ? "bg-slate-200 text-slate-600"
+                                  : "bg-purple-200 text-purple-700",
+                              )}
+                            >
                               {y + 1}
                             </span>
                             <span className="font-medium text-slate-700">
@@ -2188,7 +2326,12 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                           </div>
                           <div className="text-right">
                             <p className="font-bold text-slate-800">
-                              {formatCurrency(rowEmi, currency.code, currency.locale, currency.useIndianNotation)}
+                              {formatCurrency(
+                                rowEmi,
+                                currency.code,
+                                currency.locale,
+                                currency.useIndianNotation,
+                              )}
                             </p>
                             {pct > 0 && (
                               <p className="text-[10px] text-purple-600 font-semibold">
@@ -2196,14 +2339,16 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                               </p>
                             )}
                           </div>
-                        </div>
+                        </div>,
                       );
                     }
                     if (emiStepUpPercent === 0) {
                       return (
                         <div className="flex flex-col items-center justify-center py-10 text-slate-400 border-2 border-dashed border-slate-100 rounded-xl">
                           <Zap className="w-8 h-8 mb-2 opacity-20" />
-                          <p className="text-sm italic">Enable step-up to see year-wise EMI</p>
+                          <p className="text-sm italic">
+                            Enable step-up to see year-wise EMI
+                          </p>
                         </div>
                       );
                     }
@@ -2216,11 +2361,13 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
             <div className="p-3 bg-slate-50 rounded-xl border border-dashed border-slate-200">
               <p className="text-xs text-slate-500 leading-relaxed italic">
                 <Info className="w-3.5 h-3.5 inline mr-1 mb-0.5 text-purple-500" />
-                EMI increases by the step-up rate each year on the loan anniversary. Works alongside prepayments and rate changes to give you the most accurate projection of your repayment strategy.
+                EMI increases by the step-up rate each year on the loan
+                anniversary. Works alongside prepayments and rate changes to
+                give you the most accurate projection of your repayment
+                strategy.
               </p>
             </div>
           </section>
-
 
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -2244,11 +2391,17 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                   <div className="flex items-center gap-2">
                     <div className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-bold flex items-center gap-1">
                       <TrendingUp className="w-3 h-3" />
-                      {formatCurrencyFull(savings.interest, currency.code, currency.locale)} saved
+                      {formatCurrencyFull(
+                        savings.interest,
+                        currency.code,
+                        currency.locale,
+                      )}{" "}
+                      saved
                     </div>
                     <div className="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-[10px] font-bold flex items-center gap-1">
                       <Clock className="w-3 h-3" />
-                      {Math.floor(savings.months / 12)}y {savings.months % 12}m faster
+                      {Math.floor(savings.months / 12)}y {savings.months % 12}m
+                      faster
                     </div>
                   </div>
                 )}
@@ -2353,8 +2506,8 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                         {loanType === LoanType.HOME
                           ? "Property Value"
                           : loanType === LoanType.CAR
-                          ? "On-Road Price"
-                          : "Purchase Price / Total Value"}
+                            ? "On-Road Price"
+                            : "Purchase Price / Total Value"}
                       </label>
                       <Target className="w-4 h-4 text-slate-400" />
                     </div>
@@ -2391,7 +2544,11 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                       <input
                         type="text"
                         inputMode="decimal"
-                        value={customRegistrationRate !== null ? customRegistrationRate : Math.round(propertyValue * 0.04)}
+                        value={
+                          customRegistrationRate !== null
+                            ? customRegistrationRate
+                            : Math.round(propertyValue * 0.04)
+                        }
                         onChange={(e) => {
                           const val = e.target.value;
                           if (val === "" || /^\d*\.?\d*$/.test(val)) {
@@ -2415,7 +2572,11 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                         <input
                           type="text"
                           inputMode="decimal"
-                          value={customStampDutyRate !== null ? customStampDutyRate : Math.round(amount * 0.01)}
+                          value={
+                            customStampDutyRate !== null
+                              ? customStampDutyRate
+                              : Math.round(amount * 0.01)
+                          }
                           onChange={(e) => {
                             const val = e.target.value;
                             if (val === "" || /^\d*\.?\d*$/.test(val)) {
@@ -2426,7 +2587,15 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                         />
                       </div>
                       <p className="text-[10px] text-slate-500 font-bold">
-                        Equivalent to {(((customStampDutyRate !== null ? customStampDutyRate : Math.round(amount * 0.01)) / amount) * 100).toFixed(2)}% of Loan
+                        Equivalent to{" "}
+                        {(
+                          ((customStampDutyRate !== null
+                            ? customStampDutyRate
+                            : Math.round(amount * 0.01)) /
+                            amount) *
+                          100
+                        ).toFixed(2)}
+                        % of Loan
                       </p>
                     </div>
                     <div className="space-y-2">
@@ -2440,7 +2609,11 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                         <input
                           type="text"
                           inputMode="decimal"
-                          value={customRegistrationRate !== null ? customRegistrationRate : 1000}
+                          value={
+                            customRegistrationRate !== null
+                              ? customRegistrationRate
+                              : 1000
+                          }
                           onChange={(e) => {
                             const val = e.target.value;
                             if (val === "" || /^\d*\.?\d*$/.test(val)) {
@@ -2451,7 +2624,15 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                         />
                       </div>
                       <p className="text-[10px] text-slate-500 font-bold">
-                        Equivalent to {(((customRegistrationRate !== null ? customRegistrationRate : 1000) / amount) * 100).toFixed(2)}% of Loan
+                        Equivalent to{" "}
+                        {(
+                          ((customRegistrationRate !== null
+                            ? customRegistrationRate
+                            : 1000) /
+                            amount) *
+                          100
+                        ).toFixed(2)}
+                        % of Loan
                       </p>
                     </div>
                   </div>
@@ -3052,15 +3233,15 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
           </article>
         </section>
 
-      {/* Footer */}
-      <footer className="max-w-7xl mx-auto mt-12 pt-8 border-t border-slate-200 text-center text-slate-400 text-sm">
-        <p>
-          © {new Date().getFullYear()} Smart EMI Planner. All calculations are
-          estimates.
-        </p>
-      </footer>
+        {/* Footer */}
+        <footer className="max-w-7xl mx-auto mt-12 pt-8 border-t border-slate-200 text-center text-slate-400 text-sm">
+          <p>
+            © {new Date().getFullYear()} Smart EMI Planner. All calculations are
+            estimates.
+          </p>
+        </footer>
 
-      <style>{`
+        <style>{`
         .custom-scrollbar::-webkit-scrollbar {
           width: 4px;
         }
@@ -3075,7 +3256,7 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
           background: #cbd5e1;
         }
       `}</style>
-    </div>
+      </div>
     </div>
   );
 }

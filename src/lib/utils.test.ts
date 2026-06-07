@@ -29,9 +29,11 @@ describe("Currency Formatters", () => {
       // 2 billion
       expect(formatCurrency(2000000000, "USD", "en-US", false)).toBe("$2B");
     });
-    
+
     it("falls back to base format when below large thresholds", () => {
-      expect(formatCurrency(500, "EUR", "de-DE", false).replace(/\s/g, "")).toContain("500");
+      expect(
+        formatCurrency(500, "EUR", "de-DE", false).replace(/\s/g, ""),
+      ).toContain("500");
     });
   });
 });

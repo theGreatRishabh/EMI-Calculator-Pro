@@ -12,7 +12,7 @@ describe("useDocumentMeta Hook", () => {
   beforeEach(() => {
     // Setup initial DOM elements for testing
     originalTitle = document.title;
-    
+
     // Create elements if they don't exist
     metaDesc = document.querySelector('meta[name="description"]');
     if (!metaDesc) {
@@ -21,7 +21,7 @@ describe("useDocumentMeta Hook", () => {
       metaDesc.content = "Original Description";
       document.head.appendChild(metaDesc);
     }
-    
+
     ogTitle = document.querySelector('meta[property="og:title"]');
     if (!ogTitle) {
       ogTitle = document.createElement("meta");
@@ -49,10 +49,12 @@ describe("useDocumentMeta Hook", () => {
 
   afterEach(() => {
     // Clean up added elements
-    if (metaDesc && metaDesc.parentNode) metaDesc.parentNode.removeChild(metaDesc);
+    if (metaDesc && metaDesc.parentNode)
+      metaDesc.parentNode.removeChild(metaDesc);
     if (ogTitle && ogTitle.parentNode) ogTitle.parentNode.removeChild(ogTitle);
     if (ogDesc && ogDesc.parentNode) ogDesc.parentNode.removeChild(ogDesc);
-    if (canonical && canonical.parentNode) canonical.parentNode.removeChild(canonical);
+    if (canonical && canonical.parentNode)
+      canonical.parentNode.removeChild(canonical);
     document.title = originalTitle;
   });
 
@@ -61,43 +63,75 @@ describe("useDocumentMeta Hook", () => {
       useDocumentMeta({
         title: "Test Title",
         description: "Test Description",
-      })
+      }),
     );
 
     expect(document.title).toBe("Test Title");
-    expect(document.querySelector('meta[name="description"]')?.getAttribute("content")).toBe("Test Description");
-    expect(document.querySelector('meta[property="og:title"]')?.getAttribute("content")).toBe("Test Title");
-    expect(document.querySelector('meta[property="og:description"]')?.getAttribute("content")).toBe("Test Description");
-    
+    expect(
+      document
+        .querySelector('meta[name="description"]')
+        ?.getAttribute("content"),
+    ).toBe("Test Description");
+    expect(
+      document
+        .querySelector('meta[property="og:title"]')
+        ?.getAttribute("content"),
+    ).toBe("Test Title");
+    expect(
+      document
+        .querySelector('meta[property="og:description"]')
+        ?.getAttribute("content"),
+    ).toBe("Test Description");
+
     // Should update canonical URL dynamically
-    const expectedCanonicalUrl = window.location.origin + window.location.pathname;
-    expect(document.querySelector('link[rel="canonical"]')?.getAttribute("href")).toBe(expectedCanonicalUrl);
+    const expectedCanonicalUrl =
+      window.location.origin + window.location.pathname;
+    expect(
+      document.querySelector('link[rel="canonical"]')?.getAttribute("href"),
+    ).toBe(expectedCanonicalUrl);
 
     // Unmount and check if values are restored
     unmount();
-    
+
     expect(document.title).toBe(originalTitle);
-    expect(document.querySelector('meta[name="description"]')?.getAttribute("content")).toBe("Original Description");
-    expect(document.querySelector('meta[property="og:title"]')?.getAttribute("content")).toBe("Original OG Title");
-    expect(document.querySelector('meta[property="og:description"]')?.getAttribute("content")).toBe("Original OG Description");
-    expect(document.querySelector('link[rel="canonical"]')?.getAttribute("href")).toBe("https://example.com/original");
+    expect(
+      document
+        .querySelector('meta[name="description"]')
+        ?.getAttribute("content"),
+    ).toBe("Original Description");
+    expect(
+      document
+        .querySelector('meta[property="og:title"]')
+        ?.getAttribute("content"),
+    ).toBe("Original OG Title");
+    expect(
+      document
+        .querySelector('meta[property="og:description"]')
+        ?.getAttribute("content"),
+    ).toBe("Original OG Description");
+    expect(
+      document.querySelector('link[rel="canonical"]')?.getAttribute("href"),
+    ).toBe("https://example.com/original");
   });
 
   it("creates description element if it does not exist", () => {
     // Remove description element
-    if (metaDesc && metaDesc.parentNode) metaDesc.parentNode.removeChild(metaDesc);
+    if (metaDesc && metaDesc.parentNode)
+      metaDesc.parentNode.removeChild(metaDesc);
     metaDesc = null;
 
     const { unmount } = renderHook(() =>
       useDocumentMeta({
         title: "Another Test Title",
         description: "Another Test Description",
-      })
+      }),
     );
 
     const createdDesc = document.querySelector('meta[name="description"]');
     expect(createdDesc).not.toBeNull();
-    expect(createdDesc?.getAttribute("content")).toBe("Another Test Description");
+    expect(createdDesc?.getAttribute("content")).toBe(
+      "Another Test Description",
+    );
 
     unmount();
   });

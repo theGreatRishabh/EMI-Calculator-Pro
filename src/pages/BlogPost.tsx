@@ -25,10 +25,14 @@ export default function BlogPost() {
   const relatedPosts = (() => {
     const otherPosts = blogPosts.filter((p) => p.slug !== slug);
     const sameCategory = otherPosts.filter((p) => p.category === meta.category);
-    const differentCategory = otherPosts.filter((p) => p.category !== meta.category);
-    
+    const differentCategory = otherPosts.filter(
+      (p) => p.category !== meta.category,
+    );
+
     // Sort different category by date to get recent ones
-    differentCategory.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    differentCategory.sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+    );
 
     return [...sameCategory, ...differentCategory].slice(0, 3);
   })();
@@ -210,7 +214,8 @@ export default function BlogPost() {
                     {post.excerpt}
                   </p>
                   <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 group-hover:text-emerald-700 mt-auto">
-                    Read Article <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                    Read Article{" "}
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                   </span>
                 </Link>
               ))}

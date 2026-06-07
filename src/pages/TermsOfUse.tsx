@@ -6,7 +6,8 @@ import { useDocumentMeta } from "../hooks/useDocumentMeta";
 export default function TermsOfUse() {
   useDocumentMeta({
     title: "Terms of Use | Smart EMI Planner",
-    description: "Read our terms of use. Learn about the rules, usage guidelines, and intellectual property rights governing Smart EMI Planner.",
+    description:
+      "Read our terms of use. Learn about the rules, usage guidelines, and intellectual property rights governing Smart EMI Planner.",
   });
 
   return (
@@ -40,9 +41,11 @@ export default function TermsOfUse() {
               1. Acceptance of Terms
             </h2>
             <p className="leading-relaxed">
-              By accessing and using the website <strong>Smart EMI Planner</strong> (available at `smartemiplanner.com`),
-              you agree to comply with and be bound by these Terms of Use. If you do not agree to these terms, please refrain
-              from using our website.
+              By accessing and using the website{" "}
+              <strong>Smart EMI Planner</strong> (available at
+              `smartemiplanner.com`), you agree to comply with and be bound by
+              these Terms of Use. If you do not agree to these terms, please
+              refrain from using our website.
             </p>
           </section>
 
@@ -52,17 +55,26 @@ export default function TermsOfUse() {
               2. Permitted Use & Restrictions
             </h2>
             <p className="leading-relaxed">
-              You are granted a personal, non-exclusive, non-transferable, revocable license to access and use our loan
-              calculators for personal, non-commercial purposes.
+              You are granted a personal, non-exclusive, non-transferable,
+              revocable license to access and use our loan calculators for
+              personal, non-commercial purposes.
             </p>
-            <p className="leading-relaxed">
-              You agree **NOT** to:
-            </p>
+            <p className="leading-relaxed">You agree **NOT** to:</p>
             <ul className="list-disc pl-6 space-y-2">
               <li>Use the website for any illegal or unauthorized purpose.</li>
-              <li>Scrape, crawl, or harvest data from the calculator pages using automated scripts.</li>
-              <li>Attempt to disrupt or compromise the website's performance, layout, or security.</li>
-              <li>Rebrand, frame, or sell the calculator tools as your own products without explicit written permission from OmegaAlphaTech.</li>
+              <li>
+                Scrape, crawl, or harvest data from the calculator pages using
+                automated scripts.
+              </li>
+              <li>
+                Attempt to disrupt or compromise the website's performance,
+                layout, or security.
+              </li>
+              <li>
+                Rebrand, frame, or sell the calculator tools as your own
+                products without explicit written permission from
+                OmegaAlphaTech.
+              </li>
             </ul>
           </section>
 
@@ -71,9 +83,11 @@ export default function TermsOfUse() {
               3. Intellectual Property Rights
             </h2>
             <p className="leading-relaxed">
-              The proprietary loan optimization algorithms, layout designs, user interface graphics, codebases, custom sitemaps,
-              and contents (including text and blog posts) are the intellectual property of **Smart EMI Planner** and its developers.
-              You may not copy or redistribute any part of our design or code without permission.
+              The proprietary loan optimization algorithms, layout designs, user
+              interface graphics, codebases, custom sitemaps, and contents
+              (including text and blog posts) are the intellectual property of
+              **Smart EMI Planner** and its developers. You may not copy or
+              redistribute any part of our design or code without permission.
             </p>
           </section>
 
@@ -82,19 +96,22 @@ export default function TermsOfUse() {
               4. Limitation of Liability
             </h2>
             <p className="leading-relaxed">
-              To the fullest extent permitted by law, Smart EMI Planner and its creators (OmegaAlphaTech) will not be liable for
-              any direct, indirect, incidental, special, consequential, or punitive damages, including loss of profits, data,
-              or money, resulting from your use of or inability to use the calculators or information on this website.
+              To the fullest extent permitted by law, Smart EMI Planner and its
+              creators (OmegaAlphaTech) will not be liable for any direct,
+              indirect, incidental, special, consequential, or punitive damages,
+              including loss of profits, data, or money, resulting from your use
+              of or inability to use the calculators or information on this
+              website.
             </p>
           </section>
 
           <section className="space-y-4 pt-6 border-t border-slate-100">
-            <h2 className="text-xl font-bold text-slate-900">
-              Governing Law
-            </h2>
+            <h2 className="text-xl font-bold text-slate-900">Governing Law</h2>
             <p className="leading-relaxed">
-              These terms are governed by and construed in accordance with the laws of India. Any disputes arising out of the
-              use of this website will be subject to the exclusive jurisdiction of the courts located in New Delhi, India.
+              These terms are governed by and construed in accordance with the
+              laws of India. Any disputes arising out of the use of this website
+              will be subject to the exclusive jurisdiction of the courts
+              located in New Delhi, India.
             </p>
           </section>
         </div>

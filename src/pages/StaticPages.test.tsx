@@ -11,18 +11,31 @@ describe("Static Pages Rendering", () => {
       render(
         <MemoryRouter>
           <PrivacyPolicy />
-        </MemoryRouter>
+        </MemoryRouter>,
       );
 
       // Verify the main heading
-      const heading = screen.getByRole("heading", { name: /Privacy Policy/i, level: 1 });
+      const heading = screen.getByRole("heading", {
+        name: /Privacy Policy/i,
+        level: 1,
+      });
       expect(heading).toBeInTheDocument();
 
       // Verify some content sections
-      expect(screen.getByText(/1. 100% Client-Side Calculations \(Zero Data Collection\)/i)).toBeInTheDocument();
-      expect(screen.getByText(/None of the financial inputs you enter/i)).toBeInTheDocument();
-      expect(screen.getByText(/2. Local Storage and Sharing Features/i)).toBeInTheDocument();
-      expect(screen.getByText(/3. Analytics & Third-Party Cookies/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          /1. 100% Client-Side Calculations \(Zero Data Collection\)/i,
+        ),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/None of the financial inputs you enter/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/2. Local Storage and Sharing Features/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/3. Analytics & Third-Party Cookies/i),
+      ).toBeInTheDocument();
     });
   });
 
@@ -31,17 +44,24 @@ describe("Static Pages Rendering", () => {
       render(
         <MemoryRouter>
           <TermsOfUse />
-        </MemoryRouter>
+        </MemoryRouter>,
       );
 
       // Verify the main heading
-      const heading = screen.getByRole("heading", { name: /Terms of Use/i, level: 1 });
+      const heading = screen.getByRole("heading", {
+        name: /Terms of Use/i,
+        level: 1,
+      });
       expect(heading).toBeInTheDocument();
 
       // Verify some content sections
       expect(screen.getByText(/1. Acceptance of Terms/i)).toBeInTheDocument();
-      expect(screen.getByText(/2. Permitted Use & Restrictions/i)).toBeInTheDocument();
-      expect(screen.getByText(/3. Intellectual Property Rights/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/2. Permitted Use & Restrictions/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/3. Intellectual Property Rights/i),
+      ).toBeInTheDocument();
     });
   });
 
@@ -50,16 +70,23 @@ describe("Static Pages Rendering", () => {
       render(
         <MemoryRouter>
           <Disclaimer />
-        </MemoryRouter>
+        </MemoryRouter>,
       );
 
       // Verify the main heading
-      const heading = screen.getByRole("heading", { name: /Disclaimer/i, level: 1 });
+      const heading = screen.getByRole("heading", {
+        name: /Disclaimer/i,
+        level: 1,
+      });
       expect(heading).toBeInTheDocument();
 
       // Verify some content sections
-      expect(screen.getByText(/1. Informational & Educational Purposes Only/i)).toBeInTheDocument();
-      expect(screen.getByText(/Not Professional Financial Advice/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/1. Informational & Educational Purposes Only/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Not Professional Financial Advice/i),
+      ).toBeInTheDocument();
       expect(screen.getByText(/No Warranties/i)).toBeInTheDocument();
     });
   });

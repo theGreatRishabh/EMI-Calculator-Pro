@@ -10,7 +10,7 @@ let mockBlogPosts = [
     excerpt: "Test Excerpt A",
     date: "2026-05-01",
     readTime: "5 min read",
-    category: "Category Alpha"
+    category: "Category Alpha",
   },
   {
     slug: "test-post-2",
@@ -18,15 +18,15 @@ let mockBlogPosts = [
     excerpt: "Test Excerpt B",
     date: "2026-06-01",
     readTime: "10 min read",
-    category: "Category Beta"
-  }
+    category: "Category Beta",
+  },
 ];
 
 // Mock the blog metadata json file dynamically using a getter
 vi.mock("../blogMeta.json", () => ({
   get default() {
     return mockBlogPosts;
-  }
+  },
 }));
 
 describe("BlogList Component", () => {
@@ -34,11 +34,13 @@ describe("BlogList Component", () => {
     render(
       <MemoryRouter>
         <BlogList />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     // Verify main header text
-    expect(screen.getByRole("heading", { name: /Smart Loan Insights/i, level: 1 })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /Smart Loan Insights/i, level: 1 }),
+    ).toBeInTheDocument();
 
     // Verify cards are rendered with their metadata
     expect(screen.getByText("Test Title A")).toBeInTheDocument();
@@ -62,7 +64,7 @@ describe("BlogList Component", () => {
     render(
       <MemoryRouter>
         <BlogList />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByText(/No blog posts found/i)).toBeInTheDocument();
