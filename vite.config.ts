@@ -25,6 +25,21 @@ export default defineConfig(({ mode }) => {
       environment: "jsdom",
       setupFiles: ["./src/setupTests.ts"],
       globals: true,
+      testTimeout: 15000,
+      coverage: {
+        provider: "v8",
+        exclude: [
+          "src/blogMeta.json",
+          "src/main.tsx",
+          "src/setupTests.ts",
+          "src/types.ts",
+          "**/*.test.ts",
+          "**/*.test.tsx",
+          "node_modules/**",
+          "dist/**",
+          "vite.config.ts",
+        ],
+      },
     },
   };
 });

@@ -70,5 +70,32 @@ describe("loanLogic", () => {
       expect(rowPrepayment).toBeDefined();
       expect(rowPrepayment?.prepayment).toBe(20000);
     });
+
+    it("should handle prepayments with EMI reduction", () => {
+      const schedule = generateAmortizationSchedule(
+        100000,
+        10,
+        12,
+        startDate,
+        [],
+        [
+          {
+            id: "prepayment-emi",
+            type: PrepaymentType.ONE_TIME,
+            startDate: "2024-03-01",
+            amount: 20000,
+            reduction: PrepaymentReduction.EMI,
+          },
+        ],
+      );
+
+      const rowPrepayment = schedule.find((r) => r.month === 3);
+      expect(rowPrepayment).toBeDefined();
+      expect(rowPrepayment?.prepayment).toBe(20000);
+
+      // The EMI for the next month (month 4) should be recalculated and lower than original
+      const rowNext = schedule.find((r) => r.month === 4);
+      expect(rowNext?.emi).toBeLessThan(schedule[0].emi);
+    });
   });
 });

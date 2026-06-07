@@ -731,7 +731,8 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
   const [isLeadSubmitted, setIsLeadSubmitted] = useState(false);
 
   const isConsultancyEnabled =
-    (import.meta as any).env.VITE_ENABLE_CONSULTANCY === "true";
+    (import.meta as any).env.VITE_ENABLE_CONSULTANCY === "true" ||
+    (typeof process !== "undefined" && process.env && process.env.VITE_ENABLE_CONSULTANCY === "true");
 
   const handleLeadSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -2846,15 +2847,13 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                   </p>
                 </div>
                 <div className="flex flex-wrap justify-center gap-4 pt-4">
-                  <a
-                    href="https://www.omegaalphatech.com/contact"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-3 px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition-all shadow-xl shadow-emerald-900/40 hover:scale-105 active:scale-95"
+                  <button
+                    onClick={() => setShowLeadModal(true)}
+                    className="flex items-center gap-3 px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition-all shadow-xl shadow-emerald-900/40 hover:scale-105 active:scale-95 cursor-pointer"
                   >
                     <Award className="w-5 h-5" />
                     Request a Feature
-                  </a>
+                  </button>
                   <a
                     href="https://omegaalphatech.com/"
                     target="_blank"
