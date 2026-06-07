@@ -62,7 +62,7 @@ function generateBlogMeta() {
   );
 
   // Write catalog to src so React can import it statically
-  fs.writeFileSync(OUTPUT_FILE, JSON.stringify(blogList, null, 2));
+  fs.writeFileSync(OUTPUT_FILE, JSON.stringify(blogList, null, 2) + "\n");
   console.log(`✅ Indexed ${blogList.length} blogs to src/blogMeta.json`);
 
   // Write Sitemap
