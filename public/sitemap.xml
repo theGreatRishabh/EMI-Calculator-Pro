@@ -4,6 +4,24 @@
         <loc>https://smartemiplanner.com/</loc>
         <lastmod>2026-06-07</lastmod>
         <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://smartemiplanner.com/home-loan</loc>
+        <lastmod>2026-06-07</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>https://smartemiplanner.com/car-loan</loc>
+        <lastmod>2026-06-07</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>https://smartemiplanner.com/personal-loan</loc>
+        <lastmod>2026-06-07</lastmod>
+        <changefreq>weekly</changefreq>
         <priority>1.0</priority>
     </url>
     <url>

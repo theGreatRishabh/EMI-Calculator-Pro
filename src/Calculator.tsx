@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   PieChart,
   Pie,
@@ -469,11 +470,33 @@ function PrepaymentCard({
   );
 }
 
-export default function App() {
-  const [loanType, setLoanType] = useState<LoanType>(LoanType.HOME);
-  const [amount, setAmount] = useState(LOAN_DEFAULTS[LoanType.HOME].amount);
-  const [rate, setRate] = useState(LOAN_DEFAULTS[LoanType.HOME].rate);
-  const [tenure, setTenure] = useState(LOAN_DEFAULTS[LoanType.HOME].tenure);
+const LOAN_TYPE_META: Record<string, { title: string; description: string; slug: string }> = {
+  HOME: {
+    slug: "/home-loan",
+    title: "Home Loan EMI Calculator - Smart EMI Planner",
+    description: "Calculate your Home Loan EMI instantly. Simulate prepayments, rate changes, and EMI step-ups. Free amortization schedule with tax benefits for India.",
+  },
+  CAR: {
+    slug: "/car-loan",
+    title: "Car Loan EMI Calculator - Smart EMI Planner",
+    description: "Calculate your Car Loan EMI with on-road price breakdown including insurance. Plan prepayments and see your payoff date. Free car loan amortization schedule.",
+  },
+  PERSONAL: {
+    slug: "/personal-loan",
+    title: "Personal Loan EMI Calculator - Smart EMI Planner",
+    description: "Calculate Personal Loan EMI with processing fee breakdown. Simulate prepayments and rate changes. Free personal loan amortization schedule.",
+  },
+};
+
+export default function App({ initialLoanType = "HOME" }: { initialLoanType?: string }) {
+  const navigate = useNavigate();
+  const resolvedInitialType = (Object.values(LoanType).includes(initialLoanType as LoanType)
+    ? initialLoanType
+    : "HOME") as LoanType;
+  const [loanType, setLoanType] = useState<LoanType>(resolvedInitialType);
+  const [amount, setAmount] = useState(LOAN_DEFAULTS[resolvedInitialType].amount);
+  const [rate, setRate] = useState(LOAN_DEFAULTS[resolvedInitialType].rate);
+  const [tenure, setTenure] = useState(LOAN_DEFAULTS[resolvedInitialType].tenure);
   const [tenureUnit, setTenureUnit] = useState<"Y" | "M">("Y");
   const [loanStartDate, setLoanStartDate] = useState(
     format(new Date(), "yyyy-MM-dd"),
@@ -501,6 +524,16 @@ export default function App() {
 
   const [currencyCode, setCurrencyCode] = useState<string>("INR");
   const currency = CURRENCY_CONFIGS[currencyCode] || CURRENCY_CONFIGS.INR;
+
+  // Update page title + meta description for SEO on every loan type change
+  useEffect(() => {
+    const meta = LOAN_TYPE_META[loanType] || LOAN_TYPE_META.HOME;
+    document.title = meta.title;
+    const desc = document.querySelector<HTMLMetaElement>("meta[name='description']");
+    if (desc) desc.content = meta.description;
+    const canonical = document.querySelector<HTMLLinkElement>("link[rel='canonical']");
+    if (canonical) canonical.href = `https://smartemiplanner.com${meta.slug}`;
+  }, [loanType]);
 
   // Currency Detection
   useEffect(() => {
@@ -554,11 +587,14 @@ export default function App() {
     const curr = params.get("curr");
     const emiSU = params.get("emiSU");
 
-    // Load from LocalStorage if URL is empty
+    // Load from LocalStorage if URL is empty and it matches the current loan type (to prevent cross-type leakage)
     const savedState = !window.location.search
       ? localStorage.getItem("emi_calculator_state")
       : null;
-    const local = savedState ? JSON.parse(savedState) : null;
+    let local = savedState ? JSON.parse(savedState) : null;
+    if (local && local.loanType !== resolvedInitialType) {
+      local = null;
+    }
 
     if (curr && CURRENCY_CONFIGS[curr]) {
       setCurrencyCode(curr);
@@ -642,7 +678,7 @@ export default function App() {
     } else if (local?.emiStepUpPercent !== undefined) {
       setEmiStepUpPercent(local.emiStepUpPercent);
     }
-  }, []);
+  }, [resolvedInitialType]);
 
   // Save to LocalStorage
   useEffect(() => {
@@ -825,6 +861,10 @@ export default function App() {
   }), [originalSummary, rateChangeOnlySchedule]);
 
   const handleLoanTypeChange = (type: LoanType) => {
+    // Navigate to the SEO URL for that loan type
+    const meta = LOAN_TYPE_META[type];
+    if (meta) navigate(meta.slug);
+
     setLoanType(type);
     setAmount(LOAN_DEFAULTS[type].amount);
     setRate(LOAN_DEFAULTS[type].rate);
@@ -1226,23 +1266,6 @@ export default function App() {
           </div>
 
           <div className="flex flex-wrap items-center gap-4">
-            <div className="flex bg-white p-1 rounded-xl shadow-sm border border-slate-200">
-              {Object.values(LoanType).map((type) => (
-                <button
-                  key={type}
-                  onClick={() => handleLoanTypeChange(type)}
-                  className={cn(
-                    "px-4 py-2 rounded-lg text-sm font-medium transition-all",
-                    loanType === type
-                      ? "bg-emerald-600 text-white shadow-md"
-                      : "text-slate-600 hover:bg-slate-50",
-                  )}
-                >
-                  {type.charAt(0) + type.slice(1).toLowerCase()} Loan
-                </button>
-              ))}
-            </div>
-
             <button
               onClick={handleShare}
               className="hidden md:flex items-center gap-2 px-4 py-2 bg-slate-100 border border-slate-300 rounded-lg text-sm font-bold text-slate-700 hover:bg-slate-200 transition-all shadow-sm"

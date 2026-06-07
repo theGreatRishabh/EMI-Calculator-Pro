@@ -73,14 +73,33 @@ function generateSitemap(blogs: BlogMeta[]) {
   const today = new Date().toISOString().split("T")[0];
   const baseUrl = "https://smartemiplanner.com";
 
+  // Core calculator pages — highest priority for SEO
+  const calculatorPages = [
+    { path: "/home-loan",     priority: "1.0", changefreq: "weekly", label: "Home Loan EMI Calculator" },
+    { path: "/car-loan",      priority: "1.0", changefreq: "weekly", label: "Car Loan EMI Calculator" },
+    { path: "/personal-loan", priority: "1.0", changefreq: "weekly", label: "Personal Loan EMI Calculator" },
+  ];
+
   let xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>${baseUrl}/</loc>
         <lastmod>${today}</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>1.0</priority>
-    </url>
+        <priority>0.8</priority>
+    </url>`;
+
+  for (const page of calculatorPages) {
+    xml += `
+    <url>
+        <loc>${baseUrl}${page.path}</loc>
+        <lastmod>${today}</lastmod>
+        <changefreq>${page.changefreq}</changefreq>
+        <priority>${page.priority}</priority>
+    </url>`;
+  }
+
+  xml += `
     <url>
         <loc>${baseUrl}/blog</loc>
         <lastmod>${today}</lastmod>
@@ -102,7 +121,7 @@ function generateSitemap(blogs: BlogMeta[]) {
 
   fs.writeFileSync(SITEMAP_FILE, xml);
   console.log(
-    `✅ Generated public/sitemap.xml with ${blogs.length + 2} entries.`,
+    `✅ Generated public/sitemap.xml with ${blogs.length + calculatorPages.length + 2} entries.`,
   );
 }
 
