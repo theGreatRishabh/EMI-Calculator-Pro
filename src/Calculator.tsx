@@ -1226,8 +1226,20 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
   const currentRegistrationRate =
     customRegistrationRate ?? (currency.registrationRate || 0);
 
-  const stampDuty = (propertyValue * currentStampDutyRate) / 100;
-  const registrationFee = (propertyValue * currentRegistrationRate) / 100;
+  const stampDuty =
+    loanType === LoanType.CAR
+      ? 0
+      : loanType === LoanType.PERSONAL
+      ? (customStampDutyRate ?? Math.round(amount * 0.01))
+      : (propertyValue * currentStampDutyRate) / 100;
+
+  const registrationFee =
+    loanType === LoanType.CAR
+      ? (customRegistrationRate ?? Math.round(propertyValue * 0.04))
+      : loanType === LoanType.PERSONAL
+      ? (customRegistrationRate ?? 1000)
+      : (propertyValue * currentRegistrationRate) / 100;
+
   const totalUpfront = stampDuty + registrationFee + downPayment;
 
   return (
@@ -1244,7 +1256,7 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
               />
               <div>
                 <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-                  Smart EMI Calculator
+                  Smart EMI Planner
                 </h1>
                 <p className="text-slate-500">
                   Advanced loan simulation with rate changes and prepayments
@@ -1388,7 +1400,12 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                         </label>
                         <div className="flex bg-slate-100 p-1 rounded-lg">
                           <button
-                            onClick={() => setTenureUnit("Y")}
+                            onClick={() => {
+                              if (tenureUnit === "M") {
+                                setTenureUnit("Y");
+                                setTenure(Math.max(1, Math.round(tenure / 12)));
+                              }
+                            }}
                             className={cn(
                               "px-3 py-1 text-[10px] font-bold rounded-md transition-all",
                               tenureUnit === "Y"
@@ -1399,7 +1416,12 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                             Yrs
                           </button>
                           <button
-                            onClick={() => setTenureUnit("M")}
+                            onClick={() => {
+                              if (tenureUnit === "Y") {
+                                setTenureUnit("M");
+                                setTenure(tenure * 12);
+                              }
+                            }}
                             className={cn(
                               "px-3 py-1 text-[10px] font-bold rounded-md transition-all",
                               tenureUnit === "M"
@@ -1416,7 +1438,7 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                         aria-label="Loan Tenure Slider"
                         type="range"
                         min="1"
-                        max={LOAN_DEFAULTS[loanType].maxTenure}
+                        max={tenureUnit === "Y" ? LOAN_DEFAULTS[loanType].maxTenure : LOAN_DEFAULTS[loanType].maxTenure * 12}
                         step="1"
                         value={tenure}
                         onChange={(e) => setTenure(Number(e.target.value))}
@@ -2323,71 +2345,153 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="space-y-6">
-                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200">
-                  <div className="flex items-center justify-between mb-2">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                      {loanType === LoanType.HOME
-                        ? "Property Value"
-                        : "Purchase Price / Total Value"}
-                    </label>
-                    <Target className="w-4 h-4 text-slate-400" />
-                  </div>
-                  <div className="relative">
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center font-bold text-slate-400 text-lg">
-                      {currency.symbol}
+                {loanType !== LoanType.PERSONAL && (
+                  <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200">
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                        {loanType === LoanType.HOME
+                          ? "Property Value"
+                          : loanType === LoanType.CAR
+                          ? "On-Road Price"
+                          : "Purchase Price / Total Value"}
+                      </label>
+                      <Target className="w-4 h-4 text-slate-400" />
                     </div>
-                    <input
-                      type="text"
-                      inputMode="decimal"
-                      value={propertyValue || ""}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        if (val === "" || /^\d*\.?\d*$/.test(val)) {
-                          setPropertyValue(parseNumberInput(e));
-                        }
-                      }}
-                      className="w-full pl-8 pr-4 py-2 bg-transparent border-b-2 border-slate-200 text-2xl font-bold text-slate-900 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-300"
-                      placeholder="Enter value..."
-                    />
+                    <div className="relative">
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center font-bold text-slate-400 text-lg">
+                        {currency.symbol}
+                      </div>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        value={propertyValue || ""}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                            setPropertyValue(parseNumberInput(e));
+                          }
+                        }}
+                        className="w-full pl-8 pr-4 py-2 bg-transparent border-b-2 border-slate-200 text-2xl font-bold text-slate-900 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-300"
+                        placeholder="Enter value..."
+                      />
+                    </div>
                   </div>
-                </div>
+                )}
 
-                <div className="grid grid-cols-2 gap-4">
+                {loanType === LoanType.CAR ? (
                   <div className="space-y-2">
                     <label className="text-xs font-bold text-slate-500 uppercase tracking-wider text-nowrap">
-                      {upfrontConfig.label1}
+                      Insurance Amount
                     </label>
-                    <input
-                      type="text"
-                      inputMode="decimal"
-                      value={currentStampDutyRate}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        if (val === "" || /^\d*\.?\d*$/.test(val)) {
-                          setCustomStampDutyRate(parseNumberInput(e));
-                        }
-                      }}
-                      className="w-full pl-3 pr-9 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none transition-all"
-                    />
+                    <div className="relative">
+                      <div className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400 text-sm">
+                        {currency.symbol}
+                      </div>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        value={customRegistrationRate !== null ? customRegistrationRate : Math.round(propertyValue * 0.04)}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                            setCustomRegistrationRate(parseNumberInput(e));
+                          }
+                        }}
+                        className="w-full pl-8 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-semibold"
+                      />
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider text-nowrap">
-                      {upfrontConfig.label2}
-                    </label>
-                    <input
-                      type="text"
-                      inputMode="decimal"
-                      value={currentRegistrationRate}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        if (val === "" || /^\d*\.?\d*$/.test(val)) {
-                          setCustomRegistrationRate(parseNumberInput(e));
-                        }
-                      }}
-                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-indigo-500 outline-none"
-                    />
+                ) : loanType === LoanType.PERSONAL ? (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider text-nowrap">
+                        Filing/Processing Charges
+                      </label>
+                      <div className="relative">
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400 text-sm">
+                          {currency.symbol}
+                        </div>
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          value={customStampDutyRate !== null ? customStampDutyRate : Math.round(amount * 0.01)}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                              setCustomStampDutyRate(parseNumberInput(e));
+                            }
+                          }}
+                          className="w-full pl-8 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-semibold"
+                        />
+                      </div>
+                      <p className="text-[10px] text-slate-500 font-bold">
+                        Equivalent to {(((customStampDutyRate !== null ? customStampDutyRate : Math.round(amount * 0.01)) / amount) * 100).toFixed(2)}% of Loan
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider text-nowrap">
+                        Documentation Charges
+                      </label>
+                      <div className="relative">
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400 text-sm">
+                          {currency.symbol}
+                        </div>
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          value={customRegistrationRate !== null ? customRegistrationRate : 1000}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                              setCustomRegistrationRate(parseNumberInput(e));
+                            }
+                          }}
+                          className="w-full pl-8 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-semibold"
+                        />
+                      </div>
+                      <p className="text-[10px] text-slate-500 font-bold">
+                        Equivalent to {(((customRegistrationRate !== null ? customRegistrationRate : 1000) / amount) * 100).toFixed(2)}% of Loan
+                      </p>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider text-nowrap">
+                        {upfrontConfig.label1}
+                      </label>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        value={currentStampDutyRate}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                            setCustomStampDutyRate(parseNumberInput(e));
+                          }
+                        }}
+                        className="w-full pl-3 pr-9 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider text-nowrap">
+                        {upfrontConfig.label2}
+                      </label>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        value={currentRegistrationRate}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                            setCustomRegistrationRate(parseNumberInput(e));
+                          }
+                        }}
+                        className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-6 rounded-2xl border border-slate-200 self-start">
@@ -2427,18 +2531,20 @@ export default function App({ initialLoanType = "HOME" }: { initialLoanType?: st
                   </p>
                 </div>
                 <div className="md:col-span-2 pt-4 border-t border-slate-200 mt-2">
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-slate-500">
-                      {upfrontConfig.summary1}
-                    </span>
-                    <span className="font-bold text-slate-700">
-                      {formatCurrencyFull(
-                        stampDuty,
-                        currency.code,
-                        currency.locale,
-                      )}
-                    </span>
-                  </div>
+                  {loanType !== LoanType.CAR && (
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-slate-500">
+                        {upfrontConfig.summary1}
+                      </span>
+                      <span className="font-bold text-slate-700">
+                        {formatCurrencyFull(
+                          stampDuty,
+                          currency.code,
+                          currency.locale,
+                        )}
+                      </span>
+                    </div>
+                  )}
                   <div className="flex justify-between items-center text-sm mt-1">
                     <span className="text-slate-500">
                       {upfrontConfig.summary2}

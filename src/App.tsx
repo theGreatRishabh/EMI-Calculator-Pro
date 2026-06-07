@@ -1,15 +1,31 @@
 import React from "react";
-import { Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  Link,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import Calculator from "./Calculator";
 import BlogList from "./pages/BlogList";
 import BlogPost from "./pages/BlogPost";
-import { BookOpen, Calculator as CalcIcon, Home, Car, User } from "lucide-react";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Disclaimer from "./pages/Disclaimer";
+import TermsOfUse from "./pages/TermsOfUse";
+import FAQ from "./pages/FAQ";
+import {
+  BookOpen,
+  Calculator as CalcIcon,
+  Home,
+  Car,
+  User,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "./lib/utils";
 
 const LOAN_ROUTES = [
   { path: "/home-loan", label: "Home", icon: Home, type: "HOME" },
-  { path: "/car-loan",  label: "Car",  icon: Car,  type: "CAR" },
+  { path: "/car-loan", label: "Car", icon: Car, type: "CAR" },
   { path: "/personal-loan", label: "Personal", icon: User, type: "PERSONAL" },
 ];
 
@@ -19,8 +35,8 @@ function GlobalHeader() {
   const isCalc = !isBlog;
 
   // Detect which loan route is active
-  const activeLoanRoute = LOAN_ROUTES.find(r => location.pathname === r.path)
-    ?? LOAN_ROUTES[0]; // default highlight to Home Loan on "/"
+  const activeLoanRoute =
+    LOAN_ROUTES.find((r) => location.pathname === r.path) ?? LOAN_ROUTES[0]; // default highlight to Home Loan on "/"
 
   return (
     <header className="bg-white border-b border-slate-200 sticky top-0 z-50 px-4 py-3 sm:px-6 shadow-sm">
@@ -38,8 +54,9 @@ function GlobalHeader() {
         <nav className="relative flex items-center gap-1 sm:gap-2 bg-slate-100/80 p-1 rounded-xl">
           {/* Loan type pills */}
           {LOAN_ROUTES.map((route) => {
-            const isActive = location.pathname === route.path
-              || (location.pathname === "/" && route.type === "HOME");
+            const isActive =
+              location.pathname === route.path ||
+              (location.pathname === "/" && route.type === "HOME");
             const Icon = route.icon;
             return (
               <Link
@@ -47,7 +64,9 @@ function GlobalHeader() {
                 to={route.path}
                 className={cn(
                   "relative z-10 flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold transition-colors duration-300",
-                  isActive ? "text-emerald-700" : "text-slate-600 hover:text-emerald-600 hover:bg-slate-50/50"
+                  isActive
+                    ? "text-emerald-700"
+                    : "text-slate-600 hover:text-emerald-600 hover:bg-slate-50/50",
                 )}
               >
                 {isActive && (
@@ -68,7 +87,9 @@ function GlobalHeader() {
             to="/blog"
             className={cn(
               "relative z-10 flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold transition-colors duration-300",
-              isBlog ? "text-emerald-700" : "text-slate-600 hover:text-emerald-600 hover:bg-slate-50/50"
+              isBlog
+                ? "text-emerald-700"
+                : "text-slate-600 hover:text-emerald-600 hover:bg-slate-50/50",
             )}
           >
             {isBlog && (
@@ -103,28 +124,169 @@ export default function App() {
       <main className="flex-1 pb-16">
         <Routes>
           {/* Loan-type specific SEO URLs */}
-          <Route path="/home-loan" element={<Calculator key="HOME" initialLoanType="HOME" />} />
-          <Route path="/car-loan"  element={<Calculator key="CAR" initialLoanType="CAR" />} />
-          <Route path="/personal-loan" element={<Calculator key="PERSONAL" initialLoanType="PERSONAL" />} />
+          <Route
+            path="/home-loan"
+            element={<Calculator key="HOME" initialLoanType="HOME" />}
+          />
+          <Route
+            path="/car-loan"
+            element={<Calculator key="CAR" initialLoanType="CAR" />}
+          />
+          <Route
+            path="/personal-loan"
+            element={<Calculator key="PERSONAL" initialLoanType="PERSONAL" />}
+          />
           {/* Legacy root — redirects to /home-loan via Calculator default */}
           <Route path="/" element={<Calculator initialLoanType="HOME" />} />
           <Route path="/blog" element={<BlogList />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/disclaimer" element={<Disclaimer />} />
+          <Route path="/terms-of-use" element={<TermsOfUse />} />
+          <Route path="/faq" element={<FAQ />} />
         </Routes>
       </main>
 
-      <footer className="bg-slate-900 text-slate-400 py-4 text-center text-xs font-medium border-t border-slate-800 sticky bottom-0 z-40">
-        Built with ❤️ by{" "}
-        <a
-          href="https://omegaalphatech.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-emerald-400 hover:text-emerald-300 font-bold transition-colors"
-        >
-          OmegaAlphaTech
-        </a>
-        . Need a custom financial app for your business? We build
-        high-performance web tools.
+      <footer className="bg-slate-900 text-slate-400 py-12 px-4 border-t border-slate-800 mt-auto">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 text-sm">
+          {/* Brand Column */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <img
+                src="/favicon.png"
+                alt="Smart EMI Planner Logo"
+                className="w-6 h-6 rounded"
+              />
+              <span className="font-bold text-white tracking-tight">
+                Smart EMI Planner
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Advanced loan amortization calculators and planners. Simulate rate
+              hikes, prepayments, and annual step-ups to save on interest.
+            </p>
+          </div>
+
+          {/* Calculators Column */}
+          <div>
+            <h4 className="font-bold text-white mb-3 text-xs uppercase tracking-wider">
+              Calculators
+            </h4>
+            <ul className="space-y-2 text-xs">
+              <li>
+                <Link
+                  to="/home-loan"
+                  className="hover:text-emerald-400 transition-colors"
+                >
+                  Home Loan Calculator
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/car-loan"
+                  className="hover:text-emerald-400 transition-colors"
+                >
+                  Car Loan Calculator
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/personal-loan"
+                  className="hover:text-emerald-400 transition-colors"
+                >
+                  Personal Loan Calculator
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Resources Column */}
+          <div>
+            <h4 className="font-bold text-white mb-3 text-xs uppercase tracking-wider">
+              Resources
+            </h4>
+            <ul className="space-y-2 text-xs">
+              <li>
+                <Link
+                  to="/blog"
+                  className="hover:text-emerald-400 transition-colors"
+                >
+                  Insights Blog
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/faq"
+                  className="hover:text-emerald-400 transition-colors"
+                >
+                  FAQ
+                </Link>
+              </li>
+              <li>
+                <a
+                  href="https://www.omegaalphatech.com/contact"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-emerald-400 transition-colors"
+                >
+                  Request a Feature
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Legal Column */}
+          <div>
+            <h4 className="font-bold text-white mb-3 text-xs uppercase tracking-wider">
+              Legal
+            </h4>
+            <ul className="space-y-2 text-xs">
+              <li>
+                <Link
+                  to="/privacy-policy"
+                  className="hover:text-emerald-400 transition-colors"
+                >
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/disclaimer"
+                  className="hover:text-emerald-400 transition-colors"
+                >
+                  Disclaimer
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/terms-of-use"
+                  className="hover:text-emerald-400 transition-colors"
+                >
+                  Terms of Use
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto pt-8 border-t border-slate-800 text-center text-xs space-y-2">
+          <p>
+            &copy; {new Date().getFullYear()} Smart EMI Planner. All rights
+            reserved.
+          </p>
+          <p>
+            Built with ❤️ by{" "}
+            <a
+              href="https://omegaalphatech.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-emerald-400 hover:text-emerald-300 font-bold transition-colors"
+            >
+              OmegaAlphaTech
+            </a>
+            . We build high-performance custom financial web applications.
+          </p>
+        </div>
       </footer>
     </div>
   );
