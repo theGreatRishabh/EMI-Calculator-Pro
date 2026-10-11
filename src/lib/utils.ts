@@ -63,7 +63,9 @@ export function formatCompactCurrency(
   if (useIndianNotation && currencyCode === "INR") {
     if (absVal >= 10000000) {
       const cr = absVal / 10000000;
-      return `${sign}${symbol}${Number.isInteger(cr) ? cr : Number(cr.toFixed(2))}Cr`;
+      return `${sign}${symbol}${
+        Number.isInteger(cr) ? cr : Number(cr.toFixed(2))
+      }Cr`;
     }
     if (absVal >= 100000) {
       const l = absVal / 100000;
@@ -91,4 +93,3 @@ export function formatCompactCurrency(
   }
   return `${sign}${symbol}${absVal}`;
 }
-
