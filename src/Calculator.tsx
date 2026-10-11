@@ -1762,30 +1762,23 @@ export default function App({
                     Loan Parameters
                   </h2>
 
-                  {/* Country / Currency Selector Pill */}
-                  <div className="flex items-center gap-2 bg-slate-50 hover:bg-white border border-slate-200 rounded-full px-4 py-1.5 shadow-xs transition-all focus-within:ring-2 focus-within:ring-emerald-500/20 focus-within:border-emerald-500 self-start sm:self-auto">
-                    <span className="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">
-                      Country:
-                    </span>
-                    <div className="relative flex items-center">
-                      <select
-                        aria-label="Select Country"
-                        value={currencyCode}
-                        onChange={(e) => handleCurrencyChange(e.target.value)}
-                        className="appearance-none bg-transparent text-xs font-bold text-indigo-600 outline-none cursor-pointer pr-5 py-0.5"
-                      >
-                        {Object.values(CURRENCY_CONFIGS).map((cc) => (
-                          <option
-                            key={cc.code}
-                            value={cc.code}
-                            className="text-slate-800 font-medium"
-                          >
-                            {cc.name} ({cc.symbol})
-                          </option>
-                        ))}
-                      </select>
-                      <ChevronDown className="w-3.5 h-3.5 text-indigo-600 absolute right-0 pointer-events-none" />
+                  {/* Currency Selector */}
+                  <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-lg border border-slate-200 shadow-sm transition-all hover:bg-white hover:border-emerald-200 self-start sm:self-auto">
+                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter ml-1">
+                      Currency
                     </div>
+                    <select
+                      aria-label="Currency"
+                      value={currencyCode}
+                      onChange={(e) => handleCurrencyChange(e.target.value)}
+                      className="bg-transparent border-none text-xs font-bold text-emerald-700 outline-none cursor-pointer pr-1"
+                    >
+                      {Object.values(CURRENCY_CONFIGS).map((cc) => (
+                        <option key={cc.code} value={cc.code}>
+                          {cc.code} ({cc.symbol})
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
 
@@ -2636,23 +2629,6 @@ export default function App({
                     >
                       Goal Optimizer
                     </h2>
-                  </div>
-                  {/* Currency Selector */}
-                  <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-lg border border-slate-200 shadow-sm transition-all hover:bg-white hover:border-emerald-200">
-                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter ml-1 hidden sm:block">
-                      Currency
-                    </div>
-                    <select
-                      value={currencyCode}
-                      onChange={(e) => handleCurrencyChange(e.target.value)}
-                      className="bg-transparent border-none text-xs font-bold text-emerald-700 outline-none cursor-pointer pr-1"
-                    >
-                      {Object.values(CURRENCY_CONFIGS).map((cc) => (
-                        <option key={cc.code} value={cc.code}>
-                          {cc.code} ({cc.symbol})
-                        </option>
-                      ))}
-                    </select>
                   </div>
                 </div>
                 <p className="text-sm text-emerald-700">

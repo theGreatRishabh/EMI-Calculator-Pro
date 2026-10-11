@@ -943,9 +943,10 @@ describe("Calculator Component", () => {
       expect(screen.getByText(/SBI Student Loan Scheme, PNB Saraswati/i)).toBeInTheDocument();
       expect(screen.getByText(/Section 80E - Interest Deduction/i)).toBeInTheDocument();
 
-      // Verify country selector is in Loan Parameters and NOT in Moratorium Period Settings
+      // Verify currency selector is in Loan Parameters and NOT duplicated in Goal Optimizer or Moratorium
       expect(screen.queryByLabelText("Select Country for Banking Guidelines")).not.toBeInTheDocument();
-      const countrySelect = screen.getByLabelText("Select Country");
+      const countrySelect = screen.getByLabelText("Currency");
+      expect(screen.getAllByLabelText("Currency")).toHaveLength(1);
 
       // Switch to USA (USD)
       fireEvent.change(countrySelect, { target: { value: "USD" } });
