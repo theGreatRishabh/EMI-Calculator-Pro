@@ -656,6 +656,13 @@ const LOAN_TYPE_META: Record<
   },
 };
 
+const LOAN_TYPE_TITLES: Record<LoanType, string> = {
+  [LoanType.HOME]: "Home Loan EMI Calculator",
+  [LoanType.CAR]: "Car Loan EMI Calculator",
+  [LoanType.PERSONAL]: "Personal Loan EMI Calculator",
+  [LoanType.EDUCATION]: "Education Loan EMI Calculator",
+};
+
 export default function App({
   initialLoanType = "HOME",
 }: {
@@ -1698,10 +1705,13 @@ export default function App({
                 className="w-12 h-12 rounded-xl shadow-sm border border-slate-200"
               />
               <div>
-                <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-                  Smart EMI Planner
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
+                  <span>Smart EMI Planner</span>
+                  <span className="block text-emerald-600 font-bold text-lg sm:text-xl mt-0.5">
+                    {LOAN_TYPE_TITLES[loanType]}
+                  </span>
                 </h1>
-                <p className="text-slate-500">
+                <p className="text-slate-500 text-sm mt-1">
                   Advanced loan simulation with rate changes and prepayments
                 </p>
               </div>
@@ -2112,7 +2122,7 @@ export default function App({
               {/* Education Loan Moratorium Configuration */}
               {isEducation && (
                 <section className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border-[4px] border-indigo-100 space-y-6">
-                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center font-bold shrink-0">
                         <School className="w-5 h-5" />
@@ -2127,28 +2137,8 @@ export default function App({
                       </div>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-3">
-                      {/* Country Selector for Banking Rules */}
-                      <div className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
-                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                          Country:
-                        </span>
-                        <select
-                          aria-label="Select Country for Banking Guidelines"
-                          value={currencyCode}
-                          onChange={(e) => handleCurrencyChange(e.target.value)}
-                          className="bg-transparent text-xs font-bold text-indigo-700 outline-none cursor-pointer pr-1"
-                        >
-                          {Object.values(CURRENCY_CONFIGS).map((cc) => (
-                            <option key={cc.code} value={cc.code}>
-                              {cc.name} ({cc.symbol})
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      {/* Interest Accrual Toggle (SI vs CI) */}
-                      <div className="flex items-center bg-slate-100 p-1 rounded-xl">
+                    {/* Interest Accrual Toggle (SI vs CI) */}
+                    <div className="flex items-center bg-slate-100 p-1 rounded-xl self-start sm:self-auto">
                         <button
                           onClick={() => {
                             setMoratoriumInterestType(
@@ -2193,7 +2183,6 @@ export default function App({
                         </button>
                       </div>
                     </div>
-                  </div>
 
                   {/* Country Banking Suggestion & Rule Banner */}
                   <div className="p-4 bg-indigo-50/70 rounded-2xl border border-indigo-100/90 flex items-start gap-3.5">

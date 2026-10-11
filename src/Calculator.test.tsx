@@ -943,7 +943,9 @@ describe("Calculator Component", () => {
       expect(screen.getByText(/SBI Student Loan Scheme, PNB Saraswati/i)).toBeInTheDocument();
       expect(screen.getByText(/Section 80E - Interest Deduction/i)).toBeInTheDocument();
 
-      const countrySelect = screen.getByLabelText("Select Country for Banking Guidelines");
+      // Verify country selector is in Loan Parameters and NOT in Moratorium Period Settings
+      expect(screen.queryByLabelText("Select Country for Banking Guidelines")).not.toBeInTheDocument();
+      const countrySelect = screen.getByLabelText("Select Country");
 
       // Switch to USA (USD)
       fireEvent.change(countrySelect, { target: { value: "USD" } });
@@ -989,6 +991,51 @@ describe("Calculator Component", () => {
       ).toBeInTheDocument();
       expect(screen.getByText(/HELP\/HECS/i)).toBeInTheDocument();
       expect(screen.getByText(/Self-Education Expense Deductions/i)).toBeInTheDocument();
+    });
+
+    it("displays the dynamic green title line as part of the second title for each loan tab", () => {
+      const { unmount } = render(
+        <MemoryRouter>
+          <Calculator initialLoanType="HOME" />
+        </MemoryRouter>,
+      );
+      expect(
+        screen.getByRole("heading", { level: 1 }),
+      ).toHaveTextContent("Smart EMI Planner");
+      expect(
+        screen.getByRole("heading", { level: 1 }),
+      ).toHaveTextContent("Home Loan EMI Calculator");
+      unmount();
+
+      const carRender = render(
+        <MemoryRouter>
+          <Calculator initialLoanType="CAR" />
+        </MemoryRouter>,
+      );
+      expect(
+        screen.getByRole("heading", { level: 1 }),
+      ).toHaveTextContent("Car Loan EMI Calculator");
+      carRender.unmount();
+
+      const personalRender = render(
+        <MemoryRouter>
+          <Calculator initialLoanType="PERSONAL" />
+        </MemoryRouter>,
+      );
+      expect(
+        screen.getByRole("heading", { level: 1 }),
+      ).toHaveTextContent("Personal Loan EMI Calculator");
+      personalRender.unmount();
+
+      const eduRender = render(
+        <MemoryRouter>
+          <Calculator initialLoanType="EDUCATION" />
+        </MemoryRouter>,
+      );
+      expect(
+        screen.getByRole("heading", { level: 1 }),
+      ).toHaveTextContent("Education Loan EMI Calculator");
+      eduRender.unmount();
     });
   });
 });
