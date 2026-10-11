@@ -52,7 +52,12 @@ import {
   getYear,
   differenceInMonths,
 } from "date-fns";
-import { cn, formatCurrency, formatCurrencyFull } from "./lib/utils";
+import {
+  cn,
+  formatCurrency,
+  formatCurrencyFull,
+  formatCompactCurrency,
+} from "./lib/utils";
 import {
   LoanType,
   AdjustmentMode,
@@ -2437,7 +2442,12 @@ export default function App({
                     tickLine={false}
                     tick={{ fontSize: 10, fill: "#94a3b8" }}
                     tickFormatter={(value) =>
-                      `${currency.symbol}${value / 100000}L`
+                      formatCompactCurrency(
+                        value,
+                        currency.symbol,
+                        currency.useIndianNotation,
+                        currency.code,
+                      )
                     }
                   />
                   <Tooltip

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { formatCurrency, formatCurrencyFull } from "./utils";
+import { formatCurrency, formatCurrencyFull, formatCompactCurrency } from "./utils";
 
 describe("Currency Formatters", () => {
   describe("formatCurrencyFull", () => {
@@ -34,6 +34,27 @@ describe("Currency Formatters", () => {
       expect(
         formatCurrency(500, "EUR", "de-DE", false).replace(/\s/g, ""),
       ).toContain("500");
+    });
+  });
+
+  describe("formatCompactCurrency", () => {
+    it("formats Indian notation correctly for axis ticks (L, Cr, k)", () => {
+      expect(formatCompactCurrency(0, "₹", true, "INR")).toBe("₹0");
+      expect(formatCompactCurrency(50000, "₹", true, "INR")).toBe("₹50k");
+      expect(formatCompactCurrency(500000, "₹", true, "INR")).toBe("₹5L");
+      expect(formatCompactCurrency(1500000, "₹", true, "INR")).toBe("₹15L");
+      expect(formatCompactCurrency(10000000, "₹", true, "INR")).toBe("₹1Cr");
+      expect(formatCompactCurrency(25000000, "₹", true, "INR")).toBe("₹2.5Cr");
+    });
+
+    it("formats Western/US notation correctly for foreign markets (K, M, B)", () => {
+      expect(formatCompactCurrency(0, "$", false, "USD")).toBe("$0");
+      expect(formatCompactCurrency(50000, "$", false, "USD")).toBe("$50K");
+      expect(formatCompactCurrency(100000, "$", false, "USD")).toBe("$100K");
+      expect(formatCompactCurrency(500000, "$", false, "USD")).toBe("$500K");
+      expect(formatCompactCurrency(1000000, "$", false, "USD")).toBe("$1M");
+      expect(formatCompactCurrency(1500000, "$", false, "USD")).toBe("$1.5M");
+      expect(formatCompactCurrency(2000000000, "$", false, "USD")).toBe("$2B");
     });
   });
 });

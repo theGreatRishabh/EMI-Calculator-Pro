@@ -48,3 +48,47 @@ export function formatCurrencyFull(
     maximumFractionDigits: 0,
   }).format(amount);
 }
+
+export function formatCompactCurrency(
+  value: number,
+  symbol: string = "₹",
+  useIndianNotation: boolean = true,
+  currencyCode: string = "INR",
+): string {
+  if (value === 0) return `${symbol}0`;
+
+  const absVal = Math.abs(value);
+  const sign = value < 0 ? "-" : "";
+
+  if (useIndianNotation && currencyCode === "INR") {
+    if (absVal >= 10000000) {
+      const cr = absVal / 10000000;
+      return `${sign}${symbol}${Number.isInteger(cr) ? cr : Number(cr.toFixed(2))}Cr`;
+    }
+    if (absVal >= 100000) {
+      const l = absVal / 100000;
+      return `${sign}${symbol}${Number.isInteger(l) ? l : Number(l.toFixed(2))}L`;
+    }
+    if (absVal >= 1000) {
+      const k = absVal / 1000;
+      return `${sign}${symbol}${Number.isInteger(k) ? k : Number(k.toFixed(1))}k`;
+    }
+    return `${sign}${symbol}${absVal}`;
+  }
+
+  // Western / US notation (100K, 1M, 1B etc.)
+  if (absVal >= 1000000000) {
+    const b = absVal / 1000000000;
+    return `${sign}${symbol}${Number.isInteger(b) ? b : Number(b.toFixed(2))}B`;
+  }
+  if (absVal >= 1000000) {
+    const m = absVal / 1000000;
+    return `${sign}${symbol}${Number.isInteger(m) ? m : Number(m.toFixed(2))}M`;
+  }
+  if (absVal >= 1000) {
+    const k = absVal / 1000;
+    return `${sign}${symbol}${Number.isInteger(k) ? k : Number(k.toFixed(1))}K`;
+  }
+  return `${sign}${symbol}${absVal}`;
+}
+
