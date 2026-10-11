@@ -108,6 +108,34 @@ const CURRENCY_CONFIGS: Record<string, CurrencyConfig> = {
         description: "Save up to ₹1,50,000 on principal repayment per year.",
       },
     ],
+    educationAdvice: {
+      concessionTitle: "Bank Concession: {concessionRate}% Interest Rate Discount",
+      concessionDescription:
+        "Most Indian banks (like SBI, BoB, PNB) give a 1.00% p.a. interest discount if simple interest is serviced during the study period.",
+      defaultConcessionRate: 1.0,
+      bankingTip:
+        "Major Indian banks (SBI Student Loan Scheme, PNB Saraswati, Bank of Baroda) offer a 1.00% p.a. interest concession when simple interest is serviced during the moratorium period. Additionally, female students often qualify for an extra 0.50% concession under central schemes.",
+      taxTips: [
+        {
+          title: "Section 80E - Interest Deduction",
+          amount: 0,
+          limitLabel: "100% Deductible (No Upper Limit)",
+          description:
+            "Entire interest paid during the financial year is tax-deductible.",
+          details:
+            "Available for up to 8 consecutive assessment years starting from repayment onset.",
+        },
+        {
+          title: "Eligible Higher Studies",
+          amount: 0,
+          limitLabel: "India & Overseas (Degree / Post-Grad)",
+          description:
+            "Applicable for approved higher education programs for self, spouse, or children.",
+          details:
+            "Can be claimed by individual borrowers paying out of their taxable income.",
+        },
+      ],
+    },
   },
   USD: {
     code: "USD",
@@ -131,6 +159,34 @@ const CURRENCY_CONFIGS: Record<string, CurrencyConfig> = {
         description: "Deduct up to $10,000 for state and local taxes.",
       },
     ],
+    educationAdvice: {
+      concessionTitle: "Lender Concession: {concessionRate}% Rate Reduction",
+      concessionDescription:
+        "Most US lenders (like Sallie Mae, Discover, SoFi) offer a 0.25%–0.50% interest rate reduction for enrolling in auto-debit and making in-school interest payments.",
+      defaultConcessionRate: 0.25,
+      bankingTip:
+        "In the U.S., servicing interest while in school prevents unpaid interest from capitalizing onto your principal upon graduation. Most private lenders and federal loan servicers also provide a 0.25% interest rate discount for setting up automatic debit payments.",
+      taxTips: [
+        {
+          title: "Student Loan Interest Deduction",
+          amount: 2500,
+          limitLabel: "Up to $2,500 / year",
+          description:
+            "Above-the-line IRS deduction on Form 1040 to reduce modified adjusted gross income.",
+          details:
+            "Applies to interest paid on qualified federal and private higher education loans.",
+        },
+        {
+          title: "Education Tax Credits (AOTC / LLC)",
+          amount: 2500,
+          limitLabel: "Credits & Deductions",
+          description:
+            "American Opportunity Tax Credit (up to $2,500) and Lifetime Learning Credit (up to $2,000).",
+          details:
+            "Subject to IRS income phaseout thresholds and qualified enrollment criteria.",
+        },
+      ],
+    },
   },
   GBP: {
     code: "GBP",
@@ -155,6 +211,34 @@ const CURRENCY_CONFIGS: Record<string, CurrencyConfig> = {
         description: "Tax-free income if you let out furnished accommodation.",
       },
     ],
+    educationAdvice: {
+      concessionTitle: "Lender Concession: {concessionRate}% Rate Discount",
+      concessionDescription:
+        "UK private education lenders (like Future Finance, Prodigy) offer interest rate discounts (typically 0.25%–0.50%) when servicing interest during studies.",
+      defaultConcessionRate: 0.5,
+      bankingTip:
+        "In the UK, government Student Loans (Plan 2 & Plan 5) accrue interest linked to RPI during study, with repayments deducted via PAYE only when income exceeds the statutory threshold. For commercial study loans, servicing simple interest during term-time stops compound balance growth.",
+      taxTips: [
+        {
+          title: "Income-Contingent Repayments",
+          amount: 0,
+          limitLabel: "Threshold Protected (e.g. £27,295)",
+          description:
+            "No repayments required if earnings are below the statutory threshold (9% of excess income).",
+          details:
+            "Unpaid government loan balances are cancelled after 30 to 40 years depending on repayment plan.",
+        },
+        {
+          title: "Employer Training Exemption",
+          amount: 0,
+          limitLabel: "Tax-Free Sponsorship",
+          description:
+            "Work-related higher education costs paid by employers are exempt from income tax and National Insurance.",
+          details:
+            "Enables tax-advantaged professional degree upskilling under HMRC guidelines.",
+        },
+      ],
+    },
   },
   EUR: {
     code: "EUR",
@@ -180,6 +264,34 @@ const CURRENCY_CONFIGS: Record<string, CurrencyConfig> = {
           "Interest on investment properties is often tax-deductible.",
       },
     ],
+    educationAdvice: {
+      concessionTitle: "Lender Concession: {concessionRate}% Rate Discount",
+      concessionDescription:
+        "European student loan programs (e.g., KfW Studienkredit, Erasmus+ master loans) provide subsidized interest rates and discounts if interest is serviced during study and grace periods.",
+      defaultConcessionRate: 0.5,
+      bankingTip:
+        "In the EU, public development banks (like Germany's KfW or Erasmus+ guarantee schemes) offer subsidized rates and flexible 18–24 month grace periods. Making regular interest payments during study prevents ballooning debt from accumulating prior to your first career job.",
+      taxTips: [
+        {
+          title: "Werbungskosten (Income-Related Costs)",
+          amount: 0,
+          limitLabel: "Fully Deductible (Loss Carryover)",
+          description:
+            "Master's degrees, second degrees, and study loan interest are 100% tax-deductible in Germany/EU.",
+          details:
+            "Accumulated study costs can be carried forward as tax losses to offset early career income.",
+        },
+        {
+          title: "Sonderausgaben (First Degree Allowance)",
+          amount: 6000,
+          limitLabel: "Up to €6,000 / year",
+          description:
+            "Initial undergraduate education expenses can be deducted as special expenses against taxable income.",
+          details:
+            "Applies to direct tuition, study materials, and loan finance charges under national tax codes.",
+        },
+      ],
+    },
   },
   AUD: {
     code: "AUD",
@@ -203,6 +315,34 @@ const CURRENCY_CONFIGS: Record<string, CurrencyConfig> = {
         description: "First Home Owner Grant for new residential properties.",
       },
     ],
+    educationAdvice: {
+      concessionTitle: "Lender Concession: {concessionRate}% Rate Discount",
+      concessionDescription:
+        "Australian commercial education lenders offer up to 0.50% p.a. interest discounts for servicing interest during study. Commonwealth HELP/HECS loans are indexed to CPI.",
+      defaultConcessionRate: 0.5,
+      bankingTip:
+        "In Australia, federal HELP/HECS debt does not incur commercial interest, but is indexed to CPI (or WPI, whichever is lower), with repayments starting only when income exceeds $54,435 AUD. For bank education loans, paying interest during term-time keeps your loan principal intact.",
+      taxTips: [
+        {
+          title: "Self-Education Expense Deductions",
+          amount: 0,
+          limitLabel: "ATO Tax Deductible",
+          description:
+            "Course fees and study loan interest can be claimed if directly related to your current employment.",
+          details:
+            "Reduces assessable taxable income under Australian Taxation Office guidelines.",
+        },
+        {
+          title: "HELP Indexation Protection",
+          amount: 0,
+          limitLabel: "Capped to Lower of CPI or WPI",
+          description:
+            "Commonwealth government caps annual student debt indexation to preserve borrowing equity.",
+          details:
+            "Compulsory repayments are based on taxable income brackets, automatically withheld via PAYG.",
+        },
+      ],
+    },
   },
 };
 
@@ -573,6 +713,14 @@ export default function App({
 
   const [currencyCode, setCurrencyCode] = useState<string>("INR");
   const currency = CURRENCY_CONFIGS[currencyCode] || CURRENCY_CONFIGS.INR;
+
+  const handleCurrencyChange = (newCode: string) => {
+    setCurrencyCode(newCode);
+    const cfg = CURRENCY_CONFIGS[newCode];
+    if (cfg?.educationAdvice) {
+      setConcessionRate(cfg.educationAdvice.defaultConcessionRate);
+    }
+  };
 
   // Update page title + meta description for SEO on every loan type change
   useEffect(() => {
@@ -1598,10 +1746,38 @@ export default function App({
             {/* Loan Parameters & Goal Optimizer */}
             <div className="lg:col-span-7 xl:col-span-8 space-y-8 self-start">
               <section className="bg-white p-8 rounded-3xl shadow-sm border-[6px] border-slate-200">
-                <h2 className="text-xl font-bold flex items-center gap-2 mb-8 text-slate-800">
-                  <Calculator className="w-6 h-6 text-emerald-600" />
-                  Loan Parameters
-                </h2>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                  <h2 className="text-xl font-bold flex items-center gap-2 text-slate-800">
+                    <Calculator className="w-6 h-6 text-emerald-600" />
+                    Loan Parameters
+                  </h2>
+
+                  {/* Country / Currency Selector Pill */}
+                  <div className="flex items-center gap-2 bg-slate-50 hover:bg-white border border-slate-200 rounded-full px-4 py-1.5 shadow-xs transition-all focus-within:ring-2 focus-within:ring-emerald-500/20 focus-within:border-emerald-500 self-start sm:self-auto">
+                    <span className="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">
+                      Country:
+                    </span>
+                    <div className="relative flex items-center">
+                      <select
+                        aria-label="Select Country"
+                        value={currencyCode}
+                        onChange={(e) => handleCurrencyChange(e.target.value)}
+                        className="appearance-none bg-transparent text-xs font-bold text-indigo-600 outline-none cursor-pointer pr-5 py-0.5"
+                      >
+                        {Object.values(CURRENCY_CONFIGS).map((cc) => (
+                          <option
+                            key={cc.code}
+                            value={cc.code}
+                            className="text-slate-800 font-medium"
+                          >
+                            {cc.name} ({cc.symbol})
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown className="w-3.5 h-3.5 text-indigo-600 absolute right-0 pointer-events-none" />
+                    </div>
+                  </div>
+                </div>
 
                 <div className="space-y-10">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
@@ -1936,9 +2112,9 @@ export default function App({
               {/* Education Loan Moratorium Configuration */}
               {isEducation && (
                 <section className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border-[4px] border-indigo-100 space-y-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-100 pb-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center font-bold">
+                      <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center font-bold shrink-0">
                         <School className="w-5 h-5" />
                       </div>
                       <div>
@@ -1951,42 +2127,92 @@ export default function App({
                       </div>
                     </div>
 
-                    {/* Interest Accrual Toggle (SI vs CI) */}
-                    <div className="flex items-center bg-slate-100 p-1 rounded-xl self-start sm:self-auto">
-                      <button
-                        onClick={() =>
-                          setMoratoriumInterestType(
-                            MoratoriumInterestType.SIMPLE_INTEREST,
-                          )
-                        }
-                        className={cn(
-                          "px-3 py-1.5 text-xs font-bold rounded-lg transition-all",
-                          moratoriumInterestType ===
-                            MoratoriumInterestType.SIMPLE_INTEREST
-                            ? "bg-white shadow-sm text-indigo-600"
-                            : "text-slate-500 hover:text-slate-700",
-                        )}
-                        title="RBI / Indian Banks Standard: Simple interest charged during study, capitalized at repayment onset"
-                      >
-                        Simple Interest (SI)
-                      </button>
-                      <button
-                        onClick={() =>
-                          setMoratoriumInterestType(
-                            MoratoriumInterestType.COMPOUND_INTEREST,
-                          )
-                        }
-                        className={cn(
-                          "px-3 py-1.5 text-xs font-bold rounded-lg transition-all",
-                          moratoriumInterestType ===
-                            MoratoriumInterestType.COMPOUND_INTEREST
-                            ? "bg-white shadow-sm text-indigo-600"
-                            : "text-slate-500 hover:text-slate-700",
-                        )}
-                        title="Private NBFCs / International lenders: Interest compounded monthly during study"
-                      >
-                        Compound Interest (CI)
-                      </button>
+                    <div className="flex flex-wrap items-center gap-3">
+                      {/* Country Selector for Banking Rules */}
+                      <div className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                          Country:
+                        </span>
+                        <select
+                          aria-label="Select Country for Banking Guidelines"
+                          value={currencyCode}
+                          onChange={(e) => handleCurrencyChange(e.target.value)}
+                          className="bg-transparent text-xs font-bold text-indigo-700 outline-none cursor-pointer pr-1"
+                        >
+                          {Object.values(CURRENCY_CONFIGS).map((cc) => (
+                            <option key={cc.code} value={cc.code}>
+                              {cc.name} ({cc.symbol})
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Interest Accrual Toggle (SI vs CI) */}
+                      <div className="flex items-center bg-slate-100 p-1 rounded-xl">
+                        <button
+                          onClick={() => {
+                            setMoratoriumInterestType(
+                              MoratoriumInterestType.SIMPLE_INTEREST,
+                            );
+                            setMoratoriumPaymentOption(
+                              MoratoriumPaymentOption.NO_PAYMENT,
+                            );
+                            setPartialPaymentAmount(0);
+                          }}
+                          className={cn(
+                            "px-3 py-1.5 text-xs font-bold rounded-lg transition-all",
+                            moratoriumInterestType ===
+                              MoratoriumInterestType.SIMPLE_INTEREST
+                              ? "bg-white shadow-sm text-indigo-600"
+                              : "text-slate-500 hover:text-slate-700",
+                          )}
+                          title="RBI / Indian Banks Standard: Simple interest charged during study, capitalized at repayment onset"
+                        >
+                          Simple Interest (SI)
+                        </button>
+                        <button
+                          onClick={() => {
+                            setMoratoriumInterestType(
+                              MoratoriumInterestType.COMPOUND_INTEREST,
+                            );
+                            setMoratoriumPaymentOption(
+                              MoratoriumPaymentOption.NO_PAYMENT,
+                            );
+                            setPartialPaymentAmount(0);
+                          }}
+                          className={cn(
+                            "px-3 py-1.5 text-xs font-bold rounded-lg transition-all",
+                            moratoriumInterestType ===
+                              MoratoriumInterestType.COMPOUND_INTEREST
+                              ? "bg-white shadow-sm text-indigo-600"
+                              : "text-slate-500 hover:text-slate-700",
+                          )}
+                          title="Private NBFCs / International lenders: Interest compounded monthly during study"
+                        >
+                          Compound Interest (CI)
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Country Banking Suggestion & Rule Banner */}
+                  <div className="p-4 bg-indigo-50/70 rounded-2xl border border-indigo-100/90 flex items-start gap-3.5">
+                    <div className="p-2 bg-indigo-100 text-indigo-700 rounded-xl shrink-0 mt-0.5">
+                      <Info className="w-4 h-4" />
+                    </div>
+                    <div className="space-y-1 text-xs">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-bold text-indigo-950">
+                          Banking Suggestion & Guidelines ({currency.name})
+                        </span>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-200/80 text-indigo-800">
+                          {currency.code}
+                        </span>
+                      </div>
+                      <p className="text-indigo-800 leading-relaxed">
+                        {currency.educationAdvice?.bankingTip ||
+                          currency.educationAdvice?.concessionDescription}
+                      </p>
                     </div>
                   </div>
 
@@ -2022,7 +2248,7 @@ export default function App({
                             </span>
                           </div>
                           <p className="text-xs text-slate-500 mt-1">
-                            Pay ₹0 during study. Accrued interest is capitalized into your principal when EMI begins.
+                            Pay {currency.symbol}0 during study. Accrued interest is capitalized into your principal when EMI begins.
                           </p>
                         </div>
                         <div className="pt-2 border-t border-slate-200/60 text-xs">
@@ -2151,7 +2377,7 @@ export default function App({
                       </div>
                     )}
 
-                    {/* 1% Concession Toggle (for Option 2) */}
+                    {/* Country-Specific Concession Toggle (for Option 2) */}
                     {moratoriumPaymentOption ===
                       MoratoriumPaymentOption.PAY_SIMPLE_INTEREST && (
                       <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -2159,24 +2385,55 @@ export default function App({
                           <div className="flex items-center gap-2">
                             <Sparkles className="w-4 h-4 text-emerald-600" />
                             <span className="text-xs font-bold text-emerald-900">
-                              Bank Concession: {concessionRate}% Interest Rate Discount
+                              {(
+                                currency.educationAdvice?.concessionTitle ||
+                                "Bank Concession: {concessionRate}% Interest Rate Discount"
+                              ).replace(
+                                "{concessionRate}",
+                                concessionRate.toFixed(2),
+                              )}
                             </span>
                           </div>
                           <p className="text-xs text-emerald-700">
-                            Most Indian banks (like SBI, BoB, PNB) give a 1.00% p.a. interest discount if simple interest is serviced during the study period.
+                            {currency.educationAdvice?.concessionDescription ||
+                              "Most Indian banks (like SBI, BoB, PNB) give a 1.00% p.a. interest discount if simple interest is serviced during the study period."}
                           </p>
                         </div>
-                        <label className="relative inline-flex items-center cursor-pointer self-start sm:self-auto">
-                          <input
-                            type="checkbox"
-                            checked={enableConcession}
-                            onChange={(e) =>
-                              setEnableConcession(e.target.checked)
-                            }
-                            className="sr-only peer"
-                          />
-                          <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600" />
-                        </label>
+                        <div className="flex items-center gap-3 self-start sm:self-auto">
+                          {enableConcession && (
+                            <div className="flex items-center gap-1 bg-white px-2.5 py-1 rounded-xl border border-emerald-200 shadow-xs">
+                              <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-tighter">
+                                Rate:
+                              </span>
+                              <input
+                                aria-label="Concession Discount Rate"
+                                type="number"
+                                step="0.25"
+                                min="0.1"
+                                max="5"
+                                value={concessionRate}
+                                onChange={(e) =>
+                                  setConcessionRate(parseNumberInput(e))
+                                }
+                                className="w-12 text-center text-xs font-bold text-emerald-700 bg-transparent outline-none"
+                              />
+                              <span className="text-[10px] font-bold text-emerald-600">
+                                %
+                              </span>
+                            </div>
+                          )}
+                          <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={enableConcession}
+                              onChange={(e) =>
+                                setEnableConcession(e.target.checked)
+                              }
+                              className="sr-only peer"
+                            />
+                            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600" />
+                          </label>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -2225,7 +2482,7 @@ export default function App({
                                     currency.code,
                                     currency.locale,
                                   )
-                                : "₹0 (No EMI)"}
+                                : `${currency.symbol}0 (No EMI)`}
                           </span>
                         </div>
                         <div className="flex justify-between">
@@ -2260,7 +2517,7 @@ export default function App({
                                   currency.code,
                                   currency.locale,
                                 )}`
-                              : "₹0 (Fully Avoided)"}
+                              : `${currency.symbol}0 (Fully Avoided)`}
                           </span>
                         </div>
                       </div>
@@ -2318,7 +2575,7 @@ export default function App({
                     <div className="flex items-center gap-2">
                       <Sparkles className="w-5 h-5 text-yellow-300" />
                       <h3 className="text-base font-bold text-white">
-                        Why Servicing Interest During College Saves You Lakhs
+                        Why Servicing Interest During College Saves You {currency.useIndianNotation ? "Lakhs" : "Thousands"}
                       </h3>
                     </div>
                     <span className="text-[10px] uppercase tracking-widest font-extrabold px-2.5 py-1 bg-white/20 rounded-full self-start sm:self-auto">
@@ -2398,7 +2655,7 @@ export default function App({
                     </div>
                     <select
                       value={currencyCode}
-                      onChange={(e) => setCurrencyCode(e.target.value)}
+                      onChange={(e) => handleCurrencyChange(e.target.value)}
                       className="bg-transparent border-none text-xs font-bold text-emerald-700 outline-none cursor-pointer pr-1"
                     >
                       {Object.values(CURRENCY_CONFIGS).map((cc) => (
@@ -2539,7 +2796,7 @@ export default function App({
                 </section>
               )}
 
-              {/* Education Loan Tax Benefit Section (Section 80E) */}
+              {/* Education Loan Tax Benefit Section */}
               {loanType === LoanType.EDUCATION && (
                 <section
                   aria-labelledby="education-tax-benefit-title"
@@ -2551,87 +2808,38 @@ export default function App({
                       id="education-tax-benefit-title"
                       className="text-lg font-semibold text-indigo-900"
                     >
-                      Education Loan Tax Benefits ({currency.name})
+                      Education Loan Tax & Financial Relief ({currency.name})
                     </h2>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {currency.code === "INR" ? (
-                      <>
-                        <div className="p-4 bg-white rounded-xl border border-indigo-100">
-                          <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">
-                            Section 80E - Interest Deduction
-                          </p>
-                          <p className="text-xl font-bold text-indigo-600">
-                            100% Deductible
-                            <span className="text-[10px] text-slate-400 font-normal ml-1">
-                              (No Upper Limit)
-                            </span>
-                          </p>
-                          <p className="text-[10px] text-slate-400 mt-1">
-                            Entire interest paid during the financial year is tax-deductible.
-                          </p>
+                    {currency.educationAdvice?.taxTips?.map((tip, idx) => (
+                      <div
+                        key={idx}
+                        className="p-4 bg-white rounded-xl border border-indigo-100 space-y-1"
+                      >
+                        <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">
+                          {tip.title}
+                        </p>
+                        <p className="text-xl font-bold text-indigo-600">
+                          {tip.limitLabel}
+                        </p>
+                        <p className="text-[10px] text-slate-500 mt-1">
+                          {tip.description}
+                        </p>
+                        {tip.details && (
                           <p className="text-[10px] text-indigo-500 mt-1 italic">
-                            Available for up to 8 consecutive assessment years starting from repayment onset.
+                            {tip.details}
                           </p>
-                        </div>
-                        <div className="p-4 bg-white rounded-xl border border-indigo-100">
-                          <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">
-                            Eligible Courses & Borrowers
-                          </p>
-                          <p className="text-xl font-bold text-indigo-600">
-                            Higher Studies
-                            <span className="text-[10px] text-slate-400 font-normal ml-1">
-                              (India or Abroad)
-                            </span>
-                          </p>
-                          <p className="text-[10px] text-slate-400 mt-1">
-                            Applicable for higher education (degree/post-grad) in India or overseas.
-                          </p>
-                          <p className="text-[10px] text-indigo-500 mt-1 italic">
-                            Claimable for self, spouse, or children by individual taxpayers.
-                          </p>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="p-4 bg-white rounded-xl border border-indigo-100">
-                          <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">
-                            Student Loan Interest Deduction
-                          </p>
-                          <p className="text-xl font-bold text-indigo-600">
-                            Up to $2,500
-                            <span className="text-[10px] text-slate-400 font-normal ml-1">
-                              / year
-                            </span>
-                          </p>
-                          <p className="text-[10px] text-slate-400 mt-1">
-                            Above-the-line IRS deduction to reduce modified adjusted gross income.
-                          </p>
-                          <p className="text-[10px] text-indigo-500 mt-1 italic">
-                            Applies to interest paid on qualified higher education loans.
-                          </p>
-                        </div>
-                        <div className="p-4 bg-white rounded-xl border border-indigo-100">
-                          <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">
-                            Education Tax Relief
-                          </p>
-                          <p className="text-xl font-bold text-indigo-600">
-                            Credits & Deductions
-                          </p>
-                          <p className="text-[10px] text-slate-400 mt-1">
-                            American Opportunity (AOTC) and Lifetime Learning Credit (LLC).
-                          </p>
-                          <p className="text-[10px] text-indigo-500 mt-1 italic">
-                            Subject to income thresholds and tax filing status.
-                          </p>
-                        </div>
-                      </>
-                    )}
+                        )}
+                      </div>
+                    ))}
                   </div>
                   <div className="bg-indigo-600/5 p-3 rounded-lg border border-indigo-200/50">
                     <p className="text-xs text-indigo-700 leading-relaxed">
                       <Info className="w-3 h-3 inline mr-1 mb-0.5" />
-                      Unlike home loans where Section 80C caps principal, Section 80E provides unlimited deductions on actual interest paid for up to 8 years!
+                      {currency.code === "INR"
+                        ? "Unlike home loans where Section 80C caps principal, Section 80E provides unlimited deductions on actual interest paid for up to 8 consecutive assessment years!"
+                        : `Tax deductions, credits, and repayment subsidies depend on personal filing status and degree qualifications in ${currency.name}. Consult a certified financial advisor.`}
                     </p>
                   </div>
                 </section>

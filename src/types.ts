@@ -80,13 +80,31 @@ export interface TaxTip {
   description: string;
 }
 
+export interface EducationTaxTip {
+  title: string;
+  amount: number;
+  limitLabel: string;
+  description: string;
+  details?: string;
+}
+
+export interface EducationAdvice {
+  concessionTitle: string;
+  concessionDescription: string;
+  defaultConcessionRate: number;
+  bankingTip: string;
+  taxTips: EducationTaxTip[];
+}
+
 export interface CurrencyConfig {
   code: string;
   locale: string;
   symbol: string;
   name: string;
   taxTips: TaxTip[];
+  educationAdvice?: EducationAdvice;
   useIndianNotation: boolean; // For Lakhs/Crores
   stampDutyRate?: number; // percentage
   registrationRate?: number; // percentage
 }
+
