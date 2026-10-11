@@ -109,7 +109,8 @@ const CURRENCY_CONFIGS: Record<string, CurrencyConfig> = {
       },
     ],
     educationAdvice: {
-      concessionTitle: "Bank Concession: {concessionRate}% Interest Rate Discount",
+      concessionTitle:
+        "Bank Concession: {concessionRate}% Interest Rate Discount",
       concessionDescription:
         "Most Indian banks (like SBI, BoB, PNB) give a 1.00% p.a. interest discount if simple interest is serviced during the study period.",
       defaultConcessionRate: 1.0,
@@ -650,7 +651,8 @@ const LOAN_TYPE_META: Record<
   },
   EDUCATION: {
     slug: "/education-loan",
-    title: "Education Loan EMI Calculator with Moratorium Period - Smart EMI Planner",
+    title:
+      "Education Loan EMI Calculator with Moratorium Period - Smart EMI Planner",
     description:
       "Calculate your Education Loan EMI with Moratorium Period (Study + Grace). Simulate Simple vs Compound Interest, interest capitalization, and Section 80E tax deductions.",
   },
@@ -2129,7 +2131,8 @@ export default function App({
                               Course Duration
                             </label>
                             <span className="text-sm font-extrabold text-emerald-600">
-                              {courseDurationYears} Years ({courseDurationYears * 12} Mo)
+                              {courseDurationYears} Years (
+                              {courseDurationYears * 12} Mo)
                             </span>
                           </div>
                           <input
@@ -2205,57 +2208,64 @@ export default function App({
                           Moratorium Period Settings
                         </h2>
                         <p className="text-xs text-slate-500">
-                          Total Moratorium: {courseDurationYears * 12 + gracePeriodMonths} Months ({((courseDurationYears * 12 + gracePeriodMonths) / 12).toFixed(1)} Years)
+                          Total Moratorium:{" "}
+                          {courseDurationYears * 12 + gracePeriodMonths} Months
+                          (
+                          {(
+                            (courseDurationYears * 12 + gracePeriodMonths) /
+                            12
+                          ).toFixed(1)}{" "}
+                          Years)
                         </p>
                       </div>
                     </div>
 
                     {/* Interest Accrual Toggle (SI vs CI) */}
                     <div className="flex items-center bg-slate-100 p-1 rounded-xl self-start sm:self-auto">
-                        <button
-                          onClick={() => {
-                            setMoratoriumInterestType(
-                              MoratoriumInterestType.SIMPLE_INTEREST,
-                            );
-                            setMoratoriumPaymentOption(
-                              MoratoriumPaymentOption.NO_PAYMENT,
-                            );
-                            setPartialPaymentAmount(0);
-                          }}
-                          className={cn(
-                            "px-3 py-1.5 text-xs font-bold rounded-lg transition-all",
-                            moratoriumInterestType ===
-                              MoratoriumInterestType.SIMPLE_INTEREST
-                              ? "bg-white shadow-sm text-indigo-600"
-                              : "text-slate-500 hover:text-slate-700",
-                          )}
-                          title="RBI / Indian Banks Standard: Simple interest charged during study, capitalized at repayment onset"
-                        >
-                          Simple Interest (SI)
-                        </button>
-                        <button
-                          onClick={() => {
-                            setMoratoriumInterestType(
-                              MoratoriumInterestType.COMPOUND_INTEREST,
-                            );
-                            setMoratoriumPaymentOption(
-                              MoratoriumPaymentOption.NO_PAYMENT,
-                            );
-                            setPartialPaymentAmount(0);
-                          }}
-                          className={cn(
-                            "px-3 py-1.5 text-xs font-bold rounded-lg transition-all",
-                            moratoriumInterestType ===
-                              MoratoriumInterestType.COMPOUND_INTEREST
-                              ? "bg-white shadow-sm text-indigo-600"
-                              : "text-slate-500 hover:text-slate-700",
-                          )}
-                          title="Private NBFCs / International lenders: Interest compounded monthly during study"
-                        >
-                          Compound Interest (CI)
-                        </button>
-                      </div>
+                      <button
+                        onClick={() => {
+                          setMoratoriumInterestType(
+                            MoratoriumInterestType.SIMPLE_INTEREST,
+                          );
+                          setMoratoriumPaymentOption(
+                            MoratoriumPaymentOption.NO_PAYMENT,
+                          );
+                          setPartialPaymentAmount(0);
+                        }}
+                        className={cn(
+                          "px-3 py-1.5 text-xs font-bold rounded-lg transition-all",
+                          moratoriumInterestType ===
+                            MoratoriumInterestType.SIMPLE_INTEREST
+                            ? "bg-white shadow-sm text-indigo-600"
+                            : "text-slate-500 hover:text-slate-700",
+                        )}
+                        title="RBI / Indian Banks Standard: Simple interest charged during study, capitalized at repayment onset"
+                      >
+                        Simple Interest (SI)
+                      </button>
+                      <button
+                        onClick={() => {
+                          setMoratoriumInterestType(
+                            MoratoriumInterestType.COMPOUND_INTEREST,
+                          );
+                          setMoratoriumPaymentOption(
+                            MoratoriumPaymentOption.NO_PAYMENT,
+                          );
+                          setPartialPaymentAmount(0);
+                        }}
+                        className={cn(
+                          "px-3 py-1.5 text-xs font-bold rounded-lg transition-all",
+                          moratoriumInterestType ===
+                            MoratoriumInterestType.COMPOUND_INTEREST
+                            ? "bg-white shadow-sm text-indigo-600"
+                            : "text-slate-500 hover:text-slate-700",
+                        )}
+                        title="Private NBFCs / International lenders: Interest compounded monthly during study"
+                      >
+                        Compound Interest (CI)
+                      </button>
                     </div>
+                  </div>
 
                   {/* Country Banking Suggestion & Rule Banner */}
                   <div className="p-4 bg-indigo-50/70 rounded-2xl border border-indigo-100/90 flex items-start gap-3.5">
@@ -2310,7 +2320,9 @@ export default function App({
                             </span>
                           </div>
                           <p className="text-xs text-slate-500 mt-1">
-                            Pay {currency.symbol}0 during study. Accrued interest is capitalized into your principal when EMI begins.
+                            Pay {currency.symbol}0 during study. Accrued
+                            interest is capitalized into your principal when EMI
+                            begins.
                           </p>
                         </div>
                         <div className="pt-2 border-t border-slate-200/60 text-xs">
@@ -2318,8 +2330,10 @@ export default function App({
                             Capitalized at end:
                           </span>
                           <p className="font-bold text-amber-600 text-sm">
-                            +{formatCurrencyFull(
-                              educationMoratoriumSummary?.capitalizedInterest || 0,
+                            +
+                            {formatCurrencyFull(
+                              educationMoratoriumSummary?.capitalizedInterest ||
+                                0,
                               currency.code,
                               currency.locale,
                             )}
@@ -2353,7 +2367,8 @@ export default function App({
                             </span>
                           </div>
                           <p className="text-xs text-slate-500 mt-1">
-                            Pay interest monthly while studying. Zero interest added to your principal!
+                            Pay interest monthly while studying. Zero interest
+                            added to your principal!
                           </p>
                         </div>
                         <div className="pt-2 border-t border-slate-200/60 text-xs">
@@ -2362,7 +2377,8 @@ export default function App({
                           </span>
                           <p className="font-bold text-emerald-600 text-sm">
                             {formatCurrencyFull(
-                              educationMoratoriumSummary?.monthlySimpleInterest || 0,
+                              educationMoratoriumSummary?.monthlySimpleInterest ||
+                                0,
                               currency.code,
                               currency.locale,
                             )}
@@ -2397,7 +2413,8 @@ export default function App({
                             </span>
                           </div>
                           <p className="text-xs text-slate-500 mt-1">
-                            Pay whatever you can monthly. The remainder is capitalized into the loan.
+                            Pay whatever you can monthly. The remainder is
+                            capitalized into the loan.
                           </p>
                         </div>
                         <div className="pt-2 border-t border-slate-200/60 text-xs">
@@ -2405,8 +2422,10 @@ export default function App({
                             Remaining Capitalized:
                           </span>
                           <p className="font-bold text-indigo-600 text-sm">
-                            +{formatCurrencyFull(
-                              educationMoratoriumSummary?.capitalizedInterest || 0,
+                            +
+                            {formatCurrencyFull(
+                              educationMoratoriumSummary?.capitalizedInterest ||
+                                0,
                               currency.code,
                               currency.locale,
                             )}
@@ -2511,7 +2530,11 @@ export default function App({
                       Two-Phase Loan Lifecycle Breakdown
                     </h3>
                     <span className="text-xs text-indigo-200 font-medium px-2.5 py-1 bg-white/10 rounded-full self-start sm:self-auto">
-                      Total: {courseDurationYears * 12 + gracePeriodMonths + tenureMonths} Months
+                      Total:{" "}
+                      {courseDurationYears * 12 +
+                        gracePeriodMonths +
+                        tenureMonths}{" "}
+                      Months
                     </span>
                   </div>
 
@@ -2533,7 +2556,8 @@ export default function App({
                             {moratoriumPaymentOption ===
                             MoratoriumPaymentOption.PAY_SIMPLE_INTEREST
                               ? formatCurrencyFull(
-                                  educationMoratoriumSummary?.monthlySimpleInterest || 0,
+                                  educationMoratoriumSummary?.monthlySimpleInterest ||
+                                    0,
                                   currency.code,
                                   currency.locale,
                                 )
@@ -2558,7 +2582,8 @@ export default function App({
                           </span>
                           <span className="font-bold text-amber-300">
                             {formatCurrencyFull(
-                              educationMoratoriumSummary?.totalInterestAccrued || 0,
+                              educationMoratoriumSummary?.totalInterestAccrued ||
+                                0,
                               currency.code,
                               currency.locale,
                             )}
@@ -2610,7 +2635,8 @@ export default function App({
                         <div className="flex justify-between">
                           <span>Effective Repayment Rate:</span>
                           <span className="font-bold text-emerald-300">
-                            {educationMoratoriumSummary?.effectiveRepaymentRate}% p.a.
+                            {educationMoratoriumSummary?.effectiveRepaymentRate}
+                            % p.a.
                           </span>
                         </div>
                         <div className="flex justify-between pt-1 border-t border-white/10 font-bold">
@@ -2637,7 +2663,8 @@ export default function App({
                     <div className="flex items-center gap-2">
                       <Sparkles className="w-5 h-5 text-yellow-300" />
                       <h3 className="text-base font-bold text-white">
-                        Why Servicing Interest During College Saves You {currency.useIndianNotation ? "Lakhs" : "Thousands"}
+                        Why Servicing Interest During College Saves You{" "}
+                        {currency.useIndianNotation ? "Lakhs" : "Thousands"}
                       </h3>
                     </div>
                     <span className="text-[10px] uppercase tracking-widest font-extrabold px-2.5 py-1 bg-white/20 rounded-full self-start sm:self-auto">
@@ -2677,7 +2704,8 @@ export default function App({
                       </p>
                       <p className="text-2xl font-extrabold text-white">
                         {formatCurrencyFull(
-                          educationComparison.savings.capitalizedInterestAvoided,
+                          educationComparison.savings
+                            .capitalizedInterestAvoided,
                           currency.code,
                           currency.locale,
                         )}
@@ -2686,11 +2714,21 @@ export default function App({
                   </div>
 
                   <p className="text-xs text-emerald-100 leading-relaxed">
-                    Paying Simple Interest (~{formatCurrencyFull(
+                    Paying Simple Interest (~
+                    {formatCurrencyFull(
                       educationComparison.paySimpleInterest.monthlySi,
                       currency.code,
                       currency.locale,
-                    )}/month) during college keeps your principal at {formatCurrencyFull(amount, currency.code, currency.locale)} instead of letting it balloon to {formatCurrencyFull(educationComparison.noPayment.capitalizedPrincipal, currency.code, currency.locale)}, saving compounding interest for the next {tenure} years!
+                    )}
+                    /month) during college keeps your principal at{" "}
+                    {formatCurrencyFull(amount, currency.code, currency.locale)}{" "}
+                    instead of letting it balloon to{" "}
+                    {formatCurrencyFull(
+                      educationComparison.noPayment.capitalizedPrincipal,
+                      currency.code,
+                      currency.locale,
+                    )}
+                    , saving compounding interest for the next {tenure} years!
                   </p>
                 </section>
               )}
@@ -4316,7 +4354,11 @@ export default function App({
                   How Moratorium Period Works
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
-                  The moratorium period covers your Course Duration plus an additional Grace Period (typically 6 to 12 months after graduation or finding employment). During this phase, you are not required to pay standard EMIs, giving you breathing room while studying.
+                  The moratorium period covers your Course Duration plus an
+                  additional Grace Period (typically 6 to 12 months after
+                  graduation or finding employment). During this phase, you are
+                  not required to pay standard EMIs, giving you breathing room
+                  while studying.
                 </p>
               </article>
               <article className="space-y-4">
@@ -4324,7 +4366,11 @@ export default function App({
                   Simple Interest vs Compound Interest
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
-                  Under RBI and Indian Banks' Association (IBA) rules, banks charge Simple Interest (SI) during the moratorium. If left unpaid, all accrued interest is capitalized (added to principal) when EMIs start. Servicing SI monthly saves lakhs in compounding and unlocks up to 1% rate concessions!
+                  Under RBI and Indian Banks' Association (IBA) rules, banks
+                  charge Simple Interest (SI) during the moratorium. If left
+                  unpaid, all accrued interest is capitalized (added to
+                  principal) when EMIs start. Servicing SI monthly saves lakhs
+                  in compounding and unlocks up to 1% rate concessions!
                 </p>
               </article>
               <article className="space-y-4">
@@ -4332,7 +4378,11 @@ export default function App({
                   Tax Benefits under Section 80E
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
-                  Under Section 80E of the Income Tax Act, you can claim a 100% tax deduction on the entire interest amount paid on higher education loans with NO upper limit for up to 8 continuous years. In the US, taxpayers can deduct up to $2,500/year under student loan interest deductions.
+                  Under Section 80E of the Income Tax Act, you can claim a 100%
+                  tax deduction on the entire interest amount paid on higher
+                  education loans with NO upper limit for up to 8 continuous
+                  years. In the US, taxpayers can deduct up to $2,500/year under
+                  student loan interest deductions.
                 </p>
               </article>
             </>
@@ -4343,11 +4393,11 @@ export default function App({
                   What is an EMI?
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
-                  Equated Monthly Installment (EMI) is a fixed payment amount made
-                  by a borrower to a lender at a specified date each calendar month.
-                  EMIs are applied to both interest and principal each month, so
-                  that over a specified number of years, the loan is paid off in
-                  full.
+                  Equated Monthly Installment (EMI) is a fixed payment amount
+                  made by a borrower to a lender at a specified date each
+                  calendar month. EMIs are applied to both interest and
+                  principal each month, so that over a specified number of
+                  years, the loan is paid off in full.
                 </p>
               </article>
               <article className="space-y-4">
@@ -4356,9 +4406,10 @@ export default function App({
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
                   Making prepayments on your loan can significantly reduce your
-                  total interest burden and shorten your loan tenure. Even small,
-                  regular prepayments can save you lakhs of rupees in interest over
-                  the long term, especially in the early years of a home loan.
+                  total interest burden and shorten your loan tenure. Even
+                  small, regular prepayments can save you lakhs of rupees in
+                  interest over the long term, especially in the early years of
+                  a home loan.
                 </p>
               </article>
               <article className="space-y-4">
@@ -4366,10 +4417,10 @@ export default function App({
                   Floating vs Fixed Rates
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
-                  Floating interest rates change based on market conditions (like
-                  the RBI Repo Rate), while fixed rates remain constant. Our
-                  calculator allows you to simulate floating rate hikes to see how
-                  they impact your monthly budget and total loan cost.
+                  Floating interest rates change based on market conditions
+                  (like the RBI Repo Rate), while fixed rates remain constant.
+                  Our calculator allows you to simulate floating rate hikes to
+                  see how they impact your monthly budget and total loan cost.
                 </p>
               </article>
             </>

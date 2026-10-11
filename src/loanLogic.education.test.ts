@@ -116,7 +116,10 @@ describe("Education Loan Calculations", () => {
 
       // Verify that total payments = principal + total interest
       const totalInterest = schedule.reduce((sum, r) => sum + r.interest, 0);
-      const totalPaid = schedule.reduce((sum, r) => sum + r.emi + r.prepayment, 0);
+      const totalPaid = schedule.reduce(
+        (sum, r) => sum + r.emi + r.prepayment,
+        0,
+      );
       expect(totalPaid).toBeCloseTo(defaultParams.principal + totalInterest, 0);
     });
 
@@ -153,7 +156,10 @@ describe("Education Loan Calculations", () => {
 
       expect(comparison.savings.totalInterestSaved).toBeGreaterThan(100000);
       expect(comparison.savings.monthlyEmiDifference).toBeGreaterThan(0);
-      expect(comparison.savings.capitalizedInterestAvoided).toBeCloseTo(500000, 0);
+      expect(comparison.savings.capitalizedInterestAvoided).toBeCloseTo(
+        500000,
+        0,
+      );
     });
   });
 });

@@ -889,16 +889,26 @@ describe("Calculator Component", () => {
         </MemoryRouter>,
       );
 
-      expect(screen.getByText("Moratorium Period Settings")).toBeInTheDocument();
+      expect(
+        screen.getByText("Moratorium Period Settings"),
+      ).toBeInTheDocument();
       expect(screen.getByText("Course Duration")).toBeInTheDocument();
-      expect(screen.getByText("Grace Period (After Course)")).toBeInTheDocument();
+      expect(
+        screen.getByText("Grace Period (After Course)"),
+      ).toBeInTheDocument();
       expect(screen.getByText("Simple Interest (SI)")).toBeInTheDocument();
       expect(screen.getByText("Compound Interest (CI)")).toBeInTheDocument();
       expect(screen.getByText("No Payment")).toBeInTheDocument();
       expect(screen.getByText("Pay Simple Interest (SI)")).toBeInTheDocument();
       expect(screen.getByText("Partial Payment")).toBeInTheDocument();
-      expect(screen.getByText(/Two-Phase Loan Lifecycle Breakdown/i)).toBeInTheDocument();
-      expect(screen.getByText(/Why Servicing Interest During College Saves You Lakhs/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Two-Phase Loan Lifecycle Breakdown/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          /Why Servicing Interest During College Saves You Lakhs/i,
+        ),
+      ).toBeInTheDocument();
     });
 
     it("allows switching payment options and toggling bank concession", () => {
@@ -908,12 +918,16 @@ describe("Calculator Component", () => {
         </MemoryRouter>,
       );
 
-      const paySiBtn = screen.getByText("Pay Simple Interest (SI)").closest("button")!;
+      const paySiBtn = screen
+        .getByText("Pay Simple Interest (SI)")
+        .closest("button")!;
       fireEvent.click(paySiBtn);
 
       expect(screen.getByText(/Bank Concession/i)).toBeInTheDocument();
       expect(
-        screen.getByText(/Most Indian banks \(like SBI, BoB, PNB\) give a 1.00% p.a. interest discount/i),
+        screen.getByText(
+          /Most Indian banks \(like SBI, BoB, PNB\) give a 1.00% p.a. interest discount/i,
+        ),
       ).toBeInTheDocument();
 
       const partialBtn = screen.getByText("Partial Payment").closest("button")!;
@@ -925,7 +939,9 @@ describe("Calculator Component", () => {
       const ciBtn = screen.getByText("Compound Interest (CI)");
       fireEvent.click(ciBtn);
 
-      expect(screen.queryByPlaceholderText("e.g. 5000")).not.toBeInTheDocument();
+      expect(
+        screen.queryByPlaceholderText("e.g. 5000"),
+      ).not.toBeInTheDocument();
       expect(screen.queryByText(/Bank Concession/i)).not.toBeInTheDocument();
     });
 
@@ -938,31 +954,49 @@ describe("Calculator Component", () => {
 
       // Default INR suggestions
       expect(
-        screen.getByText(/Banking Suggestion & Guidelines \(India \(New Delhi\)\)/i),
+        screen.getByText(
+          /Banking Suggestion & Guidelines \(India \(New Delhi\)\)/i,
+        ),
       ).toBeInTheDocument();
-      expect(screen.getByText(/SBI Student Loan Scheme, PNB Saraswati/i)).toBeInTheDocument();
-      expect(screen.getByText(/Section 80E - Interest Deduction/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/SBI Student Loan Scheme, PNB Saraswati/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Section 80E - Interest Deduction/i),
+      ).toBeInTheDocument();
 
       // Verify currency selector is in Loan Parameters and NOT duplicated in Goal Optimizer or Moratorium
-      expect(screen.queryByLabelText("Select Country for Banking Guidelines")).not.toBeInTheDocument();
+      expect(
+        screen.queryByLabelText("Select Country for Banking Guidelines"),
+      ).not.toBeInTheDocument();
       const countrySelect = screen.getByLabelText("Currency");
       expect(screen.getAllByLabelText("Currency")).toHaveLength(1);
 
       // Switch to USA (USD)
       fireEvent.change(countrySelect, { target: { value: "USD" } });
       expect(
-        screen.getByText(/Banking Suggestion & Guidelines \(USA \(Washington D.C.\)\)/i),
+        screen.getByText(
+          /Banking Suggestion & Guidelines \(USA \(Washington D.C.\)\)/i,
+        ),
       ).toBeInTheDocument();
       expect(
-        screen.getByText(/servicing interest while in school prevents unpaid interest from capitalizing/i),
+        screen.getByText(
+          /servicing interest while in school prevents unpaid interest from capitalizing/i,
+        ),
       ).toBeInTheDocument();
-      expect(screen.getByText(/Student Loan Interest Deduction/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Student Loan Interest Deduction/i),
+      ).toBeInTheDocument();
 
       // Check concession banner under Pay SI for USD
-      const paySiBtn = screen.getByText("Pay Simple Interest (SI)").closest("button")!;
+      const paySiBtn = screen
+        .getByText("Pay Simple Interest (SI)")
+        .closest("button")!;
       fireEvent.click(paySiBtn);
       expect(
-        screen.getByText(/Most US lenders \(like Sallie Mae, Discover, SoFi\) offer a 0.25%–0.50% interest rate reduction/i),
+        screen.getByText(
+          /Most US lenders \(like Sallie Mae, Discover, SoFi\) offer a 0.25%–0.50% interest rate reduction/i,
+        ),
       ).toBeInTheDocument();
 
       // Switch to UK (GBP)
@@ -971,16 +1005,22 @@ describe("Calculator Component", () => {
         screen.getByText(/Banking Suggestion & Guidelines \(UK \(London\)\)/i),
       ).toBeInTheDocument();
       expect(
-        screen.getByText(/government Student Loans \(Plan 2 & Plan 5\) accrue interest linked to RPI/i),
+        screen.getByText(
+          /government Student Loans \(Plan 2 & Plan 5\) accrue interest linked to RPI/i,
+        ),
       ).toBeInTheDocument();
       expect(
-        screen.getByText(/UK private education lenders \(like Future Finance, Prodigy\) offer interest rate discounts/i),
+        screen.getByText(
+          /UK private education lenders \(like Future Finance, Prodigy\) offer interest rate discounts/i,
+        ),
       ).toBeInTheDocument();
 
       // Switch to Europe (EUR)
       fireEvent.change(countrySelect, { target: { value: "EUR" } });
       expect(
-        screen.getByText(/Banking Suggestion & Guidelines \(Europe \(Berlin\)\)/i),
+        screen.getByText(
+          /Banking Suggestion & Guidelines \(Europe \(Berlin\)\)/i,
+        ),
       ).toBeInTheDocument();
       expect(screen.getByText(/KfW or Erasmus\+/i)).toBeInTheDocument();
       expect(screen.getByText(/Werbungskosten/i)).toBeInTheDocument();
@@ -988,10 +1028,14 @@ describe("Calculator Component", () => {
       // Switch to Australia (AUD)
       fireEvent.change(countrySelect, { target: { value: "AUD" } });
       expect(
-        screen.getByText(/Banking Suggestion & Guidelines \(Australia \(Canberra\)\)/i),
+        screen.getByText(
+          /Banking Suggestion & Guidelines \(Australia \(Canberra\)\)/i,
+        ),
       ).toBeInTheDocument();
       expect(screen.getByText(/HELP\/HECS/i)).toBeInTheDocument();
-      expect(screen.getByText(/Self-Education Expense Deductions/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Self-Education Expense Deductions/i),
+      ).toBeInTheDocument();
     });
 
     it("displays the dynamic green title line as part of the second title for each loan tab", () => {
@@ -1000,12 +1044,12 @@ describe("Calculator Component", () => {
           <Calculator initialLoanType="HOME" />
         </MemoryRouter>,
       );
-      expect(
-        screen.getByRole("heading", { level: 1 }),
-      ).toHaveTextContent("Smart EMI Planner");
-      expect(
-        screen.getByRole("heading", { level: 1 }),
-      ).toHaveTextContent("Home Loan EMI Calculator");
+      expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+        "Smart EMI Planner",
+      );
+      expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+        "Home Loan EMI Calculator",
+      );
       unmount();
 
       const carRender = render(
@@ -1013,9 +1057,9 @@ describe("Calculator Component", () => {
           <Calculator initialLoanType="CAR" />
         </MemoryRouter>,
       );
-      expect(
-        screen.getByRole("heading", { level: 1 }),
-      ).toHaveTextContent("Car Loan EMI Calculator");
+      expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+        "Car Loan EMI Calculator",
+      );
       carRender.unmount();
 
       const personalRender = render(
@@ -1023,9 +1067,9 @@ describe("Calculator Component", () => {
           <Calculator initialLoanType="PERSONAL" />
         </MemoryRouter>,
       );
-      expect(
-        screen.getByRole("heading", { level: 1 }),
-      ).toHaveTextContent("Personal Loan EMI Calculator");
+      expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+        "Personal Loan EMI Calculator",
+      );
       personalRender.unmount();
 
       const eduRender = render(
@@ -1033,11 +1077,10 @@ describe("Calculator Component", () => {
           <Calculator initialLoanType="EDUCATION" />
         </MemoryRouter>,
       );
-      expect(
-        screen.getByRole("heading", { level: 1 }),
-      ).toHaveTextContent("Education Loan EMI Calculator");
+      expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+        "Education Loan EMI Calculator",
+      );
       eduRender.unmount();
     });
   });
 });
-

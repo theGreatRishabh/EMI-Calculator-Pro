@@ -211,7 +211,10 @@ export function calculateEducationMoratorium(
     concessionRatePercent = 1.0,
   } = params;
 
-  const moratoriumMonths = Math.max(0, courseDurationMonths + gracePeriodMonths);
+  const moratoriumMonths = Math.max(
+    0,
+    courseDurationMonths + gracePeriodMonths,
+  );
   const monthlyRate = annualRate / 12 / 100;
   const monthlySimpleInterest = principal * monthlyRate;
 
@@ -222,10 +225,17 @@ export function calculateEducationMoratorium(
   if (moratoriumInterestType === MoratoriumInterestType.SIMPLE_INTEREST) {
     totalInterestAccrued = monthlySimpleInterest * moratoriumMonths;
 
-    if (moratoriumPaymentOption === MoratoriumPaymentOption.PAY_SIMPLE_INTEREST) {
+    if (
+      moratoriumPaymentOption === MoratoriumPaymentOption.PAY_SIMPLE_INTEREST
+    ) {
       totalInterestPaid = totalInterestAccrued;
-    } else if (moratoriumPaymentOption === MoratoriumPaymentOption.PARTIAL_INTEREST) {
-      totalInterestPaid = Math.min(totalInterestAccrued, partialPaymentAmount * moratoriumMonths);
+    } else if (
+      moratoriumPaymentOption === MoratoriumPaymentOption.PARTIAL_INTEREST
+    ) {
+      totalInterestPaid = Math.min(
+        totalInterestAccrued,
+        partialPaymentAmount * moratoriumMonths,
+      );
     } else {
       totalInterestPaid = 0;
     }
@@ -236,9 +246,13 @@ export function calculateEducationMoratorium(
       totalInterestAccrued += interest;
 
       let payment = 0;
-      if (moratoriumPaymentOption === MoratoriumPaymentOption.PAY_SIMPLE_INTEREST) {
+      if (
+        moratoriumPaymentOption === MoratoriumPaymentOption.PAY_SIMPLE_INTEREST
+      ) {
         payment = interest;
-      } else if (moratoriumPaymentOption === MoratoriumPaymentOption.PARTIAL_INTEREST) {
+      } else if (
+        moratoriumPaymentOption === MoratoriumPaymentOption.PARTIAL_INTEREST
+      ) {
         payment = partialPaymentAmount;
       }
 
@@ -247,7 +261,10 @@ export function calculateEducationMoratorium(
     }
   }
 
-  const capitalizedInterest = Math.max(0, totalInterestAccrued - totalInterestPaid);
+  const capitalizedInterest = Math.max(
+    0,
+    totalInterestAccrued - totalInterestPaid,
+  );
   const capitalizedPrincipal = principal + capitalizedInterest;
 
   // 1% concession applied if simple interest is serviced promptly during moratorium
@@ -309,16 +326,24 @@ export function generateEducationAmortizationSchedule(
 
     if (moratoriumInterestType === MoratoriumInterestType.SIMPLE_INTEREST) {
       interest = principal * monthlyRate;
-      if (moratoriumPaymentOption === MoratoriumPaymentOption.PAY_SIMPLE_INTEREST) {
+      if (
+        moratoriumPaymentOption === MoratoriumPaymentOption.PAY_SIMPLE_INTEREST
+      ) {
         payment = interest;
-      } else if (moratoriumPaymentOption === MoratoriumPaymentOption.PARTIAL_INTEREST) {
+      } else if (
+        moratoriumPaymentOption === MoratoriumPaymentOption.PARTIAL_INTEREST
+      ) {
         payment = partialPaymentAmount;
       }
     } else {
       interest = currentBalance * monthlyRate;
-      if (moratoriumPaymentOption === MoratoriumPaymentOption.PAY_SIMPLE_INTEREST) {
+      if (
+        moratoriumPaymentOption === MoratoriumPaymentOption.PAY_SIMPLE_INTEREST
+      ) {
         payment = interest;
-      } else if (moratoriumPaymentOption === MoratoriumPaymentOption.PARTIAL_INTEREST) {
+      } else if (
+        moratoriumPaymentOption === MoratoriumPaymentOption.PARTIAL_INTEREST
+      ) {
         payment = partialPaymentAmount;
       }
       currentBalance = currentBalance + interest - payment;
@@ -389,7 +414,8 @@ export function calculateEducationComparison(
     repaymentTenureMonths,
   );
   const noPaymentRepaymentInterest =
-    noPaymentRepaymentEmi * repaymentTenureMonths - noPaymentSummary.capitalizedPrincipal;
+    noPaymentRepaymentEmi * repaymentTenureMonths -
+    noPaymentSummary.capitalizedPrincipal;
   const noPaymentTotalInterest =
     noPaymentSummary.totalInterestAccrued + noPaymentRepaymentInterest;
   const noPaymentTotalCost = params.principal + noPaymentTotalInterest;
@@ -405,13 +431,20 @@ export function calculateEducationComparison(
     repaymentTenureMonths,
   );
   const paySiRepaymentInterest =
-    paySiRepaymentEmi * repaymentTenureMonths - paySiSummary.capitalizedPrincipal;
+    paySiRepaymentEmi * repaymentTenureMonths -
+    paySiSummary.capitalizedPrincipal;
   const paySiTotalInterest =
     paySiSummary.totalInterestPaid + paySiRepaymentInterest;
   const paySiTotalCost = params.principal + paySiTotalInterest;
 
-  const totalInterestSaved = Math.max(0, noPaymentTotalInterest - paySiTotalInterest);
-  const monthlyEmiDifference = Math.max(0, noPaymentRepaymentEmi - paySiRepaymentEmi);
+  const totalInterestSaved = Math.max(
+    0,
+    noPaymentTotalInterest - paySiTotalInterest,
+  );
+  const monthlyEmiDifference = Math.max(
+    0,
+    noPaymentRepaymentEmi - paySiRepaymentEmi,
+  );
 
   return {
     noPayment: {
@@ -437,4 +470,3 @@ export function calculateEducationComparison(
     },
   };
 }
-

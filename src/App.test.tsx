@@ -51,4 +51,3 @@ describe("App Component & Navigation", () => {
     expect(educationLink?.className).toContain("text-emerald-700");
   });
 });
-

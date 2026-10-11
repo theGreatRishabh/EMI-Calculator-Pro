@@ -107,4 +107,3 @@ export interface CurrencyConfig {
   stampDutyRate?: number; // percentage
   registrationRate?: number; // percentage
 }
-
