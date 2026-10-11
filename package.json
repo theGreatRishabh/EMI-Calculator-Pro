@@ -11,8 +11,10 @@
     "lint": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "format": "prettier --check \"src/**/*.{ts,tsx,css,json}\" \"*.ts\"",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css,json}\" \"*.ts\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,css,json}\" \"*.ts\"",
     "format:write": "prettier --write \"src/**/*.{ts,tsx,css,json}\" \"*.ts\"",
+    "fix": "npm run format",
     "prepare": "husky"
   },
   "dependencies": {
