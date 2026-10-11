@@ -223,7 +223,9 @@ export function calculateEducationMoratorium(
   let currentBalance = principal;
 
   if (moratoriumInterestType === MoratoriumInterestType.SIMPLE_INTEREST) {
-    totalInterestAccrued = monthlySimpleInterest * moratoriumMonths;
+    totalInterestAccrued =
+      Math.round(((principal * annualRate * moratoriumMonths) / 1200) * 100) /
+      100;
 
     if (
       moratoriumPaymentOption === MoratoriumPaymentOption.PAY_SIMPLE_INTEREST
@@ -261,11 +263,11 @@ export function calculateEducationMoratorium(
     }
   }
 
-  const capitalizedInterest = Math.max(
-    0,
-    totalInterestAccrued - totalInterestPaid,
-  );
-  const capitalizedPrincipal = principal + capitalizedInterest;
+  const capitalizedInterest =
+    Math.round(Math.max(0, totalInterestAccrued - totalInterestPaid) * 100) /
+    100;
+  const capitalizedPrincipal =
+    Math.round((principal + capitalizedInterest) * 100) / 100;
 
   // 1% concession applied if simple interest is serviced promptly during moratorium
   let effectiveRepaymentRate = annualRate;

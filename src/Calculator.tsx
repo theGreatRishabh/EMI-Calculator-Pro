@@ -4381,8 +4381,8 @@ export default function App({
                   Under Section 80E of the Income Tax Act, you can claim a 100%
                   tax deduction on the entire interest amount paid on higher
                   education loans with NO upper limit for up to 8 continuous
-                  years. In the US, taxpayers can deduct up to $2,500/year under
-                  student loan interest deductions.
+                  years. In the US, taxpayers can deduct up to $2,500/year on
+                  student loan interest paid.
                 </p>
               </article>
             </>

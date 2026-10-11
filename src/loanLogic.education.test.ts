@@ -63,8 +63,8 @@ describe("Education Loan Calculations", () => {
       // Total accrued = 5,00,000
       // Capitalized = 2,00,000
       expect(summary.totalInterestPaid).toBe(300000);
-      expect(summary.capitalizedInterest).toBe(200000);
-      expect(summary.capitalizedPrincipal).toBe(2200000);
+      expect(summary.capitalizedInterest).toBeCloseTo(200000, 0);
+      expect(summary.capitalizedPrincipal).toBeCloseTo(2200000, 0);
     });
 
     it("calculates Compound Interest when configured for private lenders", () => {

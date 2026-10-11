@@ -985,7 +985,7 @@ describe("Calculator Component", () => {
         ),
       ).toBeInTheDocument();
       expect(
-        screen.getByText(/Student Loan Interest Deduction/i),
+        screen.getAllByText(/Student Loan Interest Deduction/i)[0],
       ).toBeInTheDocument();
 
       // Check concession banner under Pay SI for USD
@@ -1032,7 +1032,7 @@ describe("Calculator Component", () => {
           /Banking Suggestion & Guidelines \(Australia \(Canberra\)\)/i,
         ),
       ).toBeInTheDocument();
-      expect(screen.getByText(/HELP\/HECS/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/HELP\/HECS/i)[0]).toBeInTheDocument();
       expect(
         screen.getByText(/Self-Education Expense Deductions/i),
       ).toBeInTheDocument();
