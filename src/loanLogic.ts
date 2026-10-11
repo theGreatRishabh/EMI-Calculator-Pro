@@ -47,6 +47,7 @@ export function calculateEMI(
   annualRate: number,
   tenureMonths: number,
 ): number {
+  if (principal <= 0 || tenureMonths <= 0) return 0;
   if (annualRate === 0) return principal / tenureMonths;
   const monthlyRate = annualRate / 12 / 100;
   return (

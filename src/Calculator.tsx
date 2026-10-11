@@ -1244,19 +1244,49 @@ export default function App({
   };
 
   // Isolate savings contribution from prepayments alone
-  const prepaymentOnlySchedule = useMemo(
-    () =>
-      generateAmortizationSchedule(
-        amount,
-        rate,
-        tenureMonths,
+  const prepaymentOnlySchedule = useMemo(() => {
+    if (isEducation) {
+      return generateEducationAmortizationSchedule({
+        principal: amount,
+        annualRate: rate,
+        courseDurationMonths,
+        gracePeriodMonths,
+        moratoriumPaymentOption,
+        moratoriumInterestType,
+        partialPaymentAmount,
+        enableConcession,
+        concessionRatePercent: concessionRate,
+        repaymentTenureMonths: tenureMonths,
         startDate,
-        [],
+        rateChanges: [],
         prepayments,
-        0,
-      ),
-    [amount, rate, tenureMonths, startDate, prepayments],
-  );
+        emiStepUpPercent: 0,
+      });
+    }
+    return generateAmortizationSchedule(
+      amount,
+      rate,
+      tenureMonths,
+      startDate,
+      [],
+      prepayments,
+      0,
+    );
+  }, [
+    isEducation,
+    amount,
+    rate,
+    courseDurationMonths,
+    gracePeriodMonths,
+    moratoriumPaymentOption,
+    moratoriumInterestType,
+    partialPaymentAmount,
+    enableConcession,
+    concessionRate,
+    tenureMonths,
+    startDate,
+    prepayments,
+  ]);
   const prepaymentSavings = useMemo(
     () => ({
       interest:
@@ -1268,19 +1298,49 @@ export default function App({
   );
 
   // Isolate savings contribution from rate changes alone
-  const rateChangeOnlySchedule = useMemo(
-    () =>
-      generateAmortizationSchedule(
-        amount,
-        rate,
-        tenureMonths,
+  const rateChangeOnlySchedule = useMemo(() => {
+    if (isEducation) {
+      return generateEducationAmortizationSchedule({
+        principal: amount,
+        annualRate: rate,
+        courseDurationMonths,
+        gracePeriodMonths,
+        moratoriumPaymentOption,
+        moratoriumInterestType,
+        partialPaymentAmount,
+        enableConcession,
+        concessionRatePercent: concessionRate,
+        repaymentTenureMonths: tenureMonths,
         startDate,
         rateChanges,
-        [],
-        0,
-      ),
-    [amount, rate, tenureMonths, startDate, rateChanges],
-  );
+        prepayments: [],
+        emiStepUpPercent: 0,
+      });
+    }
+    return generateAmortizationSchedule(
+      amount,
+      rate,
+      tenureMonths,
+      startDate,
+      rateChanges,
+      [],
+      0,
+    );
+  }, [
+    isEducation,
+    amount,
+    rate,
+    courseDurationMonths,
+    gracePeriodMonths,
+    moratoriumPaymentOption,
+    moratoriumInterestType,
+    partialPaymentAmount,
+    enableConcession,
+    concessionRate,
+    tenureMonths,
+    startDate,
+    rateChanges,
+  ]);
   const rateChangeSavings = useMemo(
     () => ({
       interest:
@@ -1518,17 +1578,37 @@ export default function App({
         },
       ];
 
-      const testSchedule = generateAmortizationSchedule(
-        amount,
-        rate,
-        tenureMonths,
-        startDate,
-        rateChanges,
-        testPrepayments,
-      );
+      const effectiveGoalMonths = isEducation
+        ? courseDurationMonths + gracePeriodMonths + totalGoalMonths
+        : totalGoalMonths;
+
+      const testSchedule = isEducation
+        ? generateEducationAmortizationSchedule({
+            principal: amount,
+            annualRate: rate,
+            courseDurationMonths,
+            gracePeriodMonths,
+            moratoriumPaymentOption,
+            moratoriumInterestType,
+            partialPaymentAmount,
+            enableConcession,
+            concessionRatePercent: concessionRate,
+            repaymentTenureMonths: tenureMonths,
+            startDate,
+            rateChanges,
+            prepayments: testPrepayments,
+          })
+        : generateAmortizationSchedule(
+            amount,
+            rate,
+            tenureMonths,
+            startDate,
+            rateChanges,
+            testPrepayments,
+          );
 
       // We check if the schedule finishes within the total estimated time
-      if (testSchedule.length <= totalGoalMonths) {
+      if (testSchedule.length <= effectiveGoalMonths) {
         result = mid;
         high = mid;
       } else {

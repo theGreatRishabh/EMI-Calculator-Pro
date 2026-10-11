@@ -7,6 +7,8 @@ import {
 import {
   MoratoriumPaymentOption,
   MoratoriumInterestType,
+  PrepaymentType,
+  PrepaymentReduction,
 } from "./types";
 
 describe("Education Loan Calculations", () => {
@@ -109,6 +111,34 @@ describe("Education Loan Calculations", () => {
       expect(month31.principal).toBeGreaterThan(0);
 
       // Final month payoff
+      const lastMonth = schedule[schedule.length - 1];
+      expect(lastMonth.closingBalance).toBeCloseTo(0, 0);
+
+      // Verify that total payments = principal + total interest
+      const totalInterest = schedule.reduce((sum, r) => sum + r.interest, 0);
+      const totalPaid = schedule.reduce((sum, r) => sum + r.emi + r.prepayment, 0);
+      expect(totalPaid).toBeCloseTo(defaultParams.principal + totalInterest, 0);
+    });
+
+    it("handles prepayments during the repayment phase of an education loan", () => {
+      const startDate = new Date("2024-01-01");
+      const schedule = generateEducationAmortizationSchedule({
+        ...defaultParams,
+        repaymentTenureMonths: 120,
+        startDate,
+        prepayments: [
+          {
+            id: "pp-1",
+            amount: 500000,
+            startDate: "2026-07-01", // Month 31 (month 1 of repayment)
+            type: PrepaymentType.ONE_TIME,
+            reduction: PrepaymentReduction.TENURE,
+          },
+        ],
+      });
+
+      // Tenure should be shortened due to 5 lakh prepayment
+      expect(schedule.length).toBeLessThan(150);
       const lastMonth = schedule[schedule.length - 1];
       expect(lastMonth.closingBalance).toBeCloseTo(0, 0);
     });
