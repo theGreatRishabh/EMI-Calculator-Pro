@@ -19,6 +19,7 @@ import {
   Home,
   Car,
   User,
+  GraduationCap,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "./lib/utils";
@@ -27,6 +28,12 @@ const LOAN_ROUTES = [
   { path: "/home-loan", label: "Home", icon: Home, type: "HOME" },
   { path: "/car-loan", label: "Car", icon: Car, type: "CAR" },
   { path: "/personal-loan", label: "Personal", icon: User, type: "PERSONAL" },
+  {
+    path: "/education-loan",
+    label: "Education",
+    icon: GraduationCap,
+    type: "EDUCATION",
+  },
 ];
 
 function GlobalHeader() {
@@ -135,6 +142,10 @@ export default function App() {
           <Route
             path="/personal-loan"
             element={<Calculator key="PERSONAL" initialLoanType="PERSONAL" />}
+          />
+          <Route
+            path="/education-loan"
+            element={<Calculator key="EDUCATION" initialLoanType="EDUCATION" />}
           />
           {/* Legacy root — redirects to /home-loan via Calculator default */}
           <Route path="/" element={<Calculator initialLoanType="HOME" />} />

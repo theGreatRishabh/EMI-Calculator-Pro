@@ -43,6 +43,10 @@ import {
   Phone,
   Send,
   X,
+  GraduationCap,
+  School,
+  Sparkles,
+  BookOpen,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import {
@@ -67,11 +71,16 @@ import {
   Prepayment,
   AmortizationRow,
   CurrencyConfig,
+  MoratoriumPaymentOption,
+  MoratoriumInterestType,
 } from "./types";
 import {
   LOAN_DEFAULTS,
   calculateEMI,
   generateAmortizationSchedule,
+  calculateEducationMoratorium,
+  generateEducationAmortizationSchedule,
+  calculateEducationComparison,
 } from "./loanLogic";
 
 const COLORS = ["#10b981", "#f59e0b"];
@@ -499,6 +508,12 @@ const LOAN_TYPE_META: Record<
     description:
       "Calculate Personal Loan EMI with processing fee breakdown. Simulate prepayments and rate changes. Free personal loan amortization schedule.",
   },
+  EDUCATION: {
+    slug: "/education-loan",
+    title: "Education Loan EMI Calculator with Moratorium Period - Smart EMI Planner",
+    description:
+      "Calculate your Education Loan EMI with Moratorium Period (Study + Grace). Simulate Simple vs Compound Interest, interest capitalization, and Section 80E tax deductions.",
+  },
 };
 
 export default function App({
@@ -524,6 +539,17 @@ export default function App({
   const [loanStartDate, setLoanStartDate] = useState(
     format(new Date(), "yyyy-MM-dd"),
   );
+
+  // Education Loan Specific State
+  const [courseDurationYears, setCourseDurationYears] = useState(2);
+  const [gracePeriodMonths, setGracePeriodMonths] = useState(6);
+  const [moratoriumPaymentOption, setMoratoriumPaymentOption] =
+    useState<MoratoriumPaymentOption>(MoratoriumPaymentOption.NO_PAYMENT);
+  const [moratoriumInterestType, setMoratoriumInterestType] =
+    useState<MoratoriumInterestType>(MoratoriumInterestType.SIMPLE_INTEREST);
+  const [partialPaymentAmount, setPartialPaymentAmount] = useState(0);
+  const [enableConcession, setEnableConcession] = useState(true);
+  const [concessionRate, setConcessionRate] = useState(1.0);
 
   const [rateChanges, setRateChanges] = useState<RateChange[]>([]);
   const [prepayments, setPrepayments] = useState<Prepayment[]>([]);
@@ -705,6 +731,47 @@ export default function App({
     } else if (local?.emiStepUpPercent !== undefined) {
       setEmiStepUpPercent(local.emiStepUpPercent);
     }
+
+    // Education Loan parameters from URL or storage
+    const cd = params.get("cd");
+    const gp = params.get("gp");
+    const mpo = params.get("mpo") as MoratoriumPaymentOption;
+    const mit = params.get("mit") as MoratoriumInterestType;
+    const ppa = params.get("ppa");
+    const conc = params.get("conc");
+    const concr = params.get("concr");
+
+    if (cd) setCourseDurationYears(Number(cd));
+    else if (local?.courseDurationYears !== undefined)
+      setCourseDurationYears(local.courseDurationYears);
+
+    if (gp) setGracePeriodMonths(Number(gp));
+    else if (local?.gracePeriodMonths !== undefined)
+      setGracePeriodMonths(local.gracePeriodMonths);
+
+    if (mpo && Object.values(MoratoriumPaymentOption).includes(mpo)) {
+      setMoratoriumPaymentOption(mpo);
+    } else if (local?.moratoriumPaymentOption) {
+      setMoratoriumPaymentOption(local.moratoriumPaymentOption);
+    }
+
+    if (mit && Object.values(MoratoriumInterestType).includes(mit)) {
+      setMoratoriumInterestType(mit);
+    } else if (local?.moratoriumInterestType) {
+      setMoratoriumInterestType(local.moratoriumInterestType);
+    }
+
+    if (ppa) setPartialPaymentAmount(Number(ppa));
+    else if (local?.partialPaymentAmount !== undefined)
+      setPartialPaymentAmount(local.partialPaymentAmount);
+
+    if (conc !== null) setEnableConcession(conc === "1" || conc === "true");
+    else if (local?.enableConcession !== undefined)
+      setEnableConcession(local.enableConcession);
+
+    if (concr) setConcessionRate(Number(concr));
+    else if (local?.concessionRate !== undefined)
+      setConcessionRate(local.concessionRate);
   }, [resolvedInitialType]);
 
   // Save to LocalStorage
@@ -726,6 +793,13 @@ export default function App({
       prepayments,
       currencyCode,
       emiStepUpPercent,
+      courseDurationYears,
+      gracePeriodMonths,
+      moratoriumPaymentOption,
+      moratoriumInterestType,
+      partialPaymentAmount,
+      enableConcession,
+      concessionRate,
     };
     localStorage.setItem("emi_calculator_state", JSON.stringify(state));
   }, [
@@ -745,6 +819,13 @@ export default function App({
     prepayments,
     currencyCode,
     emiStepUpPercent,
+    courseDurationYears,
+    gracePeriodMonths,
+    moratoriumPaymentOption,
+    moratoriumInterestType,
+    partialPaymentAmount,
+    enableConcession,
+    concessionRate,
   ]);
 
   const [isShared, setIsShared] = useState(false);
@@ -765,7 +846,6 @@ export default function App({
 
   const handleLeadSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, you'd send this to your backend or CRM
     console.log("Lead captured:", leadForm);
     setIsLeadSubmitted(true);
     setTimeout(() => {
@@ -795,6 +875,17 @@ export default function App({
       pp: btoa(JSON.stringify(prepayments)),
       curr: currencyCode,
       emiSU: emiStepUpPercent.toString(),
+      ...(loanType === LoanType.EDUCATION
+        ? {
+            cd: courseDurationYears.toString(),
+            gp: gracePeriodMonths.toString(),
+            mpo: moratoriumPaymentOption,
+            mit: moratoriumInterestType,
+            ppa: partialPaymentAmount.toString(),
+            conc: enableConcession ? "1" : "0",
+            concr: concessionRate.toString(),
+          }
+        : {}),
     });
     const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
     navigator.clipboard.writeText(url);
@@ -811,23 +902,64 @@ export default function App({
     }
   }, [loanStartDate]);
 
-  const originalSchedule = useMemo(
-    () => generateAmortizationSchedule(amount, rate, tenureMonths, startDate),
-    [amount, rate, tenureMonths, startDate],
-  );
+  const isEducation = loanType === LoanType.EDUCATION;
+  const courseDurationMonths = courseDurationYears * 12;
 
-  const adjustedSchedule = useMemo(
-    () =>
-      generateAmortizationSchedule(
-        amount,
-        rate,
-        tenureMonths,
+  const originalSchedule = useMemo(() => {
+    if (isEducation) {
+      return generateEducationAmortizationSchedule({
+        principal: amount,
+        annualRate: rate,
+        courseDurationMonths,
+        gracePeriodMonths,
+        moratoriumPaymentOption,
+        moratoriumInterestType,
+        partialPaymentAmount,
+        enableConcession,
+        concessionRatePercent: concessionRate,
+        repaymentTenureMonths: tenureMonths,
+        startDate,
+        rateChanges: [],
+        prepayments: [],
+        emiStepUpPercent: 0,
+      });
+    }
+    return generateAmortizationSchedule(amount, rate, tenureMonths, startDate);
+  }, [
+    isEducation,
+    amount,
+    rate,
+    courseDurationMonths,
+    gracePeriodMonths,
+    moratoriumPaymentOption,
+    moratoriumInterestType,
+    partialPaymentAmount,
+    enableConcession,
+    concessionRate,
+    tenureMonths,
+    startDate,
+  ]);
+
+  const adjustedSchedule = useMemo(() => {
+    if (isEducation) {
+      return generateEducationAmortizationSchedule({
+        principal: amount,
+        annualRate: rate,
+        courseDurationMonths,
+        gracePeriodMonths,
+        moratoriumPaymentOption,
+        moratoriumInterestType,
+        partialPaymentAmount,
+        enableConcession,
+        concessionRatePercent: concessionRate,
+        repaymentTenureMonths: tenureMonths,
         startDate,
         rateChanges,
         prepayments,
         emiStepUpPercent,
-      ),
-    [
+      });
+    }
+    return generateAmortizationSchedule(
       amount,
       rate,
       tenureMonths,
@@ -835,8 +967,78 @@ export default function App({
       rateChanges,
       prepayments,
       emiStepUpPercent,
-    ],
-  );
+    );
+  }, [
+    isEducation,
+    amount,
+    rate,
+    courseDurationMonths,
+    gracePeriodMonths,
+    moratoriumPaymentOption,
+    moratoriumInterestType,
+    partialPaymentAmount,
+    enableConcession,
+    concessionRate,
+    tenureMonths,
+    startDate,
+    rateChanges,
+    prepayments,
+    emiStepUpPercent,
+  ]);
+
+  const educationMoratoriumSummary = useMemo(() => {
+    if (!isEducation) return null;
+    return calculateEducationMoratorium({
+      principal: amount,
+      annualRate: rate,
+      courseDurationMonths,
+      gracePeriodMonths,
+      moratoriumPaymentOption,
+      moratoriumInterestType,
+      partialPaymentAmount,
+      enableConcession,
+      concessionRatePercent: concessionRate,
+    });
+  }, [
+    isEducation,
+    amount,
+    rate,
+    courseDurationMonths,
+    gracePeriodMonths,
+    moratoriumPaymentOption,
+    moratoriumInterestType,
+    partialPaymentAmount,
+    enableConcession,
+    concessionRate,
+  ]);
+
+  const educationComparison = useMemo(() => {
+    if (!isEducation) return null;
+    return calculateEducationComparison(
+      {
+        principal: amount,
+        annualRate: rate,
+        courseDurationMonths,
+        gracePeriodMonths,
+        moratoriumInterestType,
+        partialPaymentAmount,
+        enableConcession,
+        concessionRatePercent: concessionRate,
+      },
+      tenureMonths,
+    );
+  }, [
+    isEducation,
+    amount,
+    rate,
+    courseDurationMonths,
+    gracePeriodMonths,
+    moratoriumInterestType,
+    partialPaymentAmount,
+    enableConcession,
+    concessionRate,
+    tenureMonths,
+  ]);
 
   const adjustedSummary = useMemo(() => {
     const totalInterest = adjustedSchedule.reduce(
@@ -848,14 +1050,18 @@ export default function App({
     const totalMonths = adjustedSchedule.length;
     const remainingMonths = Math.max(0, totalMonths - monthsPassed);
 
+    const repaymentRow =
+      adjustedSchedule.find((r) => !r.isMoratorium) || adjustedSchedule[0];
+    const emi = repaymentRow?.emi || 0;
+
     return {
       totalInterest,
       totalPayment: amount + totalInterest,
       months: totalMonths,
-      emi: adjustedSchedule[0]?.emi || 0,
+      emi,
       monthsPassed,
       remainingMonths,
-      piti: (adjustedSchedule[0]?.emi || 0) + monthlyTax + monthlyInsurance,
+      piti: emi + monthlyTax + monthlyInsurance,
     };
   }, [adjustedSchedule, amount, startDate, monthlyTax, monthlyInsurance]);
 
@@ -864,12 +1070,16 @@ export default function App({
       (sum, row) => sum + row.interest,
       0,
     );
+    const repaymentRow =
+      originalSchedule.find((r) => !r.isMoratorium) || originalSchedule[0];
+    const emi = repaymentRow?.emi || 0;
+
     return {
       totalInterest,
       totalPayment: amount + totalInterest,
       months: originalSchedule.length,
-      emi: originalSchedule[0]?.emi || 0,
-      piti: (originalSchedule[0]?.emi || 0) + monthlyTax + monthlyInsurance,
+      emi,
+      piti: emi + monthlyTax + monthlyInsurance,
     };
   }, [originalSchedule, amount, monthlyTax, monthlyInsurance]);
 
@@ -940,6 +1150,16 @@ export default function App({
     setRateChanges([]);
     setPrepayments([]);
     setEmiStepUpPercent(0);
+
+    if (type === LoanType.EDUCATION) {
+      setCourseDurationYears(2);
+      setGracePeriodMonths(6);
+      setMoratoriumPaymentOption(MoratoriumPaymentOption.NO_PAYMENT);
+      setMoratoriumInterestType(MoratoriumInterestType.SIMPLE_INTEREST);
+      setPartialPaymentAmount(0);
+      setEnableConcession(true);
+      setConcessionRate(1.0);
+    }
   };
 
   const exportToPDF = async () => {
@@ -967,7 +1187,7 @@ export default function App({
     );
 
     const tableData = adjustedSchedule.map((row) => [
-      row.month,
+      row.isMoratorium ? `${row.month} (M)` : row.month,
       format(row.date, "MMM yyyy"),
       cleanCurrency(
         formatCurrency(
@@ -1077,7 +1297,7 @@ export default function App({
 
     adjustedSchedule.forEach((row) => {
       worksheet.addRow({
-        month: row.month,
+        month: row.isMoratorium ? `${row.month} (Moratorium)` : row.month,
         date: format(row.date, "MMM yyyy"),
         opening: row.openingBalance,
         emi: row.emi,
@@ -1274,6 +1494,15 @@ export default function App({
           summary1: "Processing Fee",
           summary2: "Documentation",
         };
+      case LoanType.EDUCATION:
+        return {
+          title: "Education Loan Upfront Costs & Margin Money",
+          label1: "Processing Fee (%)",
+          label2: "Administrative & Exam Fees (%)",
+          labelDP: "Margin Money / Self-Contribution",
+          summary1: "Processing Fee",
+          summary2: "Admin Fees",
+        };
       case LoanType.HOME:
       default:
         return {
@@ -1295,14 +1524,14 @@ export default function App({
   const stampDuty =
     loanType === LoanType.CAR
       ? 0
-      : loanType === LoanType.PERSONAL
+      : loanType === LoanType.PERSONAL || loanType === LoanType.EDUCATION
         ? (customStampDutyRate ?? Math.round(amount * 0.01))
         : (propertyValue * currentStampDutyRate) / 100;
 
   const registrationFee =
     loanType === LoanType.CAR
       ? (customRegistrationRate ?? Math.round(propertyValue * 0.04))
-      : loanType === LoanType.PERSONAL
+      : loanType === LoanType.PERSONAL || loanType === LoanType.EDUCATION
         ? (customRegistrationRate ?? 1000)
         : (propertyValue * currentRegistrationRate) / 100;
 
@@ -1628,9 +1857,524 @@ export default function App({
                         </div>
                       </>
                     )}
+
+                    {loanType === LoanType.EDUCATION && (
+                      <>
+                        <div className="space-y-3 w-full">
+                          <div className="flex justify-between">
+                            <label
+                              htmlFor="course-duration"
+                              className="text-sm font-bold text-slate-600 flex items-center gap-1.5"
+                            >
+                              <GraduationCap className="w-4 h-4 text-emerald-600" />
+                              Course Duration
+                            </label>
+                            <span className="text-sm font-extrabold text-emerald-600">
+                              {courseDurationYears} Years ({courseDurationYears * 12} Mo)
+                            </span>
+                          </div>
+                          <input
+                            id="course-duration-slider"
+                            type="range"
+                            min="1"
+                            max="5"
+                            step="1"
+                            value={courseDurationYears}
+                            onChange={(e) =>
+                              setCourseDurationYears(Number(e.target.value))
+                            }
+                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
+                          />
+                          <div className="flex justify-between text-[10px] text-slate-400 font-medium px-0.5">
+                            <span>1 Yr</span>
+                            <span>2 Yrs</span>
+                            <span>3 Yrs</span>
+                            <span>4 Yrs</span>
+                            <span>5 Yrs</span>
+                          </div>
+                        </div>
+
+                        <div className="space-y-3 w-full">
+                          <div className="flex justify-between">
+                            <label
+                              htmlFor="grace-period"
+                              className="text-sm font-bold text-slate-600 flex items-center gap-1.5"
+                            >
+                              <Clock className="w-4 h-4 text-emerald-600" />
+                              Grace Period (After Course)
+                            </label>
+                            <span className="text-sm font-extrabold text-emerald-600">
+                              {gracePeriodMonths} Months
+                            </span>
+                          </div>
+                          <input
+                            id="grace-period-slider"
+                            type="range"
+                            min="0"
+                            max="24"
+                            step="6"
+                            value={gracePeriodMonths}
+                            onChange={(e) =>
+                              setGracePeriodMonths(Number(e.target.value))
+                            }
+                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
+                          />
+                          <div className="flex justify-between text-[10px] text-slate-400 font-medium px-0.5">
+                            <span>0 Mo</span>
+                            <span>6 Mo</span>
+                            <span>12 Mo</span>
+                            <span>18 Mo</span>
+                            <span>24 Mo</span>
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </section>
+
+              {/* Education Loan Moratorium Configuration */}
+              {isEducation && (
+                <section className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border-[4px] border-indigo-100 space-y-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center font-bold">
+                        <School className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h2 className="text-lg font-bold text-slate-800">
+                          Moratorium Period Settings
+                        </h2>
+                        <p className="text-xs text-slate-500">
+                          Total Moratorium: {courseDurationYears * 12 + gracePeriodMonths} Months ({((courseDurationYears * 12 + gracePeriodMonths) / 12).toFixed(1)} Years)
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Interest Accrual Toggle (SI vs CI) */}
+                    <div className="flex items-center bg-slate-100 p-1 rounded-xl self-start sm:self-auto">
+                      <button
+                        onClick={() =>
+                          setMoratoriumInterestType(
+                            MoratoriumInterestType.SIMPLE_INTEREST,
+                          )
+                        }
+                        className={cn(
+                          "px-3 py-1.5 text-xs font-bold rounded-lg transition-all",
+                          moratoriumInterestType ===
+                            MoratoriumInterestType.SIMPLE_INTEREST
+                            ? "bg-white shadow-sm text-indigo-600"
+                            : "text-slate-500 hover:text-slate-700",
+                        )}
+                        title="RBI / Indian Banks Standard: Simple interest charged during study, capitalized at repayment onset"
+                      >
+                        Simple Interest (SI)
+                      </button>
+                      <button
+                        onClick={() =>
+                          setMoratoriumInterestType(
+                            MoratoriumInterestType.COMPOUND_INTEREST,
+                          )
+                        }
+                        className={cn(
+                          "px-3 py-1.5 text-xs font-bold rounded-lg transition-all",
+                          moratoriumInterestType ===
+                            MoratoriumInterestType.COMPOUND_INTEREST
+                            ? "bg-white shadow-sm text-indigo-600"
+                            : "text-slate-500 hover:text-slate-700",
+                        )}
+                        title="Private NBFCs / International lenders: Interest compounded monthly during study"
+                      >
+                        Compound Interest (CI)
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* 3 Repayment Options During Moratorium */}
+                  <div className="space-y-3">
+                    <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                      Payment Option During Moratorium
+                    </label>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {/* Option 1: No Payment */}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setMoratoriumPaymentOption(
+                            MoratoriumPaymentOption.NO_PAYMENT,
+                          )
+                        }
+                        className={cn(
+                          "text-left p-4 rounded-2xl border-2 transition-all flex flex-col justify-between gap-3 relative",
+                          moratoriumPaymentOption ===
+                            MoratoriumPaymentOption.NO_PAYMENT
+                            ? "border-indigo-600 bg-indigo-50/50 shadow-sm"
+                            : "border-slate-200 bg-slate-50/50 hover:border-slate-300",
+                        )}
+                      >
+                        <div>
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-sm text-slate-800">
+                              No Payment
+                            </span>
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 text-slate-600">
+                              Full Moratorium
+                            </span>
+                          </div>
+                          <p className="text-xs text-slate-500 mt-1">
+                            Pay ₹0 during study. Accrued interest is capitalized into your principal when EMI begins.
+                          </p>
+                        </div>
+                        <div className="pt-2 border-t border-slate-200/60 text-xs">
+                          <span className="text-slate-400 text-[10px] uppercase font-bold">
+                            Capitalized at end:
+                          </span>
+                          <p className="font-bold text-amber-600 text-sm">
+                            +{formatCurrencyFull(
+                              educationMoratoriumSummary?.capitalizedInterest || 0,
+                              currency.code,
+                              currency.locale,
+                            )}
+                          </p>
+                        </div>
+                      </button>
+
+                      {/* Option 2: Pay Simple Interest */}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setMoratoriumPaymentOption(
+                            MoratoriumPaymentOption.PAY_SIMPLE_INTEREST,
+                          )
+                        }
+                        className={cn(
+                          "text-left p-4 rounded-2xl border-2 transition-all flex flex-col justify-between gap-3 relative",
+                          moratoriumPaymentOption ===
+                            MoratoriumPaymentOption.PAY_SIMPLE_INTEREST
+                            ? "border-emerald-600 bg-emerald-50/50 shadow-sm"
+                            : "border-slate-200 bg-slate-50/50 hover:border-slate-300",
+                        )}
+                      >
+                        <div>
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-sm text-slate-800">
+                              Pay Simple Interest (SI)
+                            </span>
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
+                              Best Savings
+                            </span>
+                          </div>
+                          <p className="text-xs text-slate-500 mt-1">
+                            Pay interest monthly while studying. Zero interest added to your principal!
+                          </p>
+                        </div>
+                        <div className="pt-2 border-t border-slate-200/60 text-xs">
+                          <span className="text-slate-400 text-[10px] uppercase font-bold">
+                            Monthly SI Payment:
+                          </span>
+                          <p className="font-bold text-emerald-600 text-sm">
+                            {formatCurrencyFull(
+                              educationMoratoriumSummary?.monthlySimpleInterest || 0,
+                              currency.code,
+                              currency.locale,
+                            )}
+                            /mo
+                          </p>
+                        </div>
+                      </button>
+
+                      {/* Option 3: Partial Interest */}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setMoratoriumPaymentOption(
+                            MoratoriumPaymentOption.PARTIAL_INTEREST,
+                          )
+                        }
+                        className={cn(
+                          "text-left p-4 rounded-2xl border-2 transition-all flex flex-col justify-between gap-3 relative",
+                          moratoriumPaymentOption ===
+                            MoratoriumPaymentOption.PARTIAL_INTEREST
+                            ? "border-indigo-600 bg-indigo-50/50 shadow-sm"
+                            : "border-slate-200 bg-slate-50/50 hover:border-slate-300",
+                        )}
+                      >
+                        <div>
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-sm text-slate-800">
+                              Partial Payment
+                            </span>
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700">
+                              Custom Budget
+                            </span>
+                          </div>
+                          <p className="text-xs text-slate-500 mt-1">
+                            Pay whatever you can monthly. The remainder is capitalized into the loan.
+                          </p>
+                        </div>
+                        <div className="pt-2 border-t border-slate-200/60 text-xs">
+                          <span className="text-slate-400 text-[10px] uppercase font-bold">
+                            Remaining Capitalized:
+                          </span>
+                          <p className="font-bold text-indigo-600 text-sm">
+                            +{formatCurrencyFull(
+                              educationMoratoriumSummary?.capitalizedInterest || 0,
+                              currency.code,
+                              currency.locale,
+                            )}
+                          </p>
+                        </div>
+                      </button>
+                    </div>
+
+                    {/* Partial Payment Amount Input */}
+                    {moratoriumPaymentOption ===
+                      MoratoriumPaymentOption.PARTIAL_INTEREST && (
+                      <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
+                        <label className="text-xs font-bold text-slate-600">
+                          Monthly Payment During Moratorium
+                        </label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400 text-sm">
+                            {currency.symbol}
+                          </span>
+                          <input
+                            type="number"
+                            value={partialPaymentAmount}
+                            onChange={(e) =>
+                              setPartialPaymentAmount(parseNumberInput(e))
+                            }
+                            placeholder="e.g. 5000"
+                            className="w-full pl-8 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-indigo-500"
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* 1% Concession Toggle (for Option 2) */}
+                    {moratoriumPaymentOption ===
+                      MoratoriumPaymentOption.PAY_SIMPLE_INTEREST && (
+                      <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div className="space-y-0.5">
+                          <div className="flex items-center gap-2">
+                            <Sparkles className="w-4 h-4 text-emerald-600" />
+                            <span className="text-xs font-bold text-emerald-900">
+                              Bank Concession: {concessionRate}% Interest Rate Discount
+                            </span>
+                          </div>
+                          <p className="text-xs text-emerald-700">
+                            Most Indian banks (like SBI, BoB, PNB) give a 1.00% p.a. interest discount if simple interest is serviced during the study period.
+                          </p>
+                        </div>
+                        <label className="relative inline-flex items-center cursor-pointer self-start sm:self-auto">
+                          <input
+                            type="checkbox"
+                            checked={enableConcession}
+                            onChange={(e) =>
+                              setEnableConcession(e.target.checked)
+                            }
+                            className="sr-only peer"
+                          />
+                          <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600" />
+                        </label>
+                      </div>
+                    )}
+                  </div>
+                </section>
+              )}
+
+              {/* Two-Phase Moratorium & Repayment Timeline */}
+              {isEducation && (
+                <section className="bg-gradient-to-br from-slate-900 to-indigo-950 p-6 rounded-3xl text-white space-y-5 shadow-lg">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-300 flex items-center gap-2">
+                      <GraduationCap className="w-4 h-4" />
+                      Two-Phase Loan Lifecycle Breakdown
+                    </h3>
+                    <span className="text-xs text-indigo-200 font-medium px-2.5 py-1 bg-white/10 rounded-full self-start sm:self-auto">
+                      Total: {courseDurationYears * 12 + gracePeriodMonths + tenureMonths} Months
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Phase 1 Card */}
+                    <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs uppercase font-extrabold tracking-wider text-amber-400">
+                          Phase 1: Moratorium Period
+                        </span>
+                        <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300">
+                          {courseDurationYears * 12 + gracePeriodMonths} Months
+                        </span>
+                      </div>
+                      <div className="space-y-1.5 text-xs text-slate-300">
+                        <div className="flex justify-between">
+                          <span>Monthly Payment:</span>
+                          <span className="font-bold text-white">
+                            {moratoriumPaymentOption ===
+                            MoratoriumPaymentOption.PAY_SIMPLE_INTEREST
+                              ? formatCurrencyFull(
+                                  educationMoratoriumSummary?.monthlySimpleInterest || 0,
+                                  currency.code,
+                                  currency.locale,
+                                )
+                              : moratoriumPaymentOption ===
+                                  MoratoriumPaymentOption.PARTIAL_INTEREST
+                                ? formatCurrencyFull(
+                                    partialPaymentAmount,
+                                    currency.code,
+                                    currency.locale,
+                                  )
+                                : "₹0 (No EMI)"}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>
+                            Total Accrued (
+                            {moratoriumInterestType ===
+                            MoratoriumInterestType.SIMPLE_INTEREST
+                              ? "SI"
+                              : "CI"}
+                            ):
+                          </span>
+                          <span className="font-bold text-amber-300">
+                            {formatCurrencyFull(
+                              educationMoratoriumSummary?.totalInterestAccrued || 0,
+                              currency.code,
+                              currency.locale,
+                            )}
+                          </span>
+                        </div>
+                        <div className="flex justify-between pt-1 border-t border-white/10 font-bold">
+                          <span>Capitalized to Loan:</span>
+                          <span
+                            className={
+                              educationMoratoriumSummary?.capitalizedInterest
+                                ? "text-amber-400"
+                                : "text-emerald-400"
+                            }
+                          >
+                            {educationMoratoriumSummary?.capitalizedInterest
+                              ? `+${formatCurrencyFull(
+                                  educationMoratoriumSummary.capitalizedInterest,
+                                  currency.code,
+                                  currency.locale,
+                                )}`
+                              : "₹0 (Fully Avoided)"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Phase 2 Card */}
+                    <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs uppercase font-extrabold tracking-wider text-emerald-400">
+                          Phase 2: Repayment Period
+                        </span>
+                        <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-400/20 text-emerald-300">
+                          {tenureMonths} Months ({tenure} Yrs)
+                        </span>
+                      </div>
+                      <div className="space-y-1.5 text-xs text-slate-300">
+                        <div className="flex justify-between">
+                          <span>Starting Repayment Principal:</span>
+                          <span className="font-bold text-white">
+                            {formatCurrencyFull(
+                              educationMoratoriumSummary?.capitalizedPrincipal ||
+                                amount,
+                              currency.code,
+                              currency.locale,
+                            )}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Effective Repayment Rate:</span>
+                          <span className="font-bold text-emerald-300">
+                            {educationMoratoriumSummary?.effectiveRepaymentRate}% p.a.
+                          </span>
+                        </div>
+                        <div className="flex justify-between pt-1 border-t border-white/10 font-bold">
+                          <span>Monthly Repayment EMI:</span>
+                          <span className="text-emerald-400 text-sm">
+                            {formatCurrencyFull(
+                              adjustedSummary.emi,
+                              currency.code,
+                              currency.locale,
+                            )}
+                            /mo
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              )}
+
+              {/* Smart Impact Comparison Card */}
+              {isEducation && educationComparison && (
+                <section className="bg-gradient-to-r from-emerald-500 to-teal-600 p-6 rounded-3xl text-white space-y-4 shadow-md">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="w-5 h-5 text-yellow-300" />
+                      <h3 className="text-base font-bold text-white">
+                        Why Servicing Interest During College Saves You Lakhs
+                      </h3>
+                    </div>
+                    <span className="text-[10px] uppercase tracking-widest font-extrabold px-2.5 py-1 bg-white/20 rounded-full self-start sm:self-auto">
+                      Impact Analysis
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="p-3 bg-white/10 rounded-xl">
+                      <p className="text-[10px] uppercase font-bold text-emerald-100">
+                        Total Interest Saved
+                      </p>
+                      <p className="text-2xl font-extrabold text-white">
+                        {formatCurrencyFull(
+                          educationComparison.savings.totalInterestSaved,
+                          currency.code,
+                          currency.locale,
+                        )}
+                      </p>
+                    </div>
+                    <div className="p-3 bg-white/10 rounded-xl">
+                      <p className="text-[10px] uppercase font-bold text-emerald-100">
+                        Monthly EMI Reduction
+                      </p>
+                      <p className="text-2xl font-extrabold text-white">
+                        {formatCurrencyFull(
+                          educationComparison.savings.monthlyEmiDifference,
+                          currency.code,
+                          currency.locale,
+                        )}
+                        /mo
+                      </p>
+                    </div>
+                    <div className="p-3 bg-white/10 rounded-xl">
+                      <p className="text-[10px] uppercase font-bold text-emerald-100">
+                        Principal Ballooning Avoided
+                      </p>
+                      <p className="text-2xl font-extrabold text-white">
+                        {formatCurrencyFull(
+                          educationComparison.savings.capitalizedInterestAvoided,
+                          currency.code,
+                          currency.locale,
+                        )}
+                      </p>
+                    </div>
+                  </div>
+
+                  <p className="text-xs text-emerald-100 leading-relaxed">
+                    Paying Simple Interest (~{formatCurrencyFull(
+                      educationComparison.paySimpleInterest.monthlySi,
+                      currency.code,
+                      currency.locale,
+                    )}/month) during college keeps your principal at {formatCurrencyFull(amount, currency.code, currency.locale)} instead of letting it balloon to {formatCurrencyFull(educationComparison.noPayment.capitalizedPrincipal, currency.code, currency.locale)}, saving compounding interest for the next {tenure} years!
+                  </p>
+                </section>
+              )}
 
               {/* Goal Optimizer Tool */}
               <section
@@ -1790,6 +2534,104 @@ export default function App({
                       <Info className="w-3 h-3 inline mr-1 mb-0.5" />
                       Estimates based on annual averages. Actual benefits depend
                       on local tax laws and individual circumstances.
+                    </p>
+                  </div>
+                </section>
+              )}
+
+              {/* Education Loan Tax Benefit Section (Section 80E) */}
+              {loanType === LoanType.EDUCATION && (
+                <section
+                  aria-labelledby="education-tax-benefit-title"
+                  className="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 space-y-4"
+                >
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5 text-indigo-600" />
+                    <h2
+                      id="education-tax-benefit-title"
+                      className="text-lg font-semibold text-indigo-900"
+                    >
+                      Education Loan Tax Benefits ({currency.name})
+                    </h2>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {currency.code === "INR" ? (
+                      <>
+                        <div className="p-4 bg-white rounded-xl border border-indigo-100">
+                          <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">
+                            Section 80E - Interest Deduction
+                          </p>
+                          <p className="text-xl font-bold text-indigo-600">
+                            100% Deductible
+                            <span className="text-[10px] text-slate-400 font-normal ml-1">
+                              (No Upper Limit)
+                            </span>
+                          </p>
+                          <p className="text-[10px] text-slate-400 mt-1">
+                            Entire interest paid during the financial year is tax-deductible.
+                          </p>
+                          <p className="text-[10px] text-indigo-500 mt-1 italic">
+                            Available for up to 8 consecutive assessment years starting from repayment onset.
+                          </p>
+                        </div>
+                        <div className="p-4 bg-white rounded-xl border border-indigo-100">
+                          <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">
+                            Eligible Courses & Borrowers
+                          </p>
+                          <p className="text-xl font-bold text-indigo-600">
+                            Higher Studies
+                            <span className="text-[10px] text-slate-400 font-normal ml-1">
+                              (India or Abroad)
+                            </span>
+                          </p>
+                          <p className="text-[10px] text-slate-400 mt-1">
+                            Applicable for higher education (degree/post-grad) in India or overseas.
+                          </p>
+                          <p className="text-[10px] text-indigo-500 mt-1 italic">
+                            Claimable for self, spouse, or children by individual taxpayers.
+                          </p>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="p-4 bg-white rounded-xl border border-indigo-100">
+                          <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">
+                            Student Loan Interest Deduction
+                          </p>
+                          <p className="text-xl font-bold text-indigo-600">
+                            Up to $2,500
+                            <span className="text-[10px] text-slate-400 font-normal ml-1">
+                              / year
+                            </span>
+                          </p>
+                          <p className="text-[10px] text-slate-400 mt-1">
+                            Above-the-line IRS deduction to reduce modified adjusted gross income.
+                          </p>
+                          <p className="text-[10px] text-indigo-500 mt-1 italic">
+                            Applies to interest paid on qualified higher education loans.
+                          </p>
+                        </div>
+                        <div className="p-4 bg-white rounded-xl border border-indigo-100">
+                          <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">
+                            Education Tax Relief
+                          </p>
+                          <p className="text-xl font-bold text-indigo-600">
+                            Credits & Deductions
+                          </p>
+                          <p className="text-[10px] text-slate-400 mt-1">
+                            American Opportunity (AOTC) and Lifetime Learning Credit (LLC).
+                          </p>
+                          <p className="text-[10px] text-indigo-500 mt-1 italic">
+                            Subject to income thresholds and tax filing status.
+                          </p>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  <div className="bg-indigo-600/5 p-3 rounded-lg border border-indigo-200/50">
+                    <p className="text-xs text-indigo-700 leading-relaxed">
+                      <Info className="w-3 h-3 inline mr-1 mb-0.5" />
+                      Unlike home loans where Section 80C caps principal, Section 80E provides unlimited deductions on actual interest paid for up to 8 years!
                     </p>
                   </div>
                 </section>
@@ -2947,7 +3789,14 @@ export default function App({
                               )}
                             >
                               <td className="px-6 py-3 text-xs text-slate-500">
-                                {row.month}
+                                <div className="flex items-center gap-1.5">
+                                  <span>{row.month}</span>
+                                  {row.isMoratorium && (
+                                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">
+                                      Moratorium
+                                    </span>
+                                  )}
+                                </div>
                               </td>
                               <td className="px-6 py-3 text-xs text-slate-500">
                                 {format(row.date, "MMM yyyy")}
@@ -3207,40 +4056,71 @@ export default function App({
 
         {/* SEO / Educational Content Section */}
         <section className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8">
-          <article className="space-y-4">
-            <h3 className="text-xl font-bold text-slate-800">
-              What is an EMI?
-            </h3>
-            <p className="text-slate-600 text-sm leading-relaxed">
-              Equated Monthly Installment (EMI) is a fixed payment amount made
-              by a borrower to a lender at a specified date each calendar month.
-              EMIs are applied to both interest and principal each month, so
-              that over a specified number of years, the loan is paid off in
-              full.
-            </p>
-          </article>
-          <article className="space-y-4">
-            <h3 className="text-xl font-bold text-slate-800">
-              Benefits of Prepayment
-            </h3>
-            <p className="text-slate-600 text-sm leading-relaxed">
-              Making prepayments on your loan can significantly reduce your
-              total interest burden and shorten your loan tenure. Even small,
-              regular prepayments can save you lakhs of rupees in interest over
-              the long term, especially in the early years of a home loan.
-            </p>
-          </article>
-          <article className="space-y-4">
-            <h3 className="text-xl font-bold text-slate-800">
-              Floating vs Fixed Rates
-            </h3>
-            <p className="text-slate-600 text-sm leading-relaxed">
-              Floating interest rates change based on market conditions (like
-              the RBI Repo Rate), while fixed rates remain constant. Our
-              calculator allows you to simulate floating rate hikes to see how
-              they impact your monthly budget and total loan cost.
-            </p>
-          </article>
+          {loanType === LoanType.EDUCATION ? (
+            <>
+              <article className="space-y-4">
+                <h3 className="text-xl font-bold text-slate-800">
+                  How Moratorium Period Works
+                </h3>
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  The moratorium period covers your Course Duration plus an additional Grace Period (typically 6 to 12 months after graduation or finding employment). During this phase, you are not required to pay standard EMIs, giving you breathing room while studying.
+                </p>
+              </article>
+              <article className="space-y-4">
+                <h3 className="text-xl font-bold text-slate-800">
+                  Simple Interest vs Compound Interest
+                </h3>
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  Under RBI and Indian Banks' Association (IBA) rules, banks charge Simple Interest (SI) during the moratorium. If left unpaid, all accrued interest is capitalized (added to principal) when EMIs start. Servicing SI monthly saves lakhs in compounding and unlocks up to 1% rate concessions!
+                </p>
+              </article>
+              <article className="space-y-4">
+                <h3 className="text-xl font-bold text-slate-800">
+                  Tax Benefits under Section 80E
+                </h3>
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  Under Section 80E of the Income Tax Act, you can claim a 100% tax deduction on the entire interest amount paid on higher education loans with NO upper limit for up to 8 continuous years. In the US, taxpayers can deduct up to $2,500/year under student loan interest deductions.
+                </p>
+              </article>
+            </>
+          ) : (
+            <>
+              <article className="space-y-4">
+                <h3 className="text-xl font-bold text-slate-800">
+                  What is an EMI?
+                </h3>
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  Equated Monthly Installment (EMI) is a fixed payment amount made
+                  by a borrower to a lender at a specified date each calendar month.
+                  EMIs are applied to both interest and principal each month, so
+                  that over a specified number of years, the loan is paid off in
+                  full.
+                </p>
+              </article>
+              <article className="space-y-4">
+                <h3 className="text-xl font-bold text-slate-800">
+                  Benefits of Prepayment
+                </h3>
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  Making prepayments on your loan can significantly reduce your
+                  total interest burden and shorten your loan tenure. Even small,
+                  regular prepayments can save you lakhs of rupees in interest over
+                  the long term, especially in the early years of a home loan.
+                </p>
+              </article>
+              <article className="space-y-4">
+                <h3 className="text-xl font-bold text-slate-800">
+                  Floating vs Fixed Rates
+                </h3>
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  Floating interest rates change based on market conditions (like
+                  the RBI Repo Rate), while fixed rates remain constant. Our
+                  calculator allows you to simulate floating rate hikes to see how
+                  they impact your monthly budget and total loan cost.
+                </p>
+              </article>
+            </>
+          )}
         </section>
 
         {/* Footer */}

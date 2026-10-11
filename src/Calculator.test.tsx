@@ -880,4 +880,44 @@ describe("Calculator Component", () => {
       { timeout: 3500 },
     );
   });
+
+  describe("Education Loan Tab Features", () => {
+    it("renders Education Loan controls when initialized with EDUCATION", () => {
+      render(
+        <MemoryRouter>
+          <Calculator initialLoanType="EDUCATION" />
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByText("Moratorium Period Settings")).toBeInTheDocument();
+      expect(screen.getByText("Course Duration")).toBeInTheDocument();
+      expect(screen.getByText("Grace Period (After Course)")).toBeInTheDocument();
+      expect(screen.getByText("Simple Interest (SI)")).toBeInTheDocument();
+      expect(screen.getByText("Compound Interest (CI)")).toBeInTheDocument();
+      expect(screen.getByText("No Payment")).toBeInTheDocument();
+      expect(screen.getByText("Pay Simple Interest (SI)")).toBeInTheDocument();
+      expect(screen.getByText("Partial Payment")).toBeInTheDocument();
+      expect(screen.getByText(/Two-Phase Loan Lifecycle Breakdown/i)).toBeInTheDocument();
+      expect(screen.getByText(/Why Servicing Interest During College Saves You Lakhs/i)).toBeInTheDocument();
+    });
+
+    it("allows switching payment options and toggling bank concession", () => {
+      render(
+        <MemoryRouter>
+          <Calculator initialLoanType="EDUCATION" />
+        </MemoryRouter>,
+      );
+
+      const paySiBtn = screen.getByText("Pay Simple Interest (SI)").closest("button")!;
+      fireEvent.click(paySiBtn);
+
+      expect(screen.getByText(/Bank Concession/i)).toBeInTheDocument();
+
+      const partialBtn = screen.getByText("Partial Payment").closest("button")!;
+      fireEvent.click(partialBtn);
+
+      expect(screen.getByPlaceholderText("e.g. 5000")).toBeInTheDocument();
+    });
+  });
 });
+

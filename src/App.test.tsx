@@ -39,4 +39,16 @@ describe("App Component & Navigation", () => {
     // And Home becomes inactive
     expect(homeLink?.className).toContain("text-slate-600");
   });
+
+  it("correctly sets active state when routed to education loan", () => {
+    render(
+      <MemoryRouter initialEntries={["/education-loan"]}>
+        <App />
+      </MemoryRouter>,
+    );
+
+    const educationLink = screen.getByText("Education").closest("a");
+    expect(educationLink?.className).toContain("text-emerald-700");
+  });
 });
+

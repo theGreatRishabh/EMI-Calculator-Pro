@@ -2,6 +2,18 @@ export enum LoanType {
   HOME = "HOME",
   CAR = "CAR",
   PERSONAL = "PERSONAL",
+  EDUCATION = "EDUCATION",
+}
+
+export enum MoratoriumPaymentOption {
+  NO_PAYMENT = "NO_PAYMENT",
+  PAY_SIMPLE_INTEREST = "PAY_SIMPLE_INTEREST",
+  PARTIAL_INTEREST = "PARTIAL_INTEREST",
+}
+
+export enum MoratoriumInterestType {
+  SIMPLE_INTEREST = "SIMPLE_INTEREST",
+  COMPOUND_INTEREST = "COMPOUND_INTEREST",
 }
 
 export enum AdjustmentMode {
@@ -45,6 +57,10 @@ export interface AmortizationRow {
   prepayment: number;
   closingBalance: number;
   interestRate: number;
+  isMoratorium?: boolean;
+  phase?: "MORATORIUM" | "REPAYMENT";
+  moratoriumInterestAccrued?: number;
+  moratoriumPayment?: number;
 }
 
 export interface LoanSummary {
