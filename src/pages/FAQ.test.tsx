@@ -82,9 +82,7 @@ describe("FAQ Component", () => {
 
     // Education Loan FAQ is present
     expect(
-      screen.getByText(
-        "How does an Education Loan Moratorium Period work?",
-      ),
+      screen.getByText("How does an Education Loan Moratorium Period work?"),
     ).toBeInTheDocument();
 
     // International Markets FAQ is present
@@ -96,14 +94,12 @@ describe("FAQ Component", () => {
 
     // Test category filter button for Education Loans
     const eduFilterBtn = screen.getByRole("button", {
-      name: /Education Loans/i,
+      name: /^Education Loans$/i,
     });
     fireEvent.click(eduFilterBtn);
 
     expect(
-      screen.getByText(
-        "How does an Education Loan Moratorium Period work?",
-      ),
+      screen.getByText("How does an Education Loan Moratorium Period work?"),
     ).toBeInTheDocument();
     expect(
       screen.queryByText("What is an EMI and how is it calculated?"),

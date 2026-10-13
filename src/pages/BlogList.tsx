@@ -133,9 +133,12 @@ export default function BlogList() {
             <div className="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
               <span>
                 Showing <strong>{displayedPosts.length}</strong> of{" "}
-                <strong>{filteredPosts.length}</strong> {filteredPosts.length === 1 ? "article" : "articles"}
+                <strong>{filteredPosts.length}</strong>{" "}
+                {filteredPosts.length === 1 ? "article" : "articles"}
                 {filteredPosts.length !== blogPosts.length && (
-                  <span className="text-slate-400 ml-1">({blogPosts.length} total)</span>
+                  <span className="text-slate-400 ml-1">
+                    ({blogPosts.length} total)
+                  </span>
                 )}
               </span>
               {(searchQuery || selectedCategory !== "All") && (
@@ -157,10 +160,17 @@ export default function BlogList() {
               </p>
               <p className="text-sm text-slate-500 max-w-md mx-auto">
                 We couldn't find any articles matching{" "}
-                {searchQuery && <span className="font-semibold">"{searchQuery}"</span>}
+                {searchQuery && (
+                  <span className="font-semibold">"{searchQuery}"</span>
+                )}
                 {selectedCategory !== "All" && (
-                  <span> in category <span className="font-semibold">{selectedCategory}</span></span>
-                )}. Try searching for different keywords.
+                  <span>
+                    {" "}
+                    in category{" "}
+                    <span className="font-semibold">{selectedCategory}</span>
+                  </span>
+                )}
+                . Try searching for different keywords.
               </p>
               <button
                 onClick={handleResetFilters}
@@ -209,12 +219,18 @@ export default function BlogList() {
                 <div className="text-center pt-4">
                   <button
                     type="button"
-                    onClick={() => setVisibleCount((prev) => prev + POSTS_PER_PAGE)}
+                    onClick={() =>
+                      setVisibleCount((prev) => prev + POSTS_PER_PAGE)
+                    }
                     className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-slate-300 hover:border-emerald-500 hover:text-emerald-700 text-slate-700 rounded-xl font-bold text-sm shadow-sm hover:shadow transition-all cursor-pointer group"
                   >
                     <span>Load More Articles</span>
                     <span className="text-xs font-semibold px-2 py-0.5 bg-slate-100 group-hover:bg-emerald-50 rounded-full text-slate-500 group-hover:text-emerald-700">
-                      +{Math.min(POSTS_PER_PAGE, filteredPosts.length - visibleCount)}
+                      +
+                      {Math.min(
+                        POSTS_PER_PAGE,
+                        filteredPosts.length - visibleCount,
+                      )}
                     </span>
                   </button>
                 </div>

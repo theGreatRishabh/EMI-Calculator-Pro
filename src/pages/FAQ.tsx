@@ -18,7 +18,11 @@ import { useDocumentMeta } from "../hooks/useDocumentMeta";
 
 interface FaqItem {
   id: string;
-  category: "Calculations" | "Education Loans" | "International Markets" | "Features & Sharing";
+  category:
+    | "Calculations"
+    | "Education Loans"
+    | "International Markets"
+    | "Features & Sharing";
   question: string;
   answer: React.ReactNode;
 }
@@ -39,26 +43,42 @@ export default function FAQ() {
       answer: (
         <div className="space-y-3">
           <p>
-            An <strong>Equated Monthly Installment (EMI)</strong> is simply the fixed payment you make to your bank or lender on the same day every month until your loan is fully paid off.
+            An <strong>Equated Monthly Installment (EMI)</strong> is simply the
+            fixed payment you make to your bank or lender on the same day every
+            month until your loan is fully paid off.
           </p>
-          <p>
-            Every installment is split into two parts:
-          </p>
+          <p>Every installment is split into two parts:</p>
           <ul className="list-disc pl-5 space-y-1">
             <li>
-              <strong>Principal:</strong> The actual money you borrowed that goes toward clearing your debt.
+              <strong>Principal:</strong> The actual money you borrowed that
+              goes toward clearing your debt.
             </li>
             <li>
-              <strong>Interest:</strong> The lender's fee for borrowing that money, calculated on whatever loan balance you still owe.
+              <strong>Interest:</strong> The lender's fee for borrowing that
+              money, calculated on whatever loan balance you still owe.
             </li>
           </ul>
           <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-sm text-emerald-900 mt-2">
-            <p className="font-semibold mb-1">💡 How to calculate your EMI on this site:</p>
+            <p className="font-semibold mb-1">
+              💡 How to calculate your EMI on this site:
+            </p>
             <ol className="list-decimal pl-5 space-y-1 text-xs text-emerald-800">
-              <li>Select your loan type (Home, Car, Personal, or Education) using the top tabs.</li>
-              <li>Enter your <strong>Loan Amount</strong> using the slider or type the amount directly into the input box.</li>
-              <li>Adjust your <strong>Interest Rate (%)</strong> and <strong>Loan Tenure</strong> (years or months).</li>
-              <li>Your monthly payment and complete interest breakdown update automatically on the right!</li>
+              <li>
+                Select your loan type (Home, Car, Personal, or Education) using
+                the top tabs.
+              </li>
+              <li>
+                Enter your <strong>Loan Amount</strong> using the slider or type
+                the amount directly into the input box.
+              </li>
+              <li>
+                Adjust your <strong>Interest Rate (%)</strong> and{" "}
+                <strong>Loan Tenure</strong> (years or months).
+              </li>
+              <li>
+                Your monthly payment and complete interest breakdown update
+                automatically on the right!
+              </li>
             </ol>
           </div>
         </div>
@@ -71,24 +91,51 @@ export default function FAQ() {
       answer: (
         <div className="space-y-3">
           <p>
-            A <strong>prepayment</strong> simply means paying extra money directly toward your loan whenever you have spare cash—like a year-end bonus, tax refund, or savings.
+            A <strong>prepayment</strong> simply means paying extra money
+            directly toward your loan whenever you have spare cash—like a
+            year-end bonus, tax refund, or savings.
           </p>
           <p>
-            Because banks charge interest on your remaining loan balance, every extra dollar or rupee you pay immediately cuts down that balance. That stops future interest from building up and can save you thousands or lakhs over the life of your loan!
+            Because banks charge interest on your remaining loan balance, every
+            extra dollar or rupee you pay immediately cuts down that balance.
+            That stops future interest from building up and can save you
+            thousands or lakhs over the life of your loan!
           </p>
           <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-sm text-emerald-900 mt-2">
-            <p className="font-semibold mb-1">💡 How to test prepayments in the calculator:</p>
+            <p className="font-semibold mb-1">
+              💡 How to test prepayments in the calculator:
+            </p>
             <ol className="list-decimal pl-5 space-y-1 text-xs text-emerald-800">
-              <li>Scroll down to the <strong>Prepayments & Extra Payments</strong> card.</li>
-              <li>Click <strong>+ Add Prepayment</strong>.</li>
-              <li>Choose <strong>One-Time</strong> (for a lump sum) or <strong>Recurring</strong> (e.g., extra every month or year).</li>
-              <li>Pick your goal:
+              <li>
+                Scroll down to the <strong>Prepayments & Extra Payments</strong>{" "}
+                card.
+              </li>
+              <li>
+                Click <strong>+ Add Prepayment</strong>.
+              </li>
+              <li>
+                Choose <strong>One-Time</strong> (for a lump sum) or{" "}
+                <strong>Recurring</strong> (e.g., extra every month or year).
+              </li>
+              <li>
+                Pick your goal:
                 <ul className="list-disc pl-4 mt-1 space-y-0.5">
-                  <li><strong>Reduce Tenure (Recommended):</strong> Keeps your monthly payment the same, but cuts months or years off your loan for maximum interest savings.</li>
-                  <li><strong>Keep Tenure Same:</strong> Keeps your loan end date the same, but lowers your future monthly payment to ease your monthly budget.</li>
+                  <li>
+                    <strong>Reduce Tenure (Recommended):</strong> Keeps your
+                    monthly payment the same, but cuts months or years off your
+                    loan for maximum interest savings.
+                  </li>
+                  <li>
+                    <strong>Keep Tenure Same:</strong> Keeps your loan end date
+                    the same, but lowers your future monthly payment to ease
+                    your monthly budget.
+                  </li>
                 </ul>
               </li>
-              <li>Look at the green <strong>Interest Saved</strong> counter to see your exact savings!</li>
+              <li>
+                Look at the green <strong>Interest Saved</strong> counter to see
+                your exact savings!
+              </li>
             </ol>
           </div>
         </div>
@@ -102,18 +149,35 @@ export default function FAQ() {
       answer: (
         <div className="space-y-3">
           <p>
-            If you have a floating or variable-rate loan, your interest rate changes whenever central banks update benchmark rates.
+            If you have a floating or variable-rate loan, your interest rate
+            changes whenever central banks update benchmark rates.
           </p>
           <p>
-            Most banks don't raise your monthly EMI right away so you don't face sudden payment shock. Instead, they quietly <strong>add extra months or years to your loan</strong> behind the scenes. This means you could end up paying for a 20-year loan for 24 years without realizing it!
+            Most banks don't raise your monthly EMI right away so you don't face
+            sudden payment shock. Instead, they quietly{" "}
+            <strong>add extra months or years to your loan</strong> behind the
+            scenes. This means you could end up paying for a 20-year loan for 24
+            years without realizing it!
           </p>
           <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-sm text-emerald-900 mt-2">
-            <p className="font-semibold mb-1">💡 How to test rate changes in the calculator:</p>
+            <p className="font-semibold mb-1">
+              💡 How to test rate changes in the calculator:
+            </p>
             <ol className="list-decimal pl-5 space-y-1 text-xs text-emerald-800">
-              <li>Scroll to the <strong>Interest Rate Changes</strong> section.</li>
-              <li>Click <strong>+ Add Rate Change</strong>.</li>
-              <li>Enter the month or year when you expect the rate to go up (or down), and type the new rate.</li>
-              <li>The calculator will immediately show you how many extra months get added and how much more interest you'll owe.</li>
+              <li>
+                Scroll to the <strong>Interest Rate Changes</strong> section.
+              </li>
+              <li>
+                Click <strong>+ Add Rate Change</strong>.
+              </li>
+              <li>
+                Enter the month or year when you expect the rate to go up (or
+                down), and type the new rate.
+              </li>
+              <li>
+                The calculator will immediately show you how many extra months
+                get added and how much more interest you'll owe.
+              </li>
             </ol>
           </div>
         </div>
@@ -126,17 +190,33 @@ export default function FAQ() {
       answer: (
         <div className="space-y-3">
           <p>
-            As your career grows, your salary or business earnings usually increase each year. A <strong>Step-up EMI</strong> means you plan to increase your monthly loan payment by a small, manageable percentage (like 5% or 10%) every year to match your salary hikes.
+            As your career grows, your salary or business earnings usually
+            increase each year. A <strong>Step-up EMI</strong> means you plan to
+            increase your monthly loan payment by a small, manageable percentage
+            (like 5% or 10%) every year to match your salary hikes.
           </p>
           <p>
-            Because your standard EMI already covers the required interest, 100% of this extra increase goes straight toward wiping out your loan balance. Stepping up your payment by just 5% a year can help you clear a 20-year loan in just 12 to 13 years!
+            Because your standard EMI already covers the required interest, 100%
+            of this extra increase goes straight toward wiping out your loan
+            balance. Stepping up your payment by just 5% a year can help you
+            clear a 20-year loan in just 12 to 13 years!
           </p>
           <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-sm text-emerald-900 mt-2">
-            <p className="font-semibold mb-1">💡 How to use Step-up EMI in the calculator:</p>
+            <p className="font-semibold mb-1">
+              💡 How to use Step-up EMI in the calculator:
+            </p>
             <ol className="list-decimal pl-5 space-y-1 text-xs text-emerald-800">
-              <li>Find the <strong>Step-up EMI</strong> toggle under Loan Options.</li>
-              <li>Turn it on and choose your annual percentage increase (e.g., 5% or 10%).</li>
-              <li>Check the repayment schedule chart to see how many years you shave off your loan!</li>
+              <li>
+                Find the <strong>Step-up EMI</strong> toggle under Loan Options.
+              </li>
+              <li>
+                Turn it on and choose your annual percentage increase (e.g., 5%
+                or 10%).
+              </li>
+              <li>
+                Check the repayment schedule chart to see how many years you
+                shave off your loan!
+              </li>
             </ol>
           </div>
         </div>
@@ -151,31 +231,47 @@ export default function FAQ() {
       answer: (
         <div className="space-y-3">
           <p>
-            An <strong>Education Loan Moratorium Period</strong> (often called a study break or grace period) is a payment holiday where you don't have to start paying full monthly EMIs while you are still studying.
+            An <strong>Education Loan Moratorium Period</strong> (often called a
+            study break or grace period) is a payment holiday where you don't
+            have to start paying full monthly EMIs while you are still studying.
           </p>
-          <p>
-            It is made up of two parts:
-          </p>
+          <p>It is made up of two parts:</p>
           <ul className="list-disc pl-5 space-y-1">
             <li>
-              <strong>Course Duration:</strong> The years you are actively studying in college (e.g., 2 years for a Master's degree, 4 years for Undergrad).
+              <strong>Course Duration:</strong> The years you are actively
+              studying in college (e.g., 2 years for a Master's degree, 4 years
+              for Undergrad).
             </li>
             <li>
-              <strong>Grace Period:</strong> An extra buffer after graduation (typically 6 to 12 months) so you have time to find a job before full loan payments begin.
+              <strong>Grace Period:</strong> An extra buffer after graduation
+              (typically 6 to 12 months) so you have time to find a job before
+              full loan payments begin.
             </li>
           </ul>
           <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-sm text-emerald-900 mt-2">
-            <p className="font-semibold mb-1">💡 How to simulate an education loan:</p>
+            <p className="font-semibold mb-1">
+              💡 How to simulate an education loan:
+            </p>
             <ol className="list-decimal pl-5 space-y-1 text-xs text-emerald-800">
-              <li>Click the <strong>Education Loan</strong> tab at the top.</li>
-              <li>Set your <strong>Course Duration</strong> and <strong>Grace Period</strong> using the sliders.</li>
-              <li>Choose whether you want to pay simple interest during college or defer everything.</li>
-              <li>Read our complete guide on{" "}
+              <li>
+                Click the <strong>Education Loan</strong> tab at the top.
+              </li>
+              <li>
+                Set your <strong>Course Duration</strong> and{" "}
+                <strong>Grace Period</strong> using the sliders.
+              </li>
+              <li>
+                Choose whether you want to pay simple interest during college or
+                defer everything.
+              </li>
+              <li>
+                Read our complete guide on{" "}
                 <Link
                   to="/blog/education-loan-moratorium-tax-guide"
                   className="text-emerald-700 font-bold underline inline-flex items-center gap-1"
                 >
-                  Education Loan Moratorium & Tax Benefits <BookOpen className="w-3 h-3 inline" />
+                  Education Loan Moratorium & Tax Benefits{" "}
+                  <BookOpen className="w-3 h-3 inline" />
                 </Link>{" "}
                 to learn how to avoid common interest traps.
               </li>
@@ -187,27 +283,44 @@ export default function FAQ() {
     {
       id: "simple-vs-compound",
       category: "Education Loans",
-      question: "What is the difference between Simple Interest (SI) and Compound Interest during the study period?",
+      question:
+        "What is the difference between Simple Interest (SI) and Compound Interest during the study period?",
       answer: (
         <div className="space-y-3">
           <p>
-            Even though you aren't required to pay full EMIs while studying, the bank still calculates interest from day one. What happens to that interest depends on what you do during college:
+            Even though you aren't required to pay full EMIs while studying, the
+            bank still calculates interest from day one. What happens to that
+            interest depends on what you do during college:
           </p>
           <ul className="list-disc pl-5 space-y-1">
             <li>
-              <strong>Pay Simple Interest (Recommended):</strong> You pay only the small monthly interest while studying. This keeps your loan from growing, so when you graduate, your loan balance is still just the amount you borrowed.
+              <strong>Pay Simple Interest (Recommended):</strong> You pay only
+              the small monthly interest while studying. This keeps your loan
+              from growing, so when you graduate, your loan balance is still
+              just the amount you borrowed.
             </li>
             <li>
-              <strong>No Payment (Interest Capitalization):</strong> If you pay zero while in school, the bank adds all that accumulated interest on top of your loan amount when you graduate. You end up paying interest on interest!
+              <strong>No Payment (Interest Capitalization):</strong> If you pay
+              zero while in school, the bank adds all that accumulated interest
+              on top of your loan amount when you graduate. You end up paying
+              interest on interest!
             </li>
             <li>
-              <strong>Partial Payment:</strong> You can pay whatever modest amount fits your student budget (even $50 or ₹2,000 a month) to keep interest in check.
+              <strong>Partial Payment:</strong> You can pay whatever modest
+              amount fits your student budget (even $50 or ₹2,000 a month) to
+              keep interest in check.
             </li>
           </ul>
           <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-sm text-emerald-900 mt-2">
-            <p className="font-semibold mb-1">💡 How to compare these options:</p>
+            <p className="font-semibold mb-1">
+              💡 How to compare these options:
+            </p>
             <p className="text-xs text-emerald-800">
-              In the Education Loan calculator under <strong>Moratorium Payment Option</strong>, switch between <strong>Pay Simple Interest</strong>, <strong>No Payment</strong>, and <strong>Partial Payment</strong> to see how each choice changes your future monthly EMI.
+              In the Education Loan calculator under{" "}
+              <strong>Moratorium Payment Option</strong>, switch between{" "}
+              <strong>Pay Simple Interest</strong>, <strong>No Payment</strong>,
+              and <strong>Partial Payment</strong> to see how each choice
+              changes your future monthly EMI.
             </p>
           </div>
         </div>
@@ -216,16 +329,23 @@ export default function FAQ() {
     {
       id: "bank-concession",
       category: "Education Loans",
-      question: "What is the interest rate concession offered by banks on education loans?",
+      question:
+        "What is the interest rate concession offered by banks on education loans?",
       answer: (
         <div className="space-y-3">
           <p>
-            Many banks and lenders give borrowers an interest rate discount (usually <strong>0.25% to 1.00% off</strong>) if you service the simple interest monthly during college or set up auto-pay. Many banks also provide special discounts for women students.
+            Many banks and lenders give borrowers an interest rate discount
+            (usually <strong>0.25% to 1.00% off</strong>) if you service the
+            simple interest monthly during college or set up auto-pay. Many
+            banks also provide special discounts for women students.
           </p>
           <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-sm text-emerald-900 mt-2">
             <p className="font-semibold mb-1">💡 How to apply this discount:</p>
             <p className="text-xs text-emerald-800">
-              Check the <strong>"Bank Concession"</strong> box in the Education Loan calculator. The calculator will immediately apply the discount and show you your lower monthly installment and total savings.
+              Check the <strong>"Bank Concession"</strong> box in the Education
+              Loan calculator. The calculator will immediately apply the
+              discount and show you your lower monthly installment and total
+              savings.
             </p>
           </div>
         </div>
@@ -236,26 +356,53 @@ export default function FAQ() {
     {
       id: "international-currencies",
       category: "International Markets",
-      question: "Does Smart EMI Planner support international loans across the USA, UK, Europe, Australia, and India?",
+      question:
+        "Does Smart EMI Planner support international loans across the USA, UK, Europe, Australia, and India?",
       answer: (
         <div className="space-y-3">
           <p>
-            Yes! Smart EMI Planner works seamlessly whether you are planning a mortgage in the US or UK, a home loan in India, or financing in Europe or Australia.
+            Yes! Smart EMI Planner works seamlessly whether you are planning a
+            mortgage in the US or UK, a home loan in India, or financing in
+            Europe or Australia.
           </p>
           <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-sm text-emerald-900 mt-2">
-            <p className="font-semibold mb-1">💡 How to switch currency and country:</p>
+            <p className="font-semibold mb-1">
+              💡 How to switch currency and country:
+            </p>
             <ol className="list-decimal pl-5 space-y-1 text-xs text-emerald-800">
-              <li>Click the <strong>Currency</strong> dropdown in the Loan Parameters card.</li>
-              <li>Choose your region:
+              <li>
+                Click the <strong>Currency</strong> dropdown in the Loan
+                Parameters card.
+              </li>
+              <li>
+                Choose your region:
                 <ul className="list-disc pl-4 mt-1 space-y-0.5">
-                  <li><strong>India, New Delhi (INR ₹):</strong> Formatted in Lakhs (L) and Crores (Cr).</li>
-                  <li><strong>USA, Washington D.C. (USD $):</strong> Formatted in Thousands ($K) and Millions ($M).</li>
-                  <li><strong>UK, London (GBP £):</strong> Formatted with British Pound (£) standards.</li>
-                  <li><strong>Europe, Berlin (EUR €):</strong> Formatted with Euro (€) standards.</li>
-                  <li><strong>Australia, Canberra (AUD A$):</strong> Formatted with Australian Dollar (A$) standards.</li>
+                  <li>
+                    <strong>India, New Delhi (INR ₹):</strong> Formatted in
+                    Lakhs (L) and Crores (Cr).
+                  </li>
+                  <li>
+                    <strong>USA, Washington D.C. (USD $):</strong> Formatted in
+                    Thousands ($K) and Millions ($M).
+                  </li>
+                  <li>
+                    <strong>UK, London (GBP £):</strong> Formatted with British
+                    Pound (£) standards.
+                  </li>
+                  <li>
+                    <strong>Europe, Berlin (EUR €):</strong> Formatted with Euro
+                    (€) standards.
+                  </li>
+                  <li>
+                    <strong>Australia, Canberra (AUD A$):</strong> Formatted
+                    with Australian Dollar (A$) standards.
+                  </li>
                 </ul>
               </li>
-              <li>All numbers, upfront costs, and charts update immediately without losing what you typed!</li>
+              <li>
+                All numbers, upfront costs, and charts update immediately
+                without losing what you typed!
+              </li>
             </ol>
           </div>
         </div>
@@ -268,15 +415,28 @@ export default function FAQ() {
       answer: (
         <div className="space-y-3">
           <p>
-            When buying a home or car, taking out a loan is only one part of the equation. You also need cash ready on day one for down payments, registration, stamp duty, or processing fees.
+            When buying a home or car, taking out a loan is only one part of the
+            equation. You also need cash ready on day one for down payments,
+            registration, stamp duty, or processing fees.
           </p>
           <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-sm text-emerald-900 mt-2">
-            <p className="font-semibold mb-1">💡 How to use the upfront costs estimator:</p>
+            <p className="font-semibold mb-1">
+              💡 How to use the upfront costs estimator:
+            </p>
             <ol className="list-decimal pl-5 space-y-1 text-xs text-emerald-800">
-              <li>Scroll down to the <strong>Upfront Costs Estimator</strong> card.</li>
+              <li>
+                Scroll down to the <strong>Upfront Costs Estimator</strong>{" "}
+                card.
+              </li>
               <li>Enter your total property or vehicle purchase price.</li>
-              <li>Adjust the down payment percentage slider to what you can comfortably pay.</li>
-              <li>The tool calculates the exact cash you need in hand on day one before the bank finances the rest!</li>
+              <li>
+                Adjust the down payment percentage slider to what you can
+                comfortably pay.
+              </li>
+              <li>
+                The tool calculates the exact cash you need in hand on day one
+                before the bank finances the rest!
+              </li>
             </ol>
           </div>
         </div>
@@ -291,16 +451,32 @@ export default function FAQ() {
       answer: (
         <div className="space-y-3">
           <p>
-            Standard bank calculators only tell you one thing: your monthly EMI. <strong>Smart EMI Planner</strong> is an all-in-one simulator that helps you test "what-if" scenarios to pay off your loan faster and save real money:
+            Standard bank calculators only tell you one thing: your monthly EMI.{" "}
+            <strong>Smart EMI Planner</strong> is an all-in-one simulator that
+            helps you test "what-if" scenarios to pay off your loan faster and
+            save real money:
           </p>
           <ul className="list-disc pl-5 space-y-1">
-            <li>See what happens if you pay a lump sum using your annual work bonus.</li>
-            <li>Simulate how adding just 5% or 10% more to your EMI each year saves years of debt.</li>
-            <li>Test what happens to your budget if interest rates rise in the future.</li>
-            <li>Compare paying simple interest during college versus letting interest pile up.</li>
+            <li>
+              See what happens if you pay a lump sum using your annual work
+              bonus.
+            </li>
+            <li>
+              Simulate how adding just 5% or 10% more to your EMI each year
+              saves years of debt.
+            </li>
+            <li>
+              Test what happens to your budget if interest rates rise in the
+              future.
+            </li>
+            <li>
+              Compare paying simple interest during college versus letting
+              interest pile up.
+            </li>
           </ul>
           <p className="text-xs text-slate-500">
-            Experiment with the sliders and toggles to find the easiest, most affordable repayment plan for your budget.
+            Experiment with the sliders and toggles to find the easiest, most
+            affordable repayment plan for your budget.
           </p>
         </div>
       ),
@@ -312,15 +488,29 @@ export default function FAQ() {
       answer: (
         <div className="space-y-3">
           <p>
-            Want to share your loan calculation with your spouse, co-borrower, financial advisor, or bank manager? You don't need to take screenshots or write down numbers.
+            Want to share your loan calculation with your spouse, co-borrower,
+            financial advisor, or bank manager? You don't need to take
+            screenshots or write down numbers.
           </p>
           <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-sm text-emerald-900 mt-2">
-            <p className="font-semibold mb-1">💡 How to share your calculation:</p>
+            <p className="font-semibold mb-1">
+              💡 How to share your calculation:
+            </p>
             <ol className="list-decimal pl-5 space-y-1 text-xs text-emerald-800">
-              <li>Customize your loan parameters, prepayments, or education loan options.</li>
-              <li>Click the <strong>Share</strong> button (with the share icon) at the top right of the calculator.</li>
+              <li>
+                Customize your loan parameters, prepayments, or education loan
+                options.
+              </li>
+              <li>
+                Click the <strong>Share</strong> button (with the share icon) at
+                the top right of the calculator.
+              </li>
               <li>A direct link is copied to your clipboard.</li>
-              <li>When anyone opens that link, the exact same numbers, prepayments, and charts open on their screen—no account or login required!</li>
+              <li>
+                When anyone opens that link, the exact same numbers,
+                prepayments, and charts open on their screen—no account or login
+                required!
+              </li>
             </ol>
           </div>
         </div>
@@ -333,10 +523,14 @@ export default function FAQ() {
       answer: (
         <div className="space-y-3">
           <p>
-            <strong>Yes, 100%!</strong> All calculations happen entirely inside your web browser on your device.
+            <strong>Yes, 100%!</strong> All calculations happen entirely inside
+            your web browser on your device.
           </p>
           <p>
-            We do not ask for your name, phone number, email address, or banking credentials. None of your numbers or calculations are ever uploaded to or stored on any server. Your financial planning stays completely private.
+            We do not ask for your name, phone number, email address, or banking
+            credentials. None of your numbers or calculations are ever uploaded
+            to or stored on any server. Your financial planning stays completely
+            private.
           </p>
         </div>
       ),
@@ -352,14 +546,20 @@ export default function FAQ() {
           </p>
           <ul className="list-disc pl-5 space-y-1">
             <li>
-              <strong>Have a feature idea?</strong> If you want support for a new country, a specific loan type, or new chart tools, we'd love to add it.
+              <strong>Have a feature idea?</strong> If you want support for a
+              new country, a specific loan type, or new chart tools, we'd love
+              to add it.
             </li>
             <li>
-              <strong>Found a bug?</strong> If something looks misaligned on your phone or a number looks off, let us know and we'll fix it right away.
+              <strong>Found a bug?</strong> If something looks misaligned on
+              your phone or a number looks off, let us know and we'll fix it
+              right away.
             </li>
           </ul>
           <p>
-            You can reach out anytime by clicking the <strong>Request a Feature</strong> button in the navigation bar or by visiting our{" "}
+            You can reach out anytime by clicking the{" "}
+            <strong>Request a Feature</strong> button in the navigation bar or
+            by visiting our{" "}
             <a
               href="https://www.omegaalphatech.com/contact"
               target="_blank"
@@ -395,7 +595,8 @@ export default function FAQ() {
       const matchesQuery =
         !query ||
         faq.question.toLowerCase().includes(query) ||
-        (typeof faq.answer === "string" && faq.answer.toLowerCase().includes(query));
+        (typeof faq.answer === "string" &&
+          faq.answer.toLowerCase().includes(query));
       return matchesCategory && matchesQuery;
     });
   }, [faqs, selectedCategory, searchQuery]);
@@ -424,7 +625,9 @@ export default function FAQ() {
             </h1>
           </div>
           <p className="text-slate-500 max-w-2xl text-sm sm:text-base leading-relaxed">
-            Everything you need to know about our calculator features, mathematical formulas, prepayments, education moratorium simulations, and multi-currency tools.
+            Everything you need to know about our calculator features,
+            mathematical formulas, prepayments, education moratorium
+            simulations, and multi-currency tools.
           </p>
 
           {/* Search & Category Filter */}
@@ -468,10 +671,18 @@ export default function FAQ() {
                         : "bg-slate-100 text-slate-600 hover:bg-slate-200/70"
                     }`}
                   >
-                    {cat === "Education Loans" && <GraduationCap className="w-3.5 h-3.5" />}
-                    {cat === "International Markets" && <Globe2 className="w-3.5 h-3.5" />}
-                    {cat === "Calculations" && <Calculator className="w-3.5 h-3.5" />}
-                    {cat === "Features & Sharing" && <Share2 className="w-3.5 h-3.5" />}
+                    {cat === "Education Loans" && (
+                      <GraduationCap className="w-3.5 h-3.5" />
+                    )}
+                    {cat === "International Markets" && (
+                      <Globe2 className="w-3.5 h-3.5" />
+                    )}
+                    {cat === "Calculations" && (
+                      <Calculator className="w-3.5 h-3.5" />
+                    )}
+                    {cat === "Features & Sharing" && (
+                      <Share2 className="w-3.5 h-3.5" />
+                    )}
                     {cat}
                   </button>
                 );
@@ -486,7 +697,8 @@ export default function FAQ() {
             <div className="text-center py-12 bg-slate-50 rounded-2xl border border-slate-200 p-6 space-y-3">
               <p className="text-slate-700 font-bold">No questions found</p>
               <p className="text-xs text-slate-500">
-                No FAQs match your search query "{searchQuery}". Try different keywords.
+                No FAQs match your search query "{searchQuery}". Try different
+                keywords.
               </p>
               <button
                 onClick={() => {
@@ -514,7 +726,9 @@ export default function FAQ() {
                     onClick={() => toggleFaq(faq.id)}
                     className="w-full flex items-center justify-between p-5 text-left font-bold text-slate-800 hover:text-emerald-700 transition-colors gap-4"
                   >
-                    <span className="text-base sm:text-lg leading-snug">{faq.question}</span>
+                    <span className="text-base sm:text-lg leading-snug">
+                      {faq.question}
+                    </span>
                     {isOpen ? (
                       <ChevronUp className="w-5 h-5 text-emerald-600 flex-shrink-0" />
                     ) : (

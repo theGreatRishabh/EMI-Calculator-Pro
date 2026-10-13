@@ -131,10 +131,11 @@ describe("BlogList Component", () => {
       </MemoryRouter>,
     );
 
-    // Initial load should show 6 posts
-    expect(screen.getByText("Article Number 1")).toBeInTheDocument();
-    expect(screen.getByText("Article Number 6")).toBeInTheDocument();
-    expect(screen.queryByText("Article Number 7")).not.toBeInTheDocument();
+    // Initial load should show top 6 posts sorted descending by date (articles 8 down to 3)
+    expect(screen.getByText("Article Number 8")).toBeInTheDocument();
+    expect(screen.getByText("Article Number 3")).toBeInTheDocument();
+    expect(screen.queryByText("Article Number 1")).not.toBeInTheDocument();
+    expect(screen.queryByText("Article Number 2")).not.toBeInTheDocument();
 
     // Load More button should be present
     const loadMoreBtn = screen.getByRole("button", {
@@ -145,9 +146,9 @@ describe("BlogList Component", () => {
     // Click Load More
     fireEvent.click(loadMoreBtn);
 
-    // Now articles 7 and 8 should be visible
-    expect(screen.getByText("Article Number 7")).toBeInTheDocument();
-    expect(screen.getByText("Article Number 8")).toBeInTheDocument();
+    // Now articles 1 and 2 should also be visible
+    expect(screen.getByText("Article Number 1")).toBeInTheDocument();
+    expect(screen.getByText("Article Number 2")).toBeInTheDocument();
 
     // Load More button should disappear when all posts are displayed
     expect(
