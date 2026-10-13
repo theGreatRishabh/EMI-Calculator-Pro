@@ -402,12 +402,12 @@ export default function FAQ() {
                     Canadian Dollar (C$) standards.
                   </li>
                   <li>
-                    <strong>Denmark, Copenhagen (DKK kr):</strong> Formatted with
-                    Danish Krone (kr) and regional Fradrag rules.
+                    <strong>Denmark, Copenhagen (DKK kr):</strong> Formatted
+                    with Danish Krone (kr) and regional Fradrag rules.
                   </li>
                   <li>
-                    <strong>South Africa, Pretoria (ZAR R):</strong> Formatted with
-                    South African Rand (R) and SARS tax guidelines.
+                    <strong>South Africa, Pretoria (ZAR R):</strong> Formatted
+                    with South African Rand (R) and SARS tax guidelines.
                   </li>
                   <li>
                     <strong>Brazil, Brasília (BRL R$):</strong> Formatted with

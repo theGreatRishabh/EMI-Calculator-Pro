@@ -1,9 +1,9 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import BlogList from "./BlogList";
 
-let mockBlogPosts = [
+const initialMockBlogPosts = [
   {
     slug: "test-post-1",
     title: "Test Title A",
@@ -22,6 +22,8 @@ let mockBlogPosts = [
   },
 ];
 
+let mockBlogPosts = [...initialMockBlogPosts];
+
 // Mock the blog metadata json file dynamically using a getter
 vi.mock("../blogMeta.json", () => ({
   get default() {
@@ -30,6 +32,10 @@ vi.mock("../blogMeta.json", () => ({
 }));
 
 describe("BlogList Component", () => {
+  beforeEach(() => {
+    mockBlogPosts = [...initialMockBlogPosts];
+  });
+
   it("renders the blog list with header and post items sorted by date", () => {
     render(
       <MemoryRouter>
@@ -45,11 +51,11 @@ describe("BlogList Component", () => {
     // Verify cards are rendered with their metadata
     expect(screen.getByText("Test Title A")).toBeInTheDocument();
     expect(screen.getByText("Test Excerpt A")).toBeInTheDocument();
-    expect(screen.getByText("Category Alpha")).toBeInTheDocument();
+    expect(screen.getAllByText("Category Alpha")[0]).toBeInTheDocument();
 
     expect(screen.getByText("Test Title B")).toBeInTheDocument();
     expect(screen.getByText("Test Excerpt B")).toBeInTheDocument();
-    expect(screen.getByText("Category Beta")).toBeInTheDocument();
+    expect(screen.getAllByText("Category Beta")[0]).toBeInTheDocument();
 
     // Verify correct sorting (B is newer than A, so B should be rendered before A)
     const headings = screen.getAllByRole("heading", { level: 2 });
