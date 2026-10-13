@@ -5,6 +5,7 @@ import remarkGfm from "remark-gfm";
 import { ArrowLeft, Calendar, Clock, ArrowRight } from "lucide-react";
 import { useDocumentMeta } from "../hooks/useDocumentMeta";
 import blogPosts from "../blogMeta.json";
+import { trackClick } from "../lib/analytics";
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
@@ -186,6 +187,11 @@ export default function BlogPost() {
           </p>
           <Link
             to="/"
+            onClick={() =>
+              trackClick("click_blog_cta_calculator", "blog_conversion", {
+                source_slug: slug,
+              })
+            }
             className="inline-flex items-center justify-center px-6 py-3 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700 transition-colors"
           >
             Open Calculator
@@ -202,6 +208,13 @@ export default function BlogPost() {
                 <Link
                   key={post.slug}
                   to={`/blog/${post.slug}`}
+                  onClick={() =>
+                    trackClick("click_blog_related_post", "blog_navigation", {
+                      from_slug: slug,
+                      to_slug: post.slug,
+                      title: post.title,
+                    })
+                  }
                   className="flex flex-col bg-white p-5 rounded-2xl border border-slate-200 hover:border-emerald-200 hover:shadow-md transition-all group h-full"
                 >
                   <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full self-start mb-3">

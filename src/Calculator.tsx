@@ -62,6 +62,7 @@ import {
   formatCurrencyFull,
   formatCompactCurrency,
 } from "./lib/utils";
+import { trackClick } from "./lib/analytics";
 import {
   LoanType,
   AdjustmentMode,
@@ -502,6 +503,10 @@ export default function App({
   const currency = CURRENCY_CONFIGS[currencyCode] || CURRENCY_CONFIGS.INR;
 
   const handleCurrencyChange = (newCode: string) => {
+    trackClick("click_change_currency", "calculator_currency", {
+      from_currency: currencyCode,
+      to_currency: newCode,
+    });
     setCurrencyCode(newCode);
     try {
       localStorage.setItem("user_selected_currency", newCode);
@@ -780,6 +785,10 @@ export default function App({
 
   const handleLeadSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    trackClick("submit_consultancy_lead", "lead_generation", {
+      loan_type: loanType,
+      loan_amount: leadForm.loanAmount,
+    });
     console.log("Lead captured:", leadForm);
     setIsLeadSubmitted(true);
     setTimeout(() => {
@@ -789,6 +798,13 @@ export default function App({
   };
 
   const handleShare = () => {
+    trackClick("click_share_calculation", "calculator_share", {
+      loan_type: loanType,
+      currency: currency.code,
+      principal: amount,
+      rate: rate,
+      tenure: tenure,
+    });
     const params = new URLSearchParams({
       type: loanType,
       amt: amount.toString(),
@@ -1131,6 +1147,10 @@ export default function App({
   );
 
   const handleLoanTypeChange = (type: LoanType) => {
+    trackClick("click_switch_loan_type", "calculator_loan_type", {
+      from_type: loanType,
+      to_type: type,
+    });
     // Navigate to the SEO URL for that loan type
     const meta = LOAN_TYPE_META[type];
     if (meta) navigate(meta.slug);
@@ -1157,6 +1177,12 @@ export default function App({
   };
 
   const exportToPDF = async () => {
+    trackClick("click_export_pdf", "calculator_export", {
+      format: "pdf",
+      loan_type: loanType,
+      currency: currency.code,
+      principal: amount,
+    });
     const { jsPDF } = await import("jspdf");
     const autoTable = (await import("jspdf-autotable")).default;
     const doc = new jsPDF();
@@ -1261,6 +1287,12 @@ export default function App({
   };
 
   const exportToExcel = async () => {
+    trackClick("click_export_excel", "calculator_export", {
+      format: "excel",
+      loan_type: loanType,
+      currency: currency.code,
+      principal: amount,
+    });
     const exceljs = await import("exceljs");
     // Vite dynamic imports sometimes resolve the module object with a default property
     const ExcelJS = exceljs.default || exceljs;
@@ -1326,6 +1358,10 @@ export default function App({
   >(null);
 
   const calculateGoalPrepayment = () => {
+    trackClick("click_calculate_goal_prepayment", "calculator_goal", {
+      loan_type: loanType,
+      target_months: goalMonths,
+    });
     let low = 0;
     let high = amount;
     let result = 0;
@@ -1399,6 +1435,10 @@ export default function App({
 
   const applyGoalPrepayment = () => {
     if (calculatedPrepayment !== null) {
+      trackClick("click_apply_goal_prepayment", "calculator_goal", {
+        loan_type: loanType,
+        applied_prepayment: calculatedPrepayment,
+      });
       const newPrepayment: Prepayment = {
         id: Math.random().toString(36).substr(2, 9),
         amount: calculatedPrepayment,
@@ -1413,6 +1453,10 @@ export default function App({
   };
 
   const addRateChange = () => {
+    trackClick("click_add_rate_change", "calculator_rate_change", {
+      loan_type: loanType,
+      current_rate: rate,
+    });
     const defaultDate = format(addMonths(startDate, 12), "yyyy-MM-dd");
     const newChange: RateChange = {
       id: Math.random().toString(36).substr(2, 9),
@@ -1424,6 +1468,10 @@ export default function App({
   };
 
   const removeRateChange = (id: string) => {
+    trackClick("click_remove_rate_change", "calculator_rate_change", {
+      id,
+      loan_type: loanType,
+    });
     setRateChanges(rateChanges.filter((rc) => rc.id !== id));
   };
 
@@ -1434,6 +1482,10 @@ export default function App({
   };
 
   const addPrepayment = () => {
+    trackClick("click_add_prepayment", "calculator_prepayment", {
+      loan_type: loanType,
+      currency: currency.code,
+    });
     const defaultDate = format(addMonths(startDate, 12), "yyyy-MM-dd");
     const newPrepayment: Prepayment = {
       id: Math.random().toString(36).substr(2, 9),
@@ -1446,6 +1498,10 @@ export default function App({
   };
 
   const removePrepayment = (id: string) => {
+    trackClick("click_remove_prepayment", "calculator_prepayment", {
+      id,
+      loan_type: loanType,
+    });
     setPrepayments(prepayments.filter((p) => p.id !== id));
   };
 
@@ -3958,7 +4014,12 @@ export default function App({
                 </div>
                 <div className="flex flex-wrap justify-center gap-4 pt-4">
                   <button
-                    onClick={() => setShowLeadModal(true)}
+                    onClick={() => {
+                      trackClick("click_open_lead_modal", "lead_generation", {
+                        loan_type: loanType,
+                      });
+                      setShowLeadModal(true);
+                    }}
                     className="flex items-center gap-3 px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition-all shadow-xl shadow-emerald-900/40 hover:scale-105 active:scale-95 cursor-pointer"
                   >
                     <Award className="w-5 h-5" />

@@ -14,6 +14,7 @@ import { LoanType } from "../types";
 import { calculateEMI, LOAN_DEFAULTS } from "../loanLogic";
 import countryConfigs from "../countryConfigs.json";
 import { formatCurrencyFull, cn } from "../lib/utils";
+import { trackClick } from "../lib/analytics";
 
 const CURRENCIES = Object.values(countryConfigs).sort((a, b) =>
   (a.country || a.name).localeCompare(b.country || b.name),
@@ -50,6 +51,10 @@ export default function ExtensionPopup({ onOpenFullApp }: ExtensionPopupProps) {
 
   // When loan type changes, update inputs to recommended defaults
   const handleLoanTypeChange = (type: LoanType) => {
+    trackClick("click_extension_loan_tab", "extension", {
+      from_type: loanType,
+      to_type: type,
+    });
     setLoanType(type);
     const def = LOAN_DEFAULTS[type];
     setAmount(def.amount);
@@ -58,6 +63,10 @@ export default function ExtensionPopup({ onOpenFullApp }: ExtensionPopupProps) {
   };
 
   const handleCurrencyChange = (newCode: string) => {
+    trackClick("click_extension_change_currency", "extension", {
+      from_currency: currencyCode,
+      to_currency: newCode,
+    });
     setCurrencyCode(newCode);
     try {
       localStorage.setItem("user_selected_currency", newCode);
@@ -83,6 +92,9 @@ export default function ExtensionPopup({ onOpenFullApp }: ExtensionPopupProps) {
   }, [totalInterest, totalPayable]);
 
   const handleCopy = () => {
+    trackClick("click_extension_copy_summary", "extension", {
+      loan_type: loanType,
+    });
     const text = `Monthly EMI: ${formatCurrencyFull(emi, currency.code, currency.locale)} | Loan: ${formatCurrencyFull(amount, currency.code, currency.locale)} at ${rate}% for ${tenureYears} yrs`;
     navigator.clipboard.writeText(text);
     setCopied(true);
@@ -90,6 +102,9 @@ export default function ExtensionPopup({ onOpenFullApp }: ExtensionPopupProps) {
   };
 
   const handleOpenFull = () => {
+    trackClick("click_extension_open_full_app", "extension", {
+      loan_type: loanType,
+    });
     if (onOpenFullApp) {
       onOpenFullApp();
       return;

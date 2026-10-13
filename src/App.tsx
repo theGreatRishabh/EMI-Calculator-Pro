@@ -25,6 +25,7 @@ import {
 import { motion } from "framer-motion";
 import { cn } from "./lib/utils";
 import ExtensionPopup from "./components/ExtensionPopup";
+import { trackPageView, trackClick } from "./lib/analytics";
 
 const LOAN_ROUTES = [
   { path: "/home-loan", label: "Home", icon: Home, type: "HOME" },
@@ -71,6 +72,12 @@ function GlobalHeader() {
               <Link
                 key={route.path}
                 to={route.path}
+                onClick={() =>
+                  trackClick("click_nav_loan_tab", "navigation", {
+                    target_path: route.path,
+                    loan_type: route.type,
+                  })
+                }
                 className={cn(
                   "relative z-10 flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold transition-colors duration-300",
                   isActive
@@ -94,6 +101,11 @@ function GlobalHeader() {
           {/* Blog pill */}
           <Link
             to="/blog"
+            onClick={() =>
+              trackClick("click_nav_blog", "navigation", {
+                target_path: "/blog",
+              })
+            }
             className={cn(
               "relative z-10 flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold transition-colors duration-300",
               isBlog
@@ -117,7 +129,10 @@ function GlobalHeader() {
               window.location.protocol === "ms-browser-extension:") && (
               <button
                 type="button"
-                onClick={() => window.open(window.location.href, "_blank")}
+                onClick={() => {
+                  trackClick("click_open_full_tab", "extension");
+                  window.open(window.location.href, "_blank");
+                }}
                 className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-emerald-700 hover:bg-slate-50 transition-colors ml-1 cursor-pointer"
                 title="Open in Full Tab"
                 aria-label="Open in Full Tab"
@@ -131,6 +146,9 @@ function GlobalHeader() {
             href="https://www.omegaalphatech.com/contact"
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() =>
+              trackClick("click_nav_request_feature", "navigation")
+            }
             className="hidden lg:flex items-center gap-2 px-4 py-2 bg-slate-900 border border-slate-700 text-white hover:bg-slate-800 rounded-lg text-sm font-bold shadow-sm transition-all ml-2"
           >
             Request a Feature
@@ -142,7 +160,7 @@ function GlobalHeader() {
 }
 
 export function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
 
   React.useEffect(() => {
     if (
@@ -151,7 +169,8 @@ export function ScrollToTop() {
     ) {
       window.scrollTo(0, 0);
     }
-  }, [pathname]);
+    trackPageView(pathname + search);
+  }, [pathname, search]);
 
   return null;
 }

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { BookOpen, Calendar, Clock, ArrowRight, Search, X } from "lucide-react";
 import { useDocumentMeta } from "../hooks/useDocumentMeta";
 import blogPosts from "../blogMeta.json";
+import { trackClick } from "../lib/analytics";
 
 export default function BlogList() {
   useDocumentMeta({
@@ -50,6 +51,7 @@ export default function BlogList() {
   };
 
   const handleCategoryChange = (cat: string) => {
+    trackClick("click_blog_category_filter", "blog", { category: cat });
     setSelectedCategory(cat);
     setVisibleCount(POSTS_PER_PAGE);
   };
@@ -200,7 +202,17 @@ export default function BlogList() {
                     </span>
                   </div>
 
-                  <Link to={`/blog/${post.slug}`} className="block">
+                  <Link
+                    to={`/blog/${post.slug}`}
+                    onClick={() =>
+                      trackClick("click_blog_card", "blog", {
+                        slug: post.slug,
+                        title: post.title,
+                        category: post.category,
+                      })
+                    }
+                    className="block"
+                  >
                     <h2 className="text-2xl font-bold text-slate-900 mb-3 group-hover:text-emerald-700 transition-colors">
                       {post.title}
                     </h2>

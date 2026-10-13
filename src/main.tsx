@@ -4,6 +4,7 @@ import { BrowserRouter, HashRouter } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
 import App from "./App.tsx";
 import "./index.css";
+import { initAnalytics } from "./lib/analytics";
 
 const isExtension =
   typeof window !== "undefined" &&
@@ -12,6 +13,8 @@ const isExtension =
 
 if (isExtension && typeof document !== "undefined") {
   document.documentElement.classList.add("is-extension");
+} else {
+  initAnalytics();
 }
 
 const Router = isExtension ? HashRouter : BrowserRouter;
