@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import BlogList from "./BlogList";
@@ -57,8 +57,53 @@ describe("BlogList Component", () => {
     expect(headings[1].textContent).toBe("Test Title A");
   });
 
-  it("renders empty state message when no posts exist", () => {
-    // Empty the mock catalog
+  it("filters posts by search query and category", () => {
+    mockBlogPosts = [
+      {
+        slug: "test-post-1",
+        title: "Home Loan Refinancing",
+        excerpt: "Tips on mortgage refinancing in Canada",
+        date: "2026-05-01",
+        readTime: "5 min read",
+        category: "Home Loans",
+      },
+      {
+        slug: "test-post-2",
+        title: "Student Loan Secrets",
+        excerpt: "How to survive education moratorium",
+        date: "2026-06-01",
+        readTime: "10 min read",
+        category: "Education",
+      },
+    ];
+
+    render(
+      <MemoryRouter>
+        <BlogList />
+      </MemoryRouter>,
+    );
+
+    const searchInput = screen.getByLabelText("Search articles");
+    expect(searchInput).toBeInTheDocument();
+
+    // Search for "Refinancing"
+    fireEvent.change(searchInput, { target: { value: "Refinancing" } });
+    expect(screen.getByText("Home Loan Refinancing")).toBeInTheDocument();
+    expect(screen.queryByText("Student Loan Secrets")).not.toBeInTheDocument();
+
+    // Clear search
+    const clearBtn = screen.getByLabelText("Clear search");
+    fireEvent.click(clearBtn);
+    expect(screen.getByText("Student Loan Secrets")).toBeInTheDocument();
+
+    // Filter by Category button
+    const eduCategoryBtn = screen.getByRole("button", { name: "Education" });
+    fireEvent.click(eduCategoryBtn);
+    expect(screen.getByText("Student Loan Secrets")).toBeInTheDocument();
+    expect(screen.queryByText("Home Loan Refinancing")).not.toBeInTheDocument();
+  });
+
+  it("renders empty state message when no posts exist in catalog", () => {
     mockBlogPosts = [];
 
     render(

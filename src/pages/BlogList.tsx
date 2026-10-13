@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { BookOpen, Calendar, Clock, ArrowRight } from "lucide-react";
+import { BookOpen, Calendar, Clock, ArrowRight, Search, X } from "lucide-react";
 import { useDocumentMeta } from "../hooks/useDocumentMeta";
 import blogPosts from "../blogMeta.json";
 
@@ -11,9 +11,36 @@ export default function BlogList() {
       "Read our latest guides, tips, and strategies for managing your Home Loans, Car Loans, and Personal Loans effectively. Learn how to save money on interest.",
   });
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const categories = useMemo(() => {
+    const cats = new Set<string>();
+    blogPosts.forEach((post) => {
+      if (post.category) cats.add(post.category);
+    });
+    return ["All", ...Array.from(cats)];
+  }, []);
+
+  const filteredPosts = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    return [...blogPosts]
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .filter((post) => {
+        const matchesCategory =
+          selectedCategory === "All" || post.category === selectedCategory;
+        const matchesQuery =
+          !query ||
+          post.title.toLowerCase().includes(query) ||
+          post.excerpt.toLowerCase().includes(query) ||
+          (post.category && post.category.toLowerCase().includes(query));
+        return matchesCategory && matchesQuery;
+      });
+  }, [searchQuery, selectedCategory]);
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-12 sm:px-6">
-      <div className="text-center mb-16">
+      <div className="text-center mb-10">
         <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 mb-4 flex items-center justify-center gap-3">
           <BookOpen className="w-8 h-8 text-emerald-600" />
           Smart Loan Insights
@@ -33,11 +60,98 @@ export default function BlogList() {
         </div>
       ) : (
         <div className="space-y-8">
-          {[...blogPosts]
-            .sort(
-              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-            )
-            .map((post) => (
+          {/* Search Bar & Category Filters */}
+          <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200/90 shadow-sm space-y-4">
+            <div className="relative">
+              <Search className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                aria-label="Search articles"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search articles by keyword, topic, or country (e.g. 'Canada', 'Prepayment', 'Tax', 'Snowball')..."
+                className="w-full pl-11 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  aria-label="Clear search"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 rounded-full hover:bg-slate-200/60 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+
+            {/* Category Pills */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 no-scrollbar text-xs font-semibold">
+              <span className="text-slate-400 uppercase tracking-wider text-[11px] mr-1 hidden sm:inline">
+                Filter:
+              </span>
+              {categories.map((cat) => {
+                const isActive = selectedCategory === cat;
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => setSelectedCategory(cat)}
+                    className={`px-3 py-1.5 rounded-full transition-all text-nowrap cursor-pointer ${
+                      isActive
+                        ? "bg-emerald-600 text-white shadow-sm shadow-emerald-200"
+                        : "bg-slate-100 text-slate-600 hover:bg-slate-200/70"
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Results Counter */}
+            <div className="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
+              <span>
+                Showing <strong>{filteredPosts.length}</strong> of{" "}
+                <strong>{blogPosts.length}</strong> articles
+              </span>
+              {(searchQuery || selectedCategory !== "All") && (
+                <button
+                  onClick={() => {
+                    setSearchQuery("");
+                    setSelectedCategory("All");
+                  }}
+                  className="text-emerald-600 hover:text-emerald-700 font-semibold cursor-pointer"
+                >
+                  Clear all filters
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Posts List or No Match State */}
+          {filteredPosts.length === 0 ? (
+            <div className="text-center py-12 bg-white rounded-2xl border border-slate-200 space-y-3 p-6 shadow-sm">
+              <p className="text-slate-700 font-bold text-base">
+                No articles match your search
+              </p>
+              <p className="text-sm text-slate-500 max-w-md mx-auto">
+                We couldn't find any articles matching{" "}
+                {searchQuery && <span className="font-semibold">"{searchQuery}"</span>}
+                {selectedCategory !== "All" && (
+                  <span> in category <span className="font-semibold">{selectedCategory}</span></span>
+                )}. Try searching for different keywords.
+              </p>
+              <button
+                onClick={() => {
+                  setSearchQuery("");
+                  setSelectedCategory("All");
+                }}
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700 transition-colors shadow-sm"
+              >
+                Reset Search
+              </button>
+            </div>
+          ) : (
+            filteredPosts.map((post) => (
               <article
                 key={post.slug}
                 className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md hover:border-emerald-200 transition-all group"
@@ -68,7 +182,8 @@ export default function BlogList() {
                   </span>
                 </Link>
               </article>
-            ))}
+            ))
+          )}
         </div>
       )}
     </div>

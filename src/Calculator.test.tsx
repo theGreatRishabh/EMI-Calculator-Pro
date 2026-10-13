@@ -1018,9 +1018,7 @@ describe("Calculator Component", () => {
       // Switch to Europe (EUR)
       fireEvent.change(countrySelect, { target: { value: "EUR" } });
       expect(
-        screen.getByText(
-          /Banking Suggestion & Guidelines \(Europe, Berlin\)/i,
-        ),
+        screen.getByText(/Banking Suggestion & Guidelines \(Europe, Berlin\)/i),
       ).toBeInTheDocument();
       expect(screen.getByText(/KfW or Erasmus\+/i)).toBeInTheDocument();
       expect(screen.getByText(/Werbungskosten/i)).toBeInTheDocument();
