@@ -1,196 +1,4 @@
 {
-  "INR": {
-    "code": "INR",
-    "country": "India",
-    "capital": "New Delhi",
-    "currencyName": "Indian Rupee",
-    "name": "India, New Delhi",
-    "locale": "en-IN",
-    "symbol": "₹",
-    "useIndianNotation": true,
-    "stampDutyRate": 6,
-    "registrationRate": 1,
-    "taxTips": [
-      {
-        "title": "Section 24(b) - Interest",
-        "amount": 200000,
-        "limitLabel": "Deduction limit: ₹2,00,000",
-        "description": "Deduct up to ₹2,00,000 on home loan interest per year."
-      },
-      {
-        "title": "Section 80C - Principal",
-        "amount": 150000,
-        "limitLabel": "Deduction limit: ₹1,50,000",
-        "description": "Save up to ₹1,50,000 on principal repayment per year."
-      }
-    ],
-    "educationAdvice": {
-      "concessionTitle": "Bank Concession: {concessionRate}% Interest Rate Discount",
-      "concessionDescription": "Most Indian banks (like SBI, BoB, PNB) give a 1.00% p.a. interest discount if simple interest is serviced during the study period.",
-      "defaultConcessionRate": 1.0,
-      "bankingTip": "Major Indian banks (SBI Student Loan Scheme, PNB Saraswati, Bank of Baroda) offer a 1.00% p.a. interest concession when simple interest is serviced during the moratorium period. Additionally, female students often qualify for an extra 0.50% concession under central schemes.",
-      "taxTips": [
-        {
-          "title": "Section 80E - Interest Deduction",
-          "amount": 0,
-          "limitLabel": "100% Deductible (No Upper Limit)",
-          "description": "Entire interest paid during the financial year is tax-deductible.",
-          "details": "Available for up to 8 consecutive assessment years starting from repayment onset."
-        },
-        {
-          "title": "Eligible Higher Studies",
-          "amount": 0,
-          "limitLabel": "India & Overseas (Degree / Post-Grad)",
-          "description": "Applicable for approved higher education programs for self, spouse, or children.",
-          "details": "Can be claimed by individual borrowers paying out of their taxable income."
-        }
-      ]
-    }
-  },
-  "USD": {
-    "code": "USD",
-    "country": "USA",
-    "capital": "Washington D.C.",
-    "currencyName": "US Dollar",
-    "name": "USA, Washington D.C.",
-    "locale": "en-US",
-    "symbol": "$",
-    "useIndianNotation": false,
-    "stampDutyRate": 4,
-    "registrationRate": 1,
-    "taxTips": [
-      {
-        "title": "Mortgage Interest Deduction",
-        "amount": 750000,
-        "limitLabel": "Limit: $750,000 debt",
-        "description": "Deduct interest on up to $750,000 of mortgage debt."
-      },
-      {
-        "title": "Property Tax Deduction",
-        "amount": 10000,
-        "limitLabel": "SALT Limit: $10,000",
-        "description": "Deduct up to $10,000 for state and local taxes."
-      }
-    ],
-    "educationAdvice": {
-      "concessionTitle": "Lender Concession: {concessionRate}% Rate Reduction",
-      "concessionDescription": "Most US lenders (like Sallie Mae, Discover, SoFi) offer a 0.25%–0.50% interest rate reduction for enrolling in auto-debit and making in-school interest payments.",
-      "defaultConcessionRate": 0.25,
-      "bankingTip": "In the U.S., servicing interest while in school prevents unpaid interest from capitalizing onto your principal upon graduation. Most private lenders and federal loan servicers also provide a 0.25% interest rate discount for setting up automatic debit payments.",
-      "taxTips": [
-        {
-          "title": "Student Loan Interest Deduction",
-          "amount": 2500,
-          "limitLabel": "Up to $2,500 / year",
-          "description": "Above-the-line IRS deduction on Form 1040 to reduce modified adjusted gross income.",
-          "details": "Applies to interest paid on qualified federal and private higher education loans."
-        },
-        {
-          "title": "Education Tax Credits (AOTC / LLC)",
-          "amount": 2500,
-          "limitLabel": "Credits & Deductions",
-          "description": "American Opportunity Tax Credit (up to $2,500) and Lifetime Learning Credit (up to $2,000).",
-          "details": "Subject to IRS income phaseout thresholds and qualified enrollment criteria."
-        }
-      ]
-    }
-  },
-  "GBP": {
-    "code": "GBP",
-    "country": "UK",
-    "capital": "London",
-    "currencyName": "British Pound",
-    "name": "UK, London",
-    "locale": "en-GB",
-    "symbol": "£",
-    "useIndianNotation": false,
-    "stampDutyRate": 5,
-    "registrationRate": 0.5,
-    "taxTips": [
-      {
-        "title": "First-Time Buyer Relief",
-        "amount": 425000,
-        "limitLabel": "Up to £425k",
-        "description": "Zero stamp duty for first-time buyers on properties up to £425,000."
-      },
-      {
-        "title": "Rent-a-Room Relief",
-        "amount": 7500,
-        "limitLabel": "Limit: £7,500/year",
-        "description": "Tax-free income if you let out furnished accommodation."
-      }
-    ],
-    "educationAdvice": {
-      "concessionTitle": "Lender Concession: {concessionRate}% Rate Discount",
-      "concessionDescription": "UK private education lenders (like Future Finance, Prodigy) offer interest rate discounts (typically 0.25%–0.50%) when servicing interest during studies.",
-      "defaultConcessionRate": 0.5,
-      "bankingTip": "In the UK, government Student Loans (Plan 2 & Plan 5) accrue interest linked to RPI during study, with repayments deducted via PAYE only when income exceeds the statutory threshold. For commercial study loans, servicing simple interest during term-time stops compound balance growth.",
-      "taxTips": [
-        {
-          "title": "Income-Contingent Repayments",
-          "amount": 0,
-          "limitLabel": "Threshold Protected (e.g. £27,295)",
-          "description": "No repayments required if earnings are below the statutory threshold (9% of excess income).",
-          "details": "Unpaid government loan balances are cancelled after 30 to 40 years depending on repayment plan."
-        },
-        {
-          "title": "Employer Training Exemption",
-          "amount": 0,
-          "limitLabel": "Tax-Free Sponsorship",
-          "description": "Work-related higher education costs paid by employers are exempt from income tax and National Insurance.",
-          "details": "Enables tax-advantaged professional degree upskilling under HMRC guidelines."
-        }
-      ]
-    }
-  },
-  "EUR": {
-    "code": "EUR",
-    "country": "Europe",
-    "capital": "Berlin",
-    "currencyName": "Euro",
-    "name": "Europe, Berlin",
-    "locale": "de-DE",
-    "symbol": "€",
-    "useIndianNotation": false,
-    "stampDutyRate": 6,
-    "registrationRate": 1.5,
-    "taxTips": [
-      {
-        "title": "Home Office Allowance",
-        "amount": 1250,
-        "limitLabel": "Limit: €1,250",
-        "description": "Deduct home office expenses from your professional income."
-      },
-      {
-        "title": "Professional Workspace",
-        "amount": 0,
-        "limitLabel": "Investment Property",
-        "description": "Interest on investment properties is often tax-deductible."
-      }
-    ],
-    "educationAdvice": {
-      "concessionTitle": "Lender Concession: {concessionRate}% Rate Discount",
-      "concessionDescription": "European student loan programs (e.g., KfW Studienkredit, Erasmus+ master loans) provide subsidized interest rates and discounts if interest is serviced during study and grace periods.",
-      "defaultConcessionRate": 0.5,
-      "bankingTip": "In the EU, public development banks (like Germany's KfW or Erasmus+ guarantee schemes) offer subsidized rates and flexible 18–24 month grace periods. Making regular interest payments during study prevents ballooning debt from accumulating prior to your first career job.",
-      "taxTips": [
-        {
-          "title": "Werbungskosten (Income-Related Costs)",
-          "amount": 0,
-          "limitLabel": "Fully Deductible (Loss Carryover)",
-          "description": "Master's degrees, second degrees, and study loan interest are 100% tax-deductible in Germany/EU.",
-          "details": "Accumulated study costs can be carried forward as tax losses to offset early career income."
-        },
-        {
-          "title": "Sonderausgaben (First Degree Allowance)",
-          "amount": 6000,
-          "limitLabel": "Up to €6,000 / year",
-          "description": "Initial undergraduate education expenses can be deducted as special expenses against taxable income.",
-          "details": "Applies to direct tuition, study materials, and loan finance charges under national tax codes."
-        }
-      ]
-    }
-  },
   "AUD": {
     "code": "AUD",
     "country": "Australia",
@@ -235,150 +43,6 @@
           "limitLabel": "Capped to Lower of CPI or WPI",
           "description": "Commonwealth government caps annual student debt indexation to preserve borrowing equity.",
           "details": "Compulsory repayments are based on taxable income brackets, automatically withheld via PAYG."
-        }
-      ]
-    }
-  },
-  "DKK": {
-    "code": "DKK",
-    "country": "Denmark",
-    "capital": "Copenhagen",
-    "currencyName": "Danish Krone",
-    "name": "Denmark, Copenhagen",
-    "locale": "da-DK",
-    "symbol": "kr",
-    "useIndianNotation": false,
-    "stampDutyRate": 0.6,
-    "registrationRate": 1.45,
-    "taxTips": [
-      {
-        "title": "Rentefradrag (Mortgage Interest Deduction)",
-        "amount": 0,
-        "limitLabel": "Capital Income Fradrag (~25-33%)",
-        "description": "Deduct mortgage interest payments directly on your årsopgørelse tax assessment to lower net taxes."
-      },
-      {
-        "title": "BoligJobordning / Håndværkerfradrag",
-        "amount": 11900,
-        "limitLabel": "Service & Green Upgrades",
-        "description": "Tax deduction for home improvement, climate adaptation, and maintenance labor costs."
-      }
-    ],
-    "educationAdvice": {
-      "concessionTitle": "SU-lån Concession: Subsidized 4% In-Study Interest Rate",
-      "concessionDescription": "Statens Uddannelsesstøtte (SU) loans carry a government-subsidized 4.0% p.a. interest rate during enrollment, transitioning to discount rate + 1% upon graduation.",
-      "defaultConcessionRate": 0.5,
-      "bankingTip": "In Denmark, SU-lån interest during study is 4% p.a., with a mandatory grace period of 1 to 2 years after completing your degree before repayment begins. Private bank student loans often offer interest rate reductions when linked to a NemKonto student account.",
-      "taxTips": [
-        {
-          "title": "SU-lån Interest Tax Deduction",
-          "amount": 0,
-          "limitLabel": "Rentefradrag on Repayment",
-          "description": "Interest accrued and paid on education loans is tax-deductible under Danish tax laws once repayment starts.",
-          "details": "Automatically reported by Udbetaling Danmark / SKAT to your annual tax return (årsopgørelse)."
-        },
-        {
-          "title": "Student Tax Exemption (Frikort)",
-          "amount": 51700,
-          "limitLabel": "Tax-Free Personal Allowance",
-          "description": "Students benefit from standard personfradrag (personal allowance) shielding scholarship grants and student earnings.",
-          "details": "Ensures students retain maximum income while managing part-time work and living expenses."
-        }
-      ]
-    }
-  },
-  "CAD": {
-    "code": "CAD",
-    "country": "Canada",
-    "capital": "Ottawa",
-    "currencyName": "Canadian Dollar",
-    "name": "Canada, Ottawa",
-    "locale": "en-CA",
-    "symbol": "C$",
-    "useIndianNotation": false,
-    "stampDutyRate": 2.0,
-    "registrationRate": 0.5,
-    "taxTips": [
-      {
-        "title": "First-Time Home Buyers' Tax Credit (HBTC)",
-        "amount": 10000,
-        "limitLabel": "Claim up to $10,000 ($1,500 credit)",
-        "description": "Non-refundable federal tax credit under CRA Line 31270 for qualifying first-time home purchasers."
-      },
-      {
-        "title": "The Smith Maneuver (Mortgage Deductibility)",
-        "amount": 0,
-        "limitLabel": "Investment Property Interest",
-        "description": "Convert non-deductible residential mortgage interest into tax-deductible investment loan interest."
-      }
-    ],
-    "educationAdvice": {
-      "concessionTitle": "Lender Concession: {concessionRate}% Auto-Debit Discount",
-      "concessionDescription": "Major Canadian chartered banks (RBC, TD, Scotiabank) offer 0.25%–0.50% rate reductions when student borrowers enroll in pre-authorized debit (PAD).",
-      "defaultConcessionRate": 0.25,
-      "bankingTip": "Federal Canada Student Loans (CSL) are 100% interest-free as of 2023! For provincial or commercial bank student lines of credit, servicing interest monthly during studies prevents debt escalation and protects your Canadian credit score (Equifax/TransUnion).",
-      "taxTips": [
-        {
-          "title": "Line 31900 - Student Loan Interest",
-          "amount": 0,
-          "limitLabel": "15% Federal Non-Refundable Credit",
-          "description": "Claim 15% federal tax credit on interest paid on qualifying Canada Student Loans or provincial student loans.",
-          "details": "Can be carried forward for up to 5 consecutive years to offset future higher-income tax liabilities."
-        },
-        {
-          "title": "Tuition Tax Credit (Schedule 11)",
-          "amount": 5000,
-          "limitLabel": "Tuition, Education & Textbook Amounts",
-          "description": "Carry forward unused tuition amounts indefinitely or transfer up to $5,000 to parents or spouses.",
-          "details": "Reduces net federal and provincial tax liabilities when entering the post-graduation workforce."
-        }
-      ]
-    }
-  },
-  "ZAR": {
-    "code": "ZAR",
-    "country": "South Africa",
-    "capital": "Pretoria",
-    "currencyName": "South African Rand",
-    "name": "South Africa, Pretoria",
-    "locale": "en-ZA",
-    "symbol": "R",
-    "useIndianNotation": false,
-    "stampDutyRate": 4.0,
-    "registrationRate": 1.0,
-    "taxTips": [
-      {
-        "title": "Transfer Duty Exemption",
-        "amount": 1100000,
-        "limitLabel": "Exempt under R1,100,000",
-        "description": "Properties purchased for R1.1 million or less are 100% exempt from SARS property transfer duty."
-      },
-      {
-        "title": "Section 13sex Residential Allowance",
-        "amount": 0,
-        "limitLabel": "55% Building Cost Deduction",
-        "description": "Write off 5% of residential building costs annually over 20 years for landlords owning 5+ units."
-      }
-    ],
-    "educationAdvice": {
-      "concessionTitle": "Lender Concession: {concessionRate}% Rate Discount",
-      "concessionDescription": "South African commercial banks (Standard Bank, FNB, Nedbank, Absa) offer preferential interest rate discounts for academic excellence and regular debit orders.",
-      "defaultConcessionRate": 0.5,
-      "bankingTip": "In South Africa, bank student loans require a sponsor or surety who services the monthly interest during your study term. Paying this interest promptly prevents compound balance inflation and grants a 6-month graduate repayment grace period.",
-      "taxTips": [
-        {
-          "title": "Section 10(1)(q) Bursary Exemption",
-          "amount": 0,
-          "limitLabel": "Tax-Free Employer Bursaries",
-          "description": "Bursaries or study loans provided by employers for employees or relatives are exempt from income tax.",
-          "details": "Subject to basic remuneration caps and bona fide educational program enrollment requirements."
-        },
-        {
-          "title": "Section 18A Educational Donations",
-          "amount": 0,
-          "limitLabel": "Deduct up to 10% Taxable Income",
-          "description": "Donations and financial support paid to registered Public Benefit Organisations (PBO) universities.",
-          "details": "Provides Section 18A tax certificates to deduct contributions from annual taxable income with SARS."
         }
       ]
     }
@@ -431,6 +95,54 @@
       ]
     }
   },
+  "CAD": {
+    "code": "CAD",
+    "country": "Canada",
+    "capital": "Ottawa",
+    "currencyName": "Canadian Dollar",
+    "name": "Canada, Ottawa",
+    "locale": "en-CA",
+    "symbol": "C$",
+    "useIndianNotation": false,
+    "stampDutyRate": 2.0,
+    "registrationRate": 0.5,
+    "taxTips": [
+      {
+        "title": "First-Time Home Buyers' Tax Credit (HBTC)",
+        "amount": 10000,
+        "limitLabel": "Claim up to $10,000 ($1,500 credit)",
+        "description": "Non-refundable federal tax credit under CRA Line 31270 for qualifying first-time home purchasers."
+      },
+      {
+        "title": "The Smith Maneuver (Mortgage Deductibility)",
+        "amount": 0,
+        "limitLabel": "Investment Property Interest",
+        "description": "Convert non-deductible residential mortgage interest into tax-deductible investment loan interest."
+      }
+    ],
+    "educationAdvice": {
+      "concessionTitle": "Lender Concession: {concessionRate}% Auto-Debit Discount",
+      "concessionDescription": "Major Canadian chartered banks (RBC, TD, Scotiabank) offer 0.25%–0.50% rate reductions when student borrowers enroll in pre-authorized debit (PAD).",
+      "defaultConcessionRate": 0.25,
+      "bankingTip": "Federal Canada Student Loans (CSL) are 100% interest-free as of 2023! For provincial or commercial bank student lines of credit, servicing interest monthly during studies prevents debt escalation and protects your Canadian credit score (Equifax/TransUnion).",
+      "taxTips": [
+        {
+          "title": "Line 31900 - Student Loan Interest",
+          "amount": 0,
+          "limitLabel": "15% Federal Non-Refundable Credit",
+          "description": "Claim 15% federal tax credit on interest paid on qualifying Canada Student Loans or provincial student loans.",
+          "details": "Can be carried forward for up to 5 consecutive years to offset future higher-income tax liabilities."
+        },
+        {
+          "title": "Tuition Tax Credit (Schedule 11)",
+          "amount": 5000,
+          "limitLabel": "Tuition, Education & Textbook Amounts",
+          "description": "Carry forward unused tuition amounts indefinitely or transfer up to $5,000 to parents or spouses.",
+          "details": "Reduces net federal and provincial tax liabilities when entering the post-graduation workforce."
+        }
+      ]
+    }
+  },
   "CNY": {
     "code": "CNY",
     "country": "China",
@@ -475,6 +187,294 @@
           "limitLabel": "Government Financial Subsidy",
           "description": "Special periodic policies granting interest exemptions and deferred principal repayments for university graduates.",
           "details": "Announced by the Ministry of Finance and People's Bank of China to ease youth transition into the workforce."
+        }
+      ]
+    }
+  },
+  "DKK": {
+    "code": "DKK",
+    "country": "Denmark",
+    "capital": "Copenhagen",
+    "currencyName": "Danish Krone",
+    "name": "Denmark, Copenhagen",
+    "locale": "da-DK",
+    "symbol": "kr",
+    "useIndianNotation": false,
+    "stampDutyRate": 0.6,
+    "registrationRate": 1.45,
+    "taxTips": [
+      {
+        "title": "Rentefradrag (Mortgage Interest Deduction)",
+        "amount": 0,
+        "limitLabel": "Capital Income Fradrag (~25-33%)",
+        "description": "Deduct mortgage interest payments directly on your årsopgørelse tax assessment to lower net taxes."
+      },
+      {
+        "title": "BoligJobordning / Håndværkerfradrag",
+        "amount": 11900,
+        "limitLabel": "Service & Green Upgrades",
+        "description": "Tax deduction for home improvement, climate adaptation, and maintenance labor costs."
+      }
+    ],
+    "educationAdvice": {
+      "concessionTitle": "SU-lån Concession: Subsidized 4% In-Study Interest Rate",
+      "concessionDescription": "Statens Uddannelsesstøtte (SU) loans carry a government-subsidized 4.0% p.a. interest rate during enrollment, transitioning to discount rate + 1% upon graduation.",
+      "defaultConcessionRate": 0.5,
+      "bankingTip": "In Denmark, SU-lån interest during study is 4% p.a., with a mandatory grace period of 1 to 2 years after completing your degree before repayment begins. Private bank student loans often offer interest rate reductions when linked to a NemKonto student account.",
+      "taxTips": [
+        {
+          "title": "SU-lån Interest Tax Deduction",
+          "amount": 0,
+          "limitLabel": "Rentefradrag on Repayment",
+          "description": "Interest accrued and paid on education loans is tax-deductible under Danish tax laws once repayment starts.",
+          "details": "Automatically reported by Udbetaling Danmark / SKAT to your annual tax return (årsopgørelse)."
+        },
+        {
+          "title": "Student Tax Exemption (Frikort)",
+          "amount": 51700,
+          "limitLabel": "Tax-Free Personal Allowance",
+          "description": "Students benefit from standard personfradrag (personal allowance) shielding scholarship grants and student earnings.",
+          "details": "Ensures students retain maximum income while managing part-time work and living expenses."
+        }
+      ]
+    }
+  },
+  "EUR": {
+    "code": "EUR",
+    "country": "Europe",
+    "capital": "Berlin",
+    "currencyName": "Euro",
+    "name": "Europe, Berlin",
+    "locale": "de-DE",
+    "symbol": "€",
+    "useIndianNotation": false,
+    "stampDutyRate": 6,
+    "registrationRate": 1.5,
+    "taxTips": [
+      {
+        "title": "Home Office Allowance",
+        "amount": 1250,
+        "limitLabel": "Limit: €1,250",
+        "description": "Deduct home office expenses from your professional income."
+      },
+      {
+        "title": "Professional Workspace",
+        "amount": 0,
+        "limitLabel": "Investment Property",
+        "description": "Interest on investment properties is often tax-deductible."
+      }
+    ],
+    "educationAdvice": {
+      "concessionTitle": "Lender Concession: {concessionRate}% Rate Discount",
+      "concessionDescription": "European student loan programs (e.g., KfW Studienkredit, Erasmus+ master loans) provide subsidized interest rates and discounts if interest is serviced during study and grace periods.",
+      "defaultConcessionRate": 0.5,
+      "bankingTip": "In the EU, public development banks (like Germany's KfW or Erasmus+ guarantee schemes) offer subsidized rates and flexible 18–24 month grace periods. Making regular interest payments during study prevents ballooning debt from accumulating prior to your first career job.",
+      "taxTips": [
+        {
+          "title": "Werbungskosten (Income-Related Costs)",
+          "amount": 0,
+          "limitLabel": "Fully Deductible (Loss Carryover)",
+          "description": "Master's degrees, second degrees, and study loan interest are 100% tax-deductible in Germany/EU.",
+          "details": "Accumulated study costs can be carried forward as tax losses to offset early career income."
+        },
+        {
+          "title": "Sonderausgaben (First Degree Allowance)",
+          "amount": 6000,
+          "limitLabel": "Up to €6,000 / year",
+          "description": "Initial undergraduate education expenses can be deducted as special expenses against taxable income.",
+          "details": "Applies to direct tuition, study materials, and loan finance charges under national tax codes."
+        }
+      ]
+    }
+  },
+  "INR": {
+    "code": "INR",
+    "country": "India",
+    "capital": "New Delhi",
+    "currencyName": "Indian Rupee",
+    "name": "India, New Delhi",
+    "locale": "en-IN",
+    "symbol": "₹",
+    "useIndianNotation": true,
+    "stampDutyRate": 6,
+    "registrationRate": 1,
+    "taxTips": [
+      {
+        "title": "Section 24(b) - Interest",
+        "amount": 200000,
+        "limitLabel": "Deduction limit: ₹2,00,000",
+        "description": "Deduct up to ₹2,00,000 on home loan interest per year."
+      },
+      {
+        "title": "Section 80C - Principal",
+        "amount": 150000,
+        "limitLabel": "Deduction limit: ₹1,50,000",
+        "description": "Save up to ₹1,50,000 on principal repayment per year."
+      }
+    ],
+    "educationAdvice": {
+      "concessionTitle": "Bank Concession: {concessionRate}% Interest Rate Discount",
+      "concessionDescription": "Most Indian banks (like SBI, BoB, PNB) give a 1.00% p.a. interest discount if simple interest is serviced during the study period.",
+      "defaultConcessionRate": 1.0,
+      "bankingTip": "Major Indian banks (SBI Student Loan Scheme, PNB Saraswati, Bank of Baroda) offer a 1.00% p.a. interest concession when simple interest is serviced during the moratorium period. Additionally, female students often qualify for an extra 0.50% concession under central schemes.",
+      "taxTips": [
+        {
+          "title": "Section 80E - Interest Deduction",
+          "amount": 0,
+          "limitLabel": "100% Deductible (No Upper Limit)",
+          "description": "Entire interest paid during the financial year is tax-deductible.",
+          "details": "Available for up to 8 consecutive assessment years starting from repayment onset."
+        },
+        {
+          "title": "Eligible Higher Studies",
+          "amount": 0,
+          "limitLabel": "India & Overseas (Degree / Post-Grad)",
+          "description": "Applicable for approved higher education programs for self, spouse, or children.",
+          "details": "Can be claimed by individual borrowers paying out of their taxable income."
+        }
+      ]
+    }
+  },
+  "ZAR": {
+    "code": "ZAR",
+    "country": "South Africa",
+    "capital": "Pretoria",
+    "currencyName": "South African Rand",
+    "name": "South Africa, Pretoria",
+    "locale": "en-ZA",
+    "symbol": "R",
+    "useIndianNotation": false,
+    "stampDutyRate": 4.0,
+    "registrationRate": 1.0,
+    "taxTips": [
+      {
+        "title": "Transfer Duty Exemption",
+        "amount": 1100000,
+        "limitLabel": "Exempt under R1,100,000",
+        "description": "Properties purchased for R1.1 million or less are 100% exempt from SARS property transfer duty."
+      },
+      {
+        "title": "Section 13sex Residential Allowance",
+        "amount": 0,
+        "limitLabel": "55% Building Cost Deduction",
+        "description": "Write off 5% of residential building costs annually over 20 years for landlords owning 5+ units."
+      }
+    ],
+    "educationAdvice": {
+      "concessionTitle": "Lender Concession: {concessionRate}% Rate Discount",
+      "concessionDescription": "South African commercial banks (Standard Bank, FNB, Nedbank, Absa) offer preferential interest rate discounts for academic excellence and regular debit orders.",
+      "defaultConcessionRate": 0.5,
+      "bankingTip": "In South Africa, bank student loans require a sponsor or surety who services the monthly interest during your study term. Paying this interest promptly prevents compound balance inflation and grants a 6-month graduate repayment grace period.",
+      "taxTips": [
+        {
+          "title": "Section 10(1)(q) Bursary Exemption",
+          "amount": 0,
+          "limitLabel": "Tax-Free Employer Bursaries",
+          "description": "Bursaries or study loans provided by employers for employees or relatives are exempt from income tax.",
+          "details": "Subject to basic remuneration caps and bona fide educational program enrollment requirements."
+        },
+        {
+          "title": "Section 18A Educational Donations",
+          "amount": 0,
+          "limitLabel": "Deduct up to 10% Taxable Income",
+          "description": "Donations and financial support paid to registered Public Benefit Organisations (PBO) universities.",
+          "details": "Provides Section 18A tax certificates to deduct contributions from annual taxable income with SARS."
+        }
+      ]
+    }
+  },
+  "GBP": {
+    "code": "GBP",
+    "country": "UK",
+    "capital": "London",
+    "currencyName": "British Pound",
+    "name": "UK, London",
+    "locale": "en-GB",
+    "symbol": "£",
+    "useIndianNotation": false,
+    "stampDutyRate": 5,
+    "registrationRate": 0.5,
+    "taxTips": [
+      {
+        "title": "First-Time Buyer Relief",
+        "amount": 425000,
+        "limitLabel": "Up to £425k",
+        "description": "Zero stamp duty for first-time buyers on properties up to £425,000."
+      },
+      {
+        "title": "Rent-a-Room Relief",
+        "amount": 7500,
+        "limitLabel": "Limit: £7,500/year",
+        "description": "Tax-free income if you let out furnished accommodation."
+      }
+    ],
+    "educationAdvice": {
+      "concessionTitle": "Lender Concession: {concessionRate}% Rate Discount",
+      "concessionDescription": "UK private education lenders (like Future Finance, Prodigy) offer interest rate discounts (typically 0.25%–0.50%) when servicing interest during studies.",
+      "defaultConcessionRate": 0.5,
+      "bankingTip": "In the UK, government Student Loans (Plan 2 & Plan 5) accrue interest linked to RPI during study, with repayments deducted via PAYE only when income exceeds the statutory threshold. For commercial study loans, servicing simple interest during term-time stops compound balance growth.",
+      "taxTips": [
+        {
+          "title": "Income-Contingent Repayments",
+          "amount": 0,
+          "limitLabel": "Threshold Protected (e.g. £27,295)",
+          "description": "No repayments required if earnings are below the statutory threshold (9% of excess income).",
+          "details": "Unpaid government loan balances are cancelled after 30 to 40 years depending on repayment plan."
+        },
+        {
+          "title": "Employer Training Exemption",
+          "amount": 0,
+          "limitLabel": "Tax-Free Sponsorship",
+          "description": "Work-related higher education costs paid by employers are exempt from income tax and National Insurance.",
+          "details": "Enables tax-advantaged professional degree upskilling under HMRC guidelines."
+        }
+      ]
+    }
+  },
+  "USD": {
+    "code": "USD",
+    "country": "USA",
+    "capital": "Washington D.C.",
+    "currencyName": "US Dollar",
+    "name": "USA, Washington D.C.",
+    "locale": "en-US",
+    "symbol": "$",
+    "useIndianNotation": false,
+    "stampDutyRate": 4,
+    "registrationRate": 1,
+    "taxTips": [
+      {
+        "title": "Mortgage Interest Deduction",
+        "amount": 750000,
+        "limitLabel": "Limit: $750,000 debt",
+        "description": "Deduct interest on up to $750,000 of mortgage debt."
+      },
+      {
+        "title": "Property Tax Deduction",
+        "amount": 10000,
+        "limitLabel": "SALT Limit: $10,000",
+        "description": "Deduct up to $10,000 for state and local taxes."
+      }
+    ],
+    "educationAdvice": {
+      "concessionTitle": "Lender Concession: {concessionRate}% Rate Reduction",
+      "concessionDescription": "Most US lenders (like Sallie Mae, Discover, SoFi) offer a 0.25%–0.50% interest rate reduction for enrolling in auto-debit and making in-school interest payments.",
+      "defaultConcessionRate": 0.25,
+      "bankingTip": "In the U.S., servicing interest while in school prevents unpaid interest from capitalizing onto your principal upon graduation. Most private lenders and federal loan servicers also provide a 0.25% interest rate discount for setting up automatic debit payments.",
+      "taxTips": [
+        {
+          "title": "Student Loan Interest Deduction",
+          "amount": 2500,
+          "limitLabel": "Up to $2,500 / year",
+          "description": "Above-the-line IRS deduction on Form 1040 to reduce modified adjusted gross income.",
+          "details": "Applies to interest paid on qualified federal and private higher education loans."
+        },
+        {
+          "title": "Education Tax Credits (AOTC / LLC)",
+          "amount": 2500,
+          "limitLabel": "Credits & Deductions",
+          "description": "American Opportunity Tax Credit (up to $2,500) and Lifetime Learning Credit (up to $2,000).",
+          "details": "Subject to IRS income phaseout thresholds and qualified enrollment criteria."
         }
       ]
     }

@@ -124,9 +124,34 @@ function GlobalHeader() {
   );
 }
 
+export function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  React.useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      typeof window.scrollTo === "function"
+    ) {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname]);
+
+  return null;
+}
+
 export default function App() {
+  const handleScrollToTop = () => {
+    if (
+      typeof window !== "undefined" &&
+      typeof window.scrollTo === "function"
+    ) {
+      window.scrollTo(0, 0);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col">
+      <ScrollToTop />
       <GlobalHeader />
       <main className="flex-1 pb-16">
         <Routes>
@@ -162,16 +187,20 @@ export default function App() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 text-sm">
           {/* Brand Column */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
+            <Link
+              to="/home-loan"
+              onClick={handleScrollToTop}
+              className="flex items-center gap-2 group w-fit"
+            >
               <img
                 src="/favicon.png"
                 alt="Smart EMI Planner Logo"
                 className="w-6 h-6 rounded"
               />
-              <span className="font-bold text-white tracking-tight">
+              <span className="font-bold text-white tracking-tight group-hover:text-emerald-400 transition-colors">
                 Smart EMI Planner
               </span>
-            </div>
+            </Link>
             <p className="text-xs text-slate-400 leading-relaxed">
               Advanced loan amortization calculators and planners. Simulate rate
               hikes, prepayments, and annual step-ups to save on interest.
@@ -187,6 +216,7 @@ export default function App() {
               <li>
                 <Link
                   to="/home-loan"
+                  onClick={handleScrollToTop}
                   className="hover:text-emerald-400 transition-colors"
                 >
                   Home Loan Calculator
@@ -195,6 +225,7 @@ export default function App() {
               <li>
                 <Link
                   to="/car-loan"
+                  onClick={handleScrollToTop}
                   className="hover:text-emerald-400 transition-colors"
                 >
                   Car Loan Calculator
@@ -203,6 +234,7 @@ export default function App() {
               <li>
                 <Link
                   to="/personal-loan"
+                  onClick={handleScrollToTop}
                   className="hover:text-emerald-400 transition-colors"
                 >
                   Personal Loan Calculator
@@ -211,6 +243,7 @@ export default function App() {
               <li>
                 <Link
                   to="/education-loan"
+                  onClick={handleScrollToTop}
                   className="hover:text-emerald-400 transition-colors"
                 >
                   Education Loan Calculator
@@ -228,6 +261,7 @@ export default function App() {
               <li>
                 <Link
                   to="/blog"
+                  onClick={handleScrollToTop}
                   className="hover:text-emerald-400 transition-colors"
                 >
                   Insights Blog
@@ -236,6 +270,7 @@ export default function App() {
               <li>
                 <Link
                   to="/faq"
+                  onClick={handleScrollToTop}
                   className="hover:text-emerald-400 transition-colors"
                 >
                   FAQ
@@ -263,6 +298,7 @@ export default function App() {
               <li>
                 <Link
                   to="/privacy-policy"
+                  onClick={handleScrollToTop}
                   className="hover:text-emerald-400 transition-colors"
                 >
                   Privacy Policy
@@ -271,6 +307,7 @@ export default function App() {
               <li>
                 <Link
                   to="/disclaimer"
+                  onClick={handleScrollToTop}
                   className="hover:text-emerald-400 transition-colors"
                 >
                   Disclaimer
@@ -279,6 +316,7 @@ export default function App() {
               <li>
                 <Link
                   to="/terms-of-use"
+                  onClick={handleScrollToTop}
                   className="hover:text-emerald-400 transition-colors"
                 >
                   Terms of Use

@@ -463,11 +463,49 @@ export default function App({
     {},
   );
 
-  const [currencyCode, setCurrencyCode] = useState<string>("INR");
+  const sortedCurrencies = useMemo(() => {
+    return Object.values(CURRENCY_CONFIGS).sort((a, b) =>
+      (a.country || a.name).localeCompare(b.country || b.name),
+    );
+  }, []);
+
+  const [currencyCode, setCurrencyCode] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const urlCurr = params.get("curr");
+        if (urlCurr && CURRENCY_CONFIGS[urlCurr]) {
+          return urlCurr;
+        }
+      } catch (e) {}
+
+      try {
+        const userPreferred = localStorage.getItem("user_selected_currency");
+        if (userPreferred && CURRENCY_CONFIGS[userPreferred]) {
+          return userPreferred;
+        }
+
+        const savedState = localStorage.getItem("emi_calculator_state");
+        if (savedState) {
+          const parsed = JSON.parse(savedState);
+          if (parsed?.currencyCode && CURRENCY_CONFIGS[parsed.currencyCode]) {
+            return parsed.currencyCode;
+          }
+        }
+      } catch (e) {}
+    }
+
+    // Default to INR
+    return "INR";
+  });
+
   const currency = CURRENCY_CONFIGS[currencyCode] || CURRENCY_CONFIGS.INR;
 
   const handleCurrencyChange = (newCode: string) => {
     setCurrencyCode(newCode);
+    try {
+      localStorage.setItem("user_selected_currency", newCode);
+    } catch (e) {}
     const cfg = CURRENCY_CONFIGS[newCode];
     if (cfg?.educationAdvice) {
       setConcessionRate(cfg.educationAdvice.defaultConcessionRate);
@@ -500,38 +538,6 @@ export default function App({
     if (canonical) canonical.href = `https://smartemiplanner.com${meta.slug}`;
   }, [loanType]);
 
-  // Currency Detection
-  useEffect(() => {
-    const detectCurrency = () => {
-      // 1. Check URL
-      const params = new URLSearchParams(window.location.search);
-      const urlCurr = params.get("curr");
-      if (urlCurr && CURRENCY_CONFIGS[urlCurr]) {
-        setCurrencyCode(urlCurr);
-        return;
-      }
-
-      // 2. Check Locale
-      try {
-        const locale = new Intl.NumberFormat().resolvedOptions().locale;
-        if (locale.includes("US")) setCurrencyCode("USD");
-        else if (locale.includes("GB")) setCurrencyCode("GBP");
-        else if (locale.includes("AU")) setCurrencyCode("AUD");
-        else if (
-          locale.includes("DE") ||
-          locale.includes("FR") ||
-          locale.includes("IT") ||
-          locale.includes("ES")
-        )
-          setCurrencyCode("EUR");
-        else setCurrencyCode("INR");
-      } catch (e) {
-        setCurrencyCode("INR");
-      }
-    };
-    detectCurrency();
-  }, []);
-
   // URL & LocalStorage State Persistence
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -563,8 +569,21 @@ export default function App({
 
     if (curr && CURRENCY_CONFIGS[curr]) {
       setCurrencyCode(curr);
-    } else if (local?.currencyCode && CURRENCY_CONFIGS[local.currencyCode]) {
-      setCurrencyCode(local.currencyCode);
+      try {
+        localStorage.setItem("user_selected_currency", curr);
+      } catch (e) {}
+    } else {
+      try {
+        const userPreferred = localStorage.getItem("user_selected_currency");
+        if (userPreferred && CURRENCY_CONFIGS[userPreferred]) {
+          setCurrencyCode(userPreferred);
+        } else if (
+          local?.currencyCode &&
+          CURRENCY_CONFIGS[local.currencyCode]
+        ) {
+          setCurrencyCode(local.currencyCode);
+        }
+      } catch (e) {}
     }
 
     if (type && Object.values(LoanType).includes(type)) {
@@ -713,7 +732,10 @@ export default function App({
       enableConcession,
       concessionRate,
     };
-    localStorage.setItem("emi_calculator_state", JSON.stringify(state));
+    try {
+      localStorage.setItem("emi_calculator_state", JSON.stringify(state));
+      localStorage.setItem("user_selected_currency", currencyCode);
+    } catch (e) {}
   }, [
     loanType,
     amount,
@@ -1610,9 +1632,11 @@ export default function App({
                       onChange={(e) => handleCurrencyChange(e.target.value)}
                       className="bg-transparent border-none text-xs font-bold text-emerald-700 outline-none cursor-pointer pr-1"
                     >
-                      {Object.values(CURRENCY_CONFIGS).map((cc) => (
+                      {sortedCurrencies.map((cc) => (
                         <option key={cc.code} value={cc.code}>
-                          {cc.code} ({cc.symbol}) - {cc.name}
+                          {cc.country
+                            ? `${cc.country} (${cc.code} ${cc.symbol})`
+                            : `${cc.name} (${cc.code} ${cc.symbol})`}
                         </option>
                       ))}
                     </select>

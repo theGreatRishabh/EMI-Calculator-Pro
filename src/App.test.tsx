@@ -1,9 +1,13 @@
-import { render, screen } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import App from "./App";
 
 describe("App Component & Navigation", () => {
+  beforeEach(() => {
+    window.scrollTo = vi.fn();
+  });
+
   it("renders the calculator route by default with active Calculator tab", () => {
     render(
       <MemoryRouter initialEntries={["/"]}>
@@ -63,5 +67,23 @@ describe("App Component & Navigation", () => {
     });
     expect(footerEduLink).toBeInTheDocument();
     expect(footerEduLink).toHaveAttribute("href", "/education-loan");
+  });
+
+  it("scrolls to top when clicking footer links like FAQ", () => {
+    const scrollToMock = vi.fn();
+    window.scrollTo = scrollToMock;
+
+    render(
+      <MemoryRouter initialEntries={["/home-loan"]}>
+        <App />
+      </MemoryRouter>,
+    );
+
+    scrollToMock.mockClear();
+
+    const faqFooterLink = screen.getByRole("link", { name: "FAQ" });
+    fireEvent.click(faqFooterLink);
+
+    expect(scrollToMock).toHaveBeenCalledWith(0, 0);
   });
 });

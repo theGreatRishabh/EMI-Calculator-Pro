@@ -360,6 +360,62 @@ describe("Calculator Component", () => {
     ).toBeInTheDocument();
   });
 
+  it("sorts currencies alphabetically country-wise and maintains state in localStorage", () => {
+    localStorage.clear();
+
+    const { unmount } = render(
+      <MemoryRouter>
+        <Calculator initialLoanType="HOME" />
+      </MemoryRouter>,
+    );
+
+    const currencySelect = screen.getByRole("combobox") as HTMLSelectElement;
+    const options = Array.from(currencySelect.options).map((opt) => opt.text);
+
+    // Verify alphabetical order by country
+    expect(options[0]).toContain("Australia");
+    expect(options[1]).toContain("Brazil");
+    expect(options[2]).toContain("Canada");
+    expect(options[3]).toContain("China");
+    expect(options[4]).toContain("Denmark");
+    expect(options[5]).toContain("Europe");
+    expect(options[6]).toContain("India");
+    expect(options[7]).toContain("South Africa");
+    expect(options[8]).toContain("UK");
+    expect(options[9]).toContain("USA");
+
+    // Change currency to CAD
+    fireEvent.change(currencySelect, { target: { value: "CAD" } });
+    expect(currencySelect.value).toBe("CAD");
+    expect(localStorage.getItem("user_selected_currency")).toBe("CAD");
+
+    unmount();
+
+    // Re-mount on a different loan type (e.g., CAR loan)
+    const { unmount: unmountCar } = render(
+      <MemoryRouter>
+        <Calculator initialLoanType="CAR" />
+      </MemoryRouter>,
+    );
+
+    const newCurrencySelect = screen.getByRole("combobox") as HTMLSelectElement;
+    // Should persist CAD across pages and types
+    expect(newCurrencySelect.value).toBe("CAD");
+    unmountCar();
+
+    // Re-mount on HOME loan to verify country-specific tax estimator is retained
+    render(
+      <MemoryRouter>
+        <Calculator initialLoanType="HOME" />
+      </MemoryRouter>,
+    );
+    expect(
+      screen.getByText(/Tax Benefit Estimator \(Canada, Ottawa\)/i),
+    ).toBeInTheDocument();
+
+    localStorage.clear();
+  });
+
   it("supports expanding year rows in the amortization schedule table", () => {
     render(
       <MemoryRouter>
@@ -1128,6 +1184,25 @@ describe("Calculator Component", () => {
         "Education Loan EMI Calculator",
       );
       eduRender.unmount();
+    });
+
+    it("defaults to INR currency and persists selection on change", () => {
+      localStorage.clear();
+      const { unmount } = render(
+        <MemoryRouter>
+          <Calculator initialLoanType="HOME" />
+        </MemoryRouter>,
+      );
+
+      const currencySelect = screen.getByRole("combobox", {
+        name: "Currency",
+      }) as HTMLSelectElement;
+      expect(currencySelect.value).toBe("INR");
+
+      fireEvent.change(currencySelect, { target: { value: "USD" } });
+      expect(currencySelect.value).toBe("USD");
+      expect(localStorage.getItem("user_selected_currency")).toBe("USD");
+      unmount();
     });
   });
 });
