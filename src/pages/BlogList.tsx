@@ -11,8 +11,10 @@ export default function BlogList() {
       "Read our latest guides, tips, and strategies for managing your Home Loans, Car Loans, and Personal Loans effectively. Learn how to save money on interest.",
   });
 
+  const POSTS_PER_PAGE = 6;
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [visibleCount, setVisibleCount] = useState(POSTS_PER_PAGE);
 
   const categories = useMemo(() => {
     const cats = new Set<string>();
@@ -37,6 +39,26 @@ export default function BlogList() {
         return matchesCategory && matchesQuery;
       });
   }, [searchQuery, selectedCategory]);
+
+  const displayedPosts = useMemo(() => {
+    return filteredPosts.slice(0, visibleCount);
+  }, [filteredPosts, visibleCount]);
+
+  const handleSearchChange = (val: string) => {
+    setSearchQuery(val);
+    setVisibleCount(POSTS_PER_PAGE);
+  };
+
+  const handleCategoryChange = (cat: string) => {
+    setSelectedCategory(cat);
+    setVisibleCount(POSTS_PER_PAGE);
+  };
+
+  const handleResetFilters = () => {
+    setSearchQuery("");
+    setSelectedCategory("All");
+    setVisibleCount(POSTS_PER_PAGE);
+  };
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12 sm:px-6">
@@ -68,7 +90,7 @@ export default function BlogList() {
                 type="text"
                 aria-label="Search articles"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 placeholder="Search articles by keyword, topic, or country (e.g. 'Canada', 'Prepayment', 'Tax', 'Snowball')..."
                 className="w-full pl-11 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
               />
@@ -76,7 +98,7 @@ export default function BlogList() {
                 <button
                   type="button"
                   aria-label="Clear search"
-                  onClick={() => setSearchQuery("")}
+                  onClick={() => handleSearchChange("")}
                   className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 rounded-full hover:bg-slate-200/60 transition-colors"
                 >
                   <X className="w-4 h-4" />
@@ -94,7 +116,7 @@ export default function BlogList() {
                 return (
                   <button
                     key={cat}
-                    onClick={() => setSelectedCategory(cat)}
+                    onClick={() => handleCategoryChange(cat)}
                     className={`px-3 py-1.5 rounded-full transition-all text-nowrap cursor-pointer ${
                       isActive
                         ? "bg-emerald-600 text-white shadow-sm shadow-emerald-200"
@@ -110,15 +132,15 @@ export default function BlogList() {
             {/* Results Counter */}
             <div className="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
               <span>
-                Showing <strong>{filteredPosts.length}</strong> of{" "}
-                <strong>{blogPosts.length}</strong> articles
+                Showing <strong>{displayedPosts.length}</strong> of{" "}
+                <strong>{filteredPosts.length}</strong> {filteredPosts.length === 1 ? "article" : "articles"}
+                {filteredPosts.length !== blogPosts.length && (
+                  <span className="text-slate-400 ml-1">({blogPosts.length} total)</span>
+                )}
               </span>
               {(searchQuery || selectedCategory !== "All") && (
                 <button
-                  onClick={() => {
-                    setSearchQuery("");
-                    setSelectedCategory("All");
-                  }}
+                  onClick={handleResetFilters}
                   className="text-emerald-600 hover:text-emerald-700 font-semibold cursor-pointer"
                 >
                   Clear all filters
@@ -141,48 +163,63 @@ export default function BlogList() {
                 )}. Try searching for different keywords.
               </p>
               <button
-                onClick={() => {
-                  setSearchQuery("");
-                  setSelectedCategory("All");
-                }}
+                onClick={handleResetFilters}
                 className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700 transition-colors shadow-sm"
               >
                 Reset Search
               </button>
             </div>
           ) : (
-            filteredPosts.map((post) => (
-              <article
-                key={post.slug}
-                className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md hover:border-emerald-200 transition-all group"
-              >
-                <div className="flex items-center flex-wrap gap-4 text-xs font-semibold uppercase tracking-wider text-slate-500 mb-4">
-                  <span className="text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full">
-                    {post.category || "Insights"}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Calendar className="w-3.5 h-3.5" />
-                    {post.date || new Date().toLocaleDateString()}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5" />
-                    {post.readTime || "5 min read"}
-                  </span>
-                </div>
+            <div className="space-y-6">
+              {displayedPosts.map((post) => (
+                <article
+                  key={post.slug}
+                  className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md hover:border-emerald-200 transition-all group"
+                >
+                  <div className="flex items-center flex-wrap gap-4 text-xs font-semibold uppercase tracking-wider text-slate-500 mb-4">
+                    <span className="text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full">
+                      {post.category || "Insights"}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-3.5 h-3.5" />
+                      {post.date || new Date().toLocaleDateString()}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3.5 h-3.5" />
+                      {post.readTime || "5 min read"}
+                    </span>
+                  </div>
 
-                <Link to={`/blog/${post.slug}`} className="block">
-                  <h2 className="text-2xl font-bold text-slate-900 mb-3 group-hover:text-emerald-700 transition-colors">
-                    {post.title}
-                  </h2>
-                  <p className="text-slate-600 mb-6 leading-relaxed font-medium">
-                    {post.excerpt}
-                  </p>
-                  <span className="inline-flex items-center gap-2 text-emerald-600 font-bold hover:text-emerald-700">
-                    Read Article <ArrowRight className="w-4 h-4" />
-                  </span>
-                </Link>
-              </article>
-            ))
+                  <Link to={`/blog/${post.slug}`} className="block">
+                    <h2 className="text-2xl font-bold text-slate-900 mb-3 group-hover:text-emerald-700 transition-colors">
+                      {post.title}
+                    </h2>
+                    <p className="text-slate-600 mb-6 leading-relaxed font-medium">
+                      {post.excerpt}
+                    </p>
+                    <span className="inline-flex items-center gap-2 text-emerald-600 font-bold hover:text-emerald-700">
+                      Read Article <ArrowRight className="w-4 h-4" />
+                    </span>
+                  </Link>
+                </article>
+              ))}
+
+              {/* Load More Button */}
+              {visibleCount < filteredPosts.length && (
+                <div className="text-center pt-4">
+                  <button
+                    type="button"
+                    onClick={() => setVisibleCount((prev) => prev + POSTS_PER_PAGE)}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-slate-300 hover:border-emerald-500 hover:text-emerald-700 text-slate-700 rounded-xl font-bold text-sm shadow-sm hover:shadow transition-all cursor-pointer group"
+                  >
+                    <span>Load More Articles</span>
+                    <span className="text-xs font-semibold px-2 py-0.5 bg-slate-100 group-hover:bg-emerald-50 rounded-full text-slate-500 group-hover:text-emerald-700">
+                      +{Math.min(POSTS_PER_PAGE, filteredPosts.length - visibleCount)}
+                    </span>
+                  </button>
+                </div>
+              )}
+            </div>
           )}
         </div>
       )}

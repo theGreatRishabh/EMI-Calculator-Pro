@@ -72,4 +72,65 @@ describe("FAQ Component", () => {
       screen.queryByText(/Equated Monthly Installment/i),
     ).not.toBeInTheDocument();
   });
+
+  it("renders and filters Education Loan and International Market FAQs", () => {
+    render(
+      <MemoryRouter>
+        <FAQ />
+      </MemoryRouter>,
+    );
+
+    // Education Loan FAQ is present
+    expect(
+      screen.getByText(
+        "How does an Education Loan Moratorium Period work?",
+      ),
+    ).toBeInTheDocument();
+
+    // International Markets FAQ is present
+    expect(
+      screen.getByText(
+        "Does Smart EMI Planner support international loans across the USA, UK, Europe, Australia, and India?",
+      ),
+    ).toBeInTheDocument();
+
+    // Test category filter button for Education Loans
+    const eduFilterBtn = screen.getByRole("button", {
+      name: /Education Loans/i,
+    });
+    fireEvent.click(eduFilterBtn);
+
+    expect(
+      screen.getByText(
+        "How does an Education Loan Moratorium Period work?",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText("What is an EMI and how is it calculated?"),
+    ).not.toBeInTheDocument();
+
+    // Test FAQ Search
+    const searchInput = screen.getByLabelText("Search FAQs");
+    fireEvent.change(searchInput, { target: { value: "Concession" } });
+    expect(
+      screen.getByText(
+        "What is the interest rate concession offered by banks on education loans?",
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it("renders Share Calculation and Bug/Feature Request FAQs", () => {
+    render(
+      <MemoryRouter>
+        <FAQ />
+      </MemoryRouter>,
+    );
+
+    expect(
+      screen.getByText("How does the 'Share Calculation' feature work?"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("How can I request a new feature or report a bug?"),
+    ).toBeInTheDocument();
+  });
 });

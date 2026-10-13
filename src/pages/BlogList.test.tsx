@@ -114,4 +114,44 @@ describe("BlogList Component", () => {
 
     expect(screen.getByText(/No blog posts found/i)).toBeInTheDocument();
   });
+
+  it("handles pagination with Load More button when more than 6 posts exist", () => {
+    mockBlogPosts = Array.from({ length: 8 }, (_, i) => ({
+      slug: `post-${i + 1}`,
+      title: `Article Number ${i + 1}`,
+      excerpt: `Excerpt for article ${i + 1}`,
+      date: `2026-05-0${(i % 9) + 1}`,
+      readTime: "5 min read",
+      category: "General",
+    }));
+
+    render(
+      <MemoryRouter>
+        <BlogList />
+      </MemoryRouter>,
+    );
+
+    // Initial load should show 6 posts
+    expect(screen.getByText("Article Number 1")).toBeInTheDocument();
+    expect(screen.getByText("Article Number 6")).toBeInTheDocument();
+    expect(screen.queryByText("Article Number 7")).not.toBeInTheDocument();
+
+    // Load More button should be present
+    const loadMoreBtn = screen.getByRole("button", {
+      name: /Load More Articles/i,
+    });
+    expect(loadMoreBtn).toBeInTheDocument();
+
+    // Click Load More
+    fireEvent.click(loadMoreBtn);
+
+    // Now articles 7 and 8 should be visible
+    expect(screen.getByText("Article Number 7")).toBeInTheDocument();
+    expect(screen.getByText("Article Number 8")).toBeInTheDocument();
+
+    // Load More button should disappear when all posts are displayed
+    expect(
+      screen.queryByRole("button", { name: /Load More Articles/i }),
+    ).not.toBeInTheDocument();
+  });
 });
