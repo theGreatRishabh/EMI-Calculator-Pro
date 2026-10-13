@@ -20,9 +20,11 @@ import {
   Car,
   User,
   GraduationCap,
+  Maximize2,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "./lib/utils";
+import ExtensionPopup from "./components/ExtensionPopup";
 
 const LOAN_ROUTES = [
   { path: "/home-loan", label: "Home", icon: Home, type: "HOME" },
@@ -110,6 +112,21 @@ function GlobalHeader() {
             <span className="hidden sm:inline">Blog</span>
           </Link>
 
+          {typeof window !== "undefined" &&
+            (window.location.protocol === "chrome-extension:" ||
+              window.location.protocol === "ms-browser-extension:") && (
+              <button
+                type="button"
+                onClick={() => window.open(window.location.href, "_blank")}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-emerald-700 hover:bg-slate-50 transition-colors ml-1 cursor-pointer"
+                title="Open in Full Tab"
+                aria-label="Open in Full Tab"
+              >
+                <Maximize2 className="w-4 h-4" />
+                <span className="hidden md:inline">Full Tab</span>
+              </button>
+            )}
+
           <a
             href="https://www.omegaalphatech.com/contact"
             target="_blank"
@@ -140,6 +157,32 @@ export function ScrollToTop() {
 }
 
 export default function App() {
+  const isExtension =
+    typeof window !== "undefined" &&
+    (window.location.protocol === "chrome-extension:" ||
+      window.location.protocol === "ms-browser-extension:");
+
+  const isSmallWindow =
+    typeof window !== "undefined" && window.innerWidth <= 550;
+  const isExplicitFull =
+    typeof window !== "undefined" &&
+    (window.location.search.includes("view=full") ||
+      window.location.hash.includes("view=full"));
+  const isExplicitMini =
+    typeof window !== "undefined" &&
+    (window.location.hash.includes("/popup") ||
+      window.location.search.includes("view=mini"));
+
+  const [forceFullView, setForceFullView] = React.useState(false);
+
+  const showMiniView =
+    (isExtension && isSmallWindow && !isExplicitFull && !forceFullView) ||
+    isExplicitMini;
+
+  if (showMiniView) {
+    return <ExtensionPopup onOpenFullApp={() => setForceFullView(true)} />;
+  }
+
   const handleScrollToTop = () => {
     if (
       typeof window !== "undefined" &&
@@ -180,6 +223,12 @@ export default function App() {
           <Route path="/disclaimer" element={<Disclaimer />} />
           <Route path="/terms-of-use" element={<TermsOfUse />} />
           <Route path="/faq" element={<FAQ />} />
+          <Route
+            path="/popup"
+            element={
+              <ExtensionPopup onOpenFullApp={() => setForceFullView(true)} />
+            }
+          />
         </Routes>
       </main>
 

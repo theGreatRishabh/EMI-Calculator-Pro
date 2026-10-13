@@ -86,4 +86,20 @@ describe("App Component & Navigation", () => {
 
     expect(scrollToMock).toHaveBeenCalledWith(0, 0);
   });
+
+  it("renders ExtensionPopup when routed to /popup", () => {
+    render(
+      <MemoryRouter initialEntries={["/popup"]}>
+        <App />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText("Monthly Installment (EMI)")).toBeInTheDocument();
+    expect(screen.getByText("Full App")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: /Open Prepayments & Amortization Schedule/i,
+      }),
+    ).toBeInTheDocument();
+  });
 });

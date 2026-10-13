@@ -1,6 +1,9 @@
 node_modules/
 build/
 dist/
+dist-extension/
+smart-emi-planner-extension.zip
+*.zip
 coverage/
 .DS_Store
 *.log

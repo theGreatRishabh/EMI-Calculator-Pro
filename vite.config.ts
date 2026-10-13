@@ -6,7 +6,10 @@ import { defineConfig, loadEnv } from "vite";
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, ".", "");
+  const isExtension = process.env.EXTENSION_BUILD === "true";
+
   return {
+    base: isExtension ? "./" : "/",
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
@@ -19,6 +22,7 @@ export default defineConfig(({ mode }) => {
       hmr: process.env.DISABLE_HMR !== "true",
     },
     build: {
+      outDir: isExtension ? "dist-extension" : "dist",
       sourcemap: true,
     },
     test: {

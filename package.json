@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "tsx scripts/generateBlogMeta.ts && vite --port=3000 --host=0.0.0.0",
     "build": "tsx scripts/generateBlogMeta.ts && vite build",
+    "build:extension": "tsx scripts/buildExtension.ts",
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
