@@ -311,6 +311,55 @@ describe("Calculator Component", () => {
     ).toBeInTheDocument();
   });
 
+  it("supports switching to newly added countries (Canada, Denmark, South Africa, Brazil, China)", () => {
+    render(
+      <MemoryRouter>
+        <Calculator initialLoanType="HOME" />
+      </MemoryRouter>,
+    );
+
+    const currencySelect = screen.getByRole("combobox") as HTMLSelectElement;
+
+    // Switch to Canada (CAD)
+    fireEvent.change(currencySelect, { target: { value: "CAD" } });
+    expect(currencySelect.value).toBe("CAD");
+    expect(
+      screen.getByText(/Tax Benefit Estimator \(Canada, Ottawa\)/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/First-Time Home Buyers' Tax Credit/i),
+    ).toBeInTheDocument();
+
+    // Switch to Denmark (DKK)
+    fireEvent.change(currencySelect, { target: { value: "DKK" } });
+    expect(currencySelect.value).toBe("DKK");
+    expect(
+      screen.getByText(/Tax Benefit Estimator \(Denmark, Copenhagen\)/i),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/Rentefradrag/i)).toBeInTheDocument();
+
+    // Switch to South Africa (ZAR)
+    fireEvent.change(currencySelect, { target: { value: "ZAR" } });
+    expect(currencySelect.value).toBe("ZAR");
+    expect(
+      screen.getByText(/Tax Benefit Estimator \(South Africa, Pretoria\)/i),
+    ).toBeInTheDocument();
+
+    // Switch to Brazil (BRL)
+    fireEvent.change(currencySelect, { target: { value: "BRL" } });
+    expect(currencySelect.value).toBe("BRL");
+    expect(
+      screen.getByText(/Tax Benefit Estimator \(Brazil, Brasília\)/i),
+    ).toBeInTheDocument();
+
+    // Switch to China (CNY)
+    fireEvent.change(currencySelect, { target: { value: "CNY" } });
+    expect(currencySelect.value).toBe("CNY");
+    expect(
+      screen.getByText(/Tax Benefit Estimator \(China, Beijing\)/i),
+    ).toBeInTheDocument();
+  });
+
   it("supports expanding year rows in the amortization schedule table", () => {
     render(
       <MemoryRouter>

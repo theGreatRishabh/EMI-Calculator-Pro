@@ -98,6 +98,9 @@ export interface EducationAdvice {
 
 export interface CurrencyConfig {
   code: string;
+  country?: string;
+  capital?: string;
+  currencyName?: string;
   locale: string;
   symbol: string;
   name: string;

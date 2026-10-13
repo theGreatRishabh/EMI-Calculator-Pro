@@ -397,6 +397,26 @@ export default function FAQ() {
                     <strong>Australia, Canberra (AUD A$):</strong> Formatted
                     with Australian Dollar (A$) standards.
                   </li>
+                  <li>
+                    <strong>Canada, Ottawa (CAD C$):</strong> Formatted with
+                    Canadian Dollar (C$) standards.
+                  </li>
+                  <li>
+                    <strong>Denmark, Copenhagen (DKK kr):</strong> Formatted with
+                    Danish Krone (kr) and regional Fradrag rules.
+                  </li>
+                  <li>
+                    <strong>South Africa, Pretoria (ZAR R):</strong> Formatted with
+                    South African Rand (R) and SARS tax guidelines.
+                  </li>
+                  <li>
+                    <strong>Brazil, Brasília (BRL R$):</strong> Formatted with
+                    Brazilian Real (R$) and FGTS/SFH regulations.
+                  </li>
+                  <li>
+                    <strong>China, Beijing (CNY ¥):</strong> Formatted with
+                    Chinese Yuan (¥) and special IIT deductions.
+                  </li>
                 </ul>
               </li>
               <li>
