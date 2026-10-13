@@ -38,12 +38,15 @@ export default function ExtensionPopup({ onOpenFullApp }: ExtensionPopupProps) {
     return "INR";
   });
 
-  const currency = (countryConfigs as any)[currencyCode] || (countryConfigs as any).INR;
+  const currency =
+    (countryConfigs as any)[currencyCode] || (countryConfigs as any).INR;
 
   const currentDefaults = LOAN_DEFAULTS[loanType];
   const [amount, setAmount] = useState<number>(currentDefaults.amount);
   const [rate, setRate] = useState<number>(currentDefaults.rate);
-  const [tenureYears, setTenureYears] = useState<number>(currentDefaults.tenure);
+  const [tenureYears, setTenureYears] = useState<number>(
+    currentDefaults.tenure,
+  );
 
   // When loan type changes, update inputs to recommended defaults
   const handleLoanTypeChange = (type: LoanType) => {
@@ -185,7 +188,9 @@ export default function ExtensionPopup({ onOpenFullApp }: ExtensionPopupProps) {
             </span>
             <div className="text-2xl font-black tracking-tight mt-0.5">
               {formatCurrencyFull(emi, currency.code, currency.locale)}
-              <span className="text-xs font-normal text-emerald-100 ml-1">/ month</span>
+              <span className="text-xs font-normal text-emerald-100 ml-1">
+                / month
+              </span>
             </div>
           </div>
 
@@ -212,13 +217,21 @@ export default function ExtensionPopup({ onOpenFullApp }: ExtensionPopupProps) {
         {/* Quick Breakdown Badges */}
         <div className="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-emerald-500/50 text-xs">
           <div>
-            <span className="text-[10px] text-emerald-100 block">Total Interest ({interestRatio}%)</span>
+            <span className="text-[10px] text-emerald-100 block">
+              Total Interest ({interestRatio}%)
+            </span>
             <span className="font-bold">
-              {formatCurrencyFull(totalInterest, currency.code, currency.locale)}
+              {formatCurrencyFull(
+                totalInterest,
+                currency.code,
+                currency.locale,
+              )}
             </span>
           </div>
           <div>
-            <span className="text-[10px] text-emerald-100 block">Total Amount Payable</span>
+            <span className="text-[10px] text-emerald-100 block">
+              Total Amount Payable
+            </span>
             <span className="font-bold">
               {formatCurrencyFull(totalPayable, currency.code, currency.locale)}
             </span>
@@ -250,8 +263,12 @@ export default function ExtensionPopup({ onOpenFullApp }: ExtensionPopupProps) {
         {/* Interest Rate */}
         <div>
           <div className="flex justify-between items-center text-xs mb-1">
-            <span className="font-bold text-slate-600">Interest Rate (% p.a.)</span>
-            <span className="font-extrabold text-emerald-700">{rate.toFixed(2)}%</span>
+            <span className="font-bold text-slate-600">
+              Interest Rate (% p.a.)
+            </span>
+            <span className="font-extrabold text-emerald-700">
+              {rate.toFixed(2)}%
+            </span>
           </div>
           <input
             type="range"
@@ -269,7 +286,8 @@ export default function ExtensionPopup({ onOpenFullApp }: ExtensionPopupProps) {
           <div className="flex justify-between items-center text-xs mb-1">
             <span className="font-bold text-slate-600">Tenure</span>
             <span className="font-extrabold text-emerald-700">
-              {tenureYears} {tenureYears === 1 ? "Year" : "Years"} ({tenureYears * 12} mos)
+              {tenureYears} {tenureYears === 1 ? "Year" : "Years"} (
+              {tenureYears * 12} mos)
             </span>
           </div>
           <input
