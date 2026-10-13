@@ -305,9 +305,9 @@ describe("Calculator Component", () => {
     fireEvent.change(currencySelect, { target: { value: "USD" } });
     expect(currencySelect.value).toBe("USD");
 
-    // Check that tax tips heading has updated to reflect USD currency (which maps to USA (Washington D.C.))
+    // Check that tax tips heading has updated to reflect USD currency (which maps to USA, Washington D.C.)
     expect(
-      screen.getByText(/Tax Benefit Estimator \(USA \(Washington D.C.\)\)/i),
+      screen.getByText(/Tax Benefit Estimator \(USA, Washington D.C.\)/i),
     ).toBeInTheDocument();
   });
 
@@ -955,7 +955,7 @@ describe("Calculator Component", () => {
       // Default INR suggestions
       expect(
         screen.getByText(
-          /Banking Suggestion & Guidelines \(India \(New Delhi\)\)/i,
+          /Banking Suggestion & Guidelines \(India, New Delhi\)/i,
         ),
       ).toBeInTheDocument();
       expect(
@@ -976,7 +976,7 @@ describe("Calculator Component", () => {
       fireEvent.change(countrySelect, { target: { value: "USD" } });
       expect(
         screen.getByText(
-          /Banking Suggestion & Guidelines \(USA \(Washington D.C.\)\)/i,
+          /Banking Suggestion & Guidelines \(USA, Washington D.C.\)/i,
         ),
       ).toBeInTheDocument();
       expect(
@@ -1002,7 +1002,7 @@ describe("Calculator Component", () => {
       // Switch to UK (GBP)
       fireEvent.change(countrySelect, { target: { value: "GBP" } });
       expect(
-        screen.getByText(/Banking Suggestion & Guidelines \(UK \(London\)\)/i),
+        screen.getByText(/Banking Suggestion & Guidelines \(UK, London\)/i),
       ).toBeInTheDocument();
       expect(
         screen.getByText(
@@ -1019,7 +1019,7 @@ describe("Calculator Component", () => {
       fireEvent.change(countrySelect, { target: { value: "EUR" } });
       expect(
         screen.getByText(
-          /Banking Suggestion & Guidelines \(Europe \(Berlin\)\)/i,
+          /Banking Suggestion & Guidelines \(Europe, Berlin\)/i,
         ),
       ).toBeInTheDocument();
       expect(screen.getByText(/KfW or Erasmus\+/i)).toBeInTheDocument();
@@ -1029,7 +1029,7 @@ describe("Calculator Component", () => {
       fireEvent.change(countrySelect, { target: { value: "AUD" } });
       expect(
         screen.getByText(
-          /Banking Suggestion & Guidelines \(Australia \(Canberra\)\)/i,
+          /Banking Suggestion & Guidelines \(Australia, Canberra\)/i,
         ),
       ).toBeInTheDocument();
       expect(screen.getAllByText(/HELP\/HECS/i)[0]).toBeInTheDocument();

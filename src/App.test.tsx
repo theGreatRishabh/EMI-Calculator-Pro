@@ -50,4 +50,18 @@ describe("App Component & Navigation", () => {
     const educationLink = screen.getByText("Education").closest("a");
     expect(educationLink?.className).toContain("text-emerald-700");
   });
+
+  it("renders the Education Loan Calculator link in the footer calculators list", () => {
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <App />
+      </MemoryRouter>,
+    );
+
+    const footerEduLink = screen.getByRole("link", {
+      name: "Education Loan Calculator",
+    });
+    expect(footerEduLink).toBeInTheDocument();
+    expect(footerEduLink).toHaveAttribute("href", "/education-loan");
+  });
 });

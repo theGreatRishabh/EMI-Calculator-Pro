@@ -208,6 +208,14 @@ export default function App() {
                   Personal Loan Calculator
                 </Link>
               </li>
+              <li>
+                <Link
+                  to="/education-loan"
+                  className="hover:text-emerald-400 transition-colors"
+                >
+                  Education Loan Calculator
+                </Link>
+              </li>
             </ul>
           </div>
 

@@ -90,7 +90,7 @@ const CURRENCY_CONFIGS: Record<string, CurrencyConfig> = {
     code: "INR",
     locale: "en-IN",
     symbol: "₹",
-    name: "India (New Delhi)",
+    name: "India, New Delhi",
     useIndianNotation: true,
     stampDutyRate: 6,
     registrationRate: 1,
@@ -142,7 +142,7 @@ const CURRENCY_CONFIGS: Record<string, CurrencyConfig> = {
     code: "USD",
     locale: "en-US",
     symbol: "$",
-    name: "USA (Washington D.C.)",
+    name: "USA, Washington D.C.",
     useIndianNotation: false,
     stampDutyRate: 4,
     registrationRate: 1,
@@ -193,7 +193,7 @@ const CURRENCY_CONFIGS: Record<string, CurrencyConfig> = {
     code: "GBP",
     locale: "en-GB",
     symbol: "£",
-    name: "UK (London)",
+    name: "UK, London",
     useIndianNotation: false,
     stampDutyRate: 5,
     registrationRate: 0.5,
@@ -245,7 +245,7 @@ const CURRENCY_CONFIGS: Record<string, CurrencyConfig> = {
     code: "EUR",
     locale: "de-DE",
     symbol: "€",
-    name: "Europe (Berlin)",
+    name: "Europe, Berlin",
     useIndianNotation: false,
     stampDutyRate: 6,
     registrationRate: 1.5,
@@ -298,7 +298,7 @@ const CURRENCY_CONFIGS: Record<string, CurrencyConfig> = {
     code: "AUD",
     locale: "en-AU",
     symbol: "A$",
-    name: "Australia (Canberra)",
+    name: "Australia, Canberra",
     useIndianNotation: false,
     stampDutyRate: 4,
     registrationRate: 0.5,
@@ -739,6 +739,18 @@ export default function App({
       "meta[name='description']",
     );
     if (desc) desc.content = meta.description;
+    const ogTitle = document.querySelector<HTMLMetaElement>(
+      "meta[property='og:title']",
+    );
+    if (ogTitle) ogTitle.content = meta.title;
+    const ogDesc = document.querySelector<HTMLMetaElement>(
+      "meta[property='og:description']",
+    );
+    if (ogDesc) ogDesc.content = meta.description;
+    const ogUrl = document.querySelector<HTMLMetaElement>(
+      "meta[property='og:url']",
+    );
+    if (ogUrl) ogUrl.content = `https://smartemiplanner.com${meta.slug}`;
     const canonical = document.querySelector<HTMLLinkElement>(
       "link[rel='canonical']",
     );
@@ -3623,7 +3635,7 @@ export default function App({
           </div>
 
           {/* Upfront Costs Estimator */}
-          <section className="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-8">
+          <section className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200 space-y-8">
             <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
               <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-200 flex-shrink-0">
                 <Calculator className="w-6 h-6 text-white" />
@@ -3677,7 +3689,7 @@ export default function App({
 
                 {loanType === LoanType.CAR ? (
                   <div className="space-y-2">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider text-nowrap">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                       Insurance Amount
                     </label>
                     <div className="relative">
@@ -3703,9 +3715,9 @@ export default function App({
                     </div>
                   </div>
                 ) : loanType === LoanType.PERSONAL ? (
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider text-nowrap">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                         Filing/Processing Charges
                       </label>
                       <div className="relative">
@@ -3742,7 +3754,7 @@ export default function App({
                       </p>
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider text-nowrap">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                         Documentation Charges
                       </label>
                       <div className="relative">
@@ -3780,9 +3792,9 @@ export default function App({
                     </div>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider text-nowrap">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                         {upfrontConfig.label1}
                       </label>
                       <input
@@ -3799,7 +3811,7 @@ export default function App({
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider text-nowrap">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                         {upfrontConfig.label2}
                       </label>
                       <input
