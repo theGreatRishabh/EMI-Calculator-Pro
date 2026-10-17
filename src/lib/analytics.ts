@@ -42,7 +42,10 @@ export function initAnalytics(customId?: string): void {
   }
 
   // Avoid injecting script multiple times
-  if (document.getElementById("ga-gtag-script")) {
+  if (
+    document.getElementById("ga-gtag-script") ||
+    document.querySelector('script[src*="googletagmanager.com/gtag/js"]')
+  ) {
     return;
   }
 

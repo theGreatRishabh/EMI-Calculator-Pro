@@ -26,8 +26,20 @@ execSync("npx vite build", {
   env: { ...process.env, EXTENSION_BUILD: "true" },
 });
 
-// 3. Copy manifest.json & ensure icons
-console.log("3/3 Copying extension manifest & icons...");
+// 3. Clean up external scripts from dist-extension/index.html for MV3 CSP compliance
+const extHtmlPath = path.resolve(rootDir, "dist-extension/index.html");
+if (fs.existsSync(extHtmlPath)) {
+  let html = fs.readFileSync(extHtmlPath, "utf-8");
+  html = html.replace(
+    /<!-- Google tag \(gtag\.js\) -->[\s\S]*?<\/script>\s*<script>[\s\S]*?<\/script>/gi,
+    "",
+  );
+  fs.writeFileSync(extHtmlPath, html, "utf-8");
+  console.log("✓ Stripped external GA scripts from dist-extension/index.html (MV3 CSP compliance)");
+}
+
+// 4. Copy extension manifest & icons...
+console.log("4/4 Copying extension manifest & icons...");
 const manifestSrc = path.resolve(rootDir, "extension/manifest.json");
 const manifestDest = path.resolve(rootDir, "dist-extension/manifest.json");
 
