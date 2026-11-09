@@ -247,7 +247,9 @@ export default function App() {
             />
             <Route
               path="/education-loan"
-              element={<Calculator key="EDUCATION" initialLoanType="EDUCATION" />}
+              element={
+                <Calculator key="EDUCATION" initialLoanType="EDUCATION" />
+              }
             />
             {/* Legacy root — redirects to /home-loan via Calculator default */}
             <Route path="/" element={<Calculator initialLoanType="HOME" />} />
