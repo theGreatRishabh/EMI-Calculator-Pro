@@ -29,7 +29,9 @@ Many borrowers assume that because EMIs are not mandatory during this period, no
 
 ---
 
-## 2. Simple Interest (SI) vs. Compound Interest: The Capitalization Trap
+## 2. Is Education Loan Simple or Compound Interest? The Capitalization Trap Explained
+
+During the active moratorium period (your course duration plus grace period), commercial banks charge **Simple Interest (SI)** on the disbursed loan balance. However, if this interest is left unpaid during college, it **compounds through capitalization** when your full EMIs begin.
 
 Lenders generally give you three options during the moratorium period:
 

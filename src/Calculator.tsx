@@ -377,9 +377,9 @@ const LOAN_TYPE_META: Record<
 > = {
   HOME: {
     slug: "/home-loan",
-    title: "Home Loan EMI Calculator - Smart EMI Planner",
+    title: "Home Loan EMI Calculator with Multiple Prepayments - Smart EMI Planner",
     description:
-      "Calculate your Home Loan EMI instantly. Simulate prepayments, rate changes, and EMI step-ups. Free amortization schedule with tax benefits for India.",
+      "Calculate Home Loan EMI with multiple lump-sum and recurring prepayments. Simulate rate hikes, EMI step-ups, and see exact interest savings and tenure reduction.",
   },
   CAR: {
     slug: "/car-loan",
@@ -396,9 +396,9 @@ const LOAN_TYPE_META: Record<
   EDUCATION: {
     slug: "/education-loan",
     title:
-      "Education Loan EMI Calculator with Moratorium Period - Smart EMI Planner",
+      "Education Loan EMI Calculator with Moratorium (Simple vs Compound Interest)",
     description:
-      "Calculate your Education Loan EMI with Moratorium Period (Study + Grace). Simulate Simple vs Compound Interest, interest capitalization, and Section 80E tax deductions.",
+      "Calculate Education Loan EMI with course and grace moratorium period. Simulate Simple Interest vs Compound Interest capitalization, bank concessions, and Section 80E tax deductions.",
   },
 };
 
