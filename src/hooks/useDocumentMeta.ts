@@ -51,7 +51,9 @@ export function useDocumentMeta({
     const pageSchemaId = "page-custom-schema";
     let scriptTag: HTMLScriptElement | null = null;
     if (schema) {
-      scriptTag = document.getElementById(pageSchemaId) as HTMLScriptElement | null;
+      scriptTag = document.getElementById(
+        pageSchemaId,
+      ) as HTMLScriptElement | null;
       if (!scriptTag) {
         scriptTag = document.createElement("script");
         scriptTag.id = pageSchemaId;

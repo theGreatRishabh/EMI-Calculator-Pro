@@ -544,7 +544,9 @@ export default function App({
 
     // Dynamic Route-Specific JSON-LD Schema for AEO & GEO
     const dynamicSchemaId = "dynamic-route-schema";
-    let scriptTag = document.getElementById(dynamicSchemaId) as HTMLScriptElement | null;
+    let scriptTag = document.getElementById(
+      dynamicSchemaId,
+    ) as HTMLScriptElement | null;
     if (!scriptTag) {
       scriptTag = document.createElement("script");
       scriptTag.id = dynamicSchemaId;
@@ -568,52 +570,53 @@ export default function App({
         {
           "@type": "FinancialCalculator",
           "@id": `${routeUrl}#calculator`,
-          "name": loanName,
-          "url": routeUrl,
-          "description": meta.description,
-          "category": "FinanceApplication",
-          "provider": {
+          name: loanName,
+          url: routeUrl,
+          description: meta.description,
+          category: "FinanceApplication",
+          provider: {
             "@type": "Organization",
-            "name": "Smart EMI Planner",
-            "url": "https://smartemiplanner.com"
+            name: "Smart EMI Planner",
+            url: "https://smartemiplanner.com",
           },
-          "currencyAccepted": currencyCode,
-          "featureList": [
+          currencyAccepted: currencyCode,
+          featureList: [
             "Equated Monthly Installment (EMI) Calculation",
             "Amortization Schedule Generation",
             "Principal Prepayment Optimization",
             "Floating Interest Rate Hike and Drop Simulation",
             loanType === LoanType.EDUCATION
               ? "Study and Grace Moratorium Period Interest Modeling"
-              : "Step-Up Annual Repayment Modeling"
-          ]
+              : "Step-Up Annual Repayment Modeling",
+          ],
         },
         {
           "@type": "HowTo",
           "@id": `${routeUrl}#howto`,
-          "name": `How to Calculate and Optimize your ${loanName}`,
-          "description": `Step-by-step instructions to calculate monthly installments and accelerate loan closure on Smart EMI Planner.`,
-          "step": [
+          name: `How to Calculate and Optimize your ${loanName}`,
+          description: `Step-by-step instructions to calculate monthly installments and accelerate loan closure on Smart EMI Planner.`,
+          step: [
             {
               "@type": "HowToStep",
-              "name": "Enter Loan Amount and Interest Rate",
-              "text": `Specify your total principal borrowing amount, expected annual interest rate percentage, and loan tenure.`
+              name: "Enter Loan Amount and Interest Rate",
+              text: `Specify your total principal borrowing amount, expected annual interest rate percentage, and loan tenure.`,
             },
             {
               "@type": "HowToStep",
-              "name": "Model Rate Fluctuations or Moratorium",
-              "text": loanType === LoanType.EDUCATION
-                ? "Configure your course duration and grace moratorium period to see simple interest vs compound capitalization."
-                : "Add prospective floating interest rate hikes or rate reductions to simulate impact on remaining tenure."
+              name: "Model Rate Fluctuations or Moratorium",
+              text:
+                loanType === LoanType.EDUCATION
+                  ? "Configure your course duration and grace moratorium period to see simple interest vs compound capitalization."
+                  : "Add prospective floating interest rate hikes or rate reductions to simulate impact on remaining tenure.",
             },
             {
               "@type": "HowToStep",
-              "name": "Simulate Prepayments to Save Interest",
-              "text": "Add one-time or recurring principal prepayments or an annual step-up percentage to observe early payoff dates and interest savings."
-            }
-          ]
-        }
-      ]
+              name: "Simulate Prepayments to Save Interest",
+              text: "Add one-time or recurring principal prepayments or an annual step-up percentage to observe early payoff dates and interest savings.",
+            },
+          ],
+        },
+      ],
     };
 
     scriptTag.textContent = JSON.stringify(schemaData);
