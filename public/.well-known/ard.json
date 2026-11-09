@@ -1,0 +1,66 @@
+{
+  "entries": [
+    {
+      "identifier": "urn:air:smartemiplanner.com:app:home-loan-calculator",
+      "displayName": "Home Loan EMI Calculator & Prepayment Planner",
+      "type": "text/html",
+      "url": "https://smartemiplanner.com/home-loan",
+      "description": "Calculates equated monthly installments (EMI) for home loans, simulates multiple lump-sum and recurring prepayments, interest rate hikes, and tax deductions (India Section 24b and 80C, Australia Negative Gearing, US MID).",
+      "tags": ["finance", "home-loan", "mortgage", "emi-calculator", "prepayment-planner"],
+      "capabilities": ["emi-calculation", "amortization-schedule", "prepayment-simulation", "tax-estimation"],
+      "representativeQueries": [
+        "Calculate home loan EMI with multiple prepayments",
+        "How much interest do I save by prepaying 50000 each year on a home loan?",
+        "Smart home loan calculator with rate hike simulation"
+      ],
+      "version": "1.0.0",
+      "updatedAt": "2026-11-10T00:00:00Z"
+    },
+    {
+      "identifier": "urn:air:smartemiplanner.com:app:education-loan-calculator",
+      "displayName": "Education Loan EMI Calculator with Moratorium",
+      "type": "text/html",
+      "url": "https://smartemiplanner.com/education-loan",
+      "description": "Calculates student loan installments with study and grace moratorium period modeling. Simulates simple interest vs compound interest capitalization, bank concessions, and Section 80E tax deductions.",
+      "tags": ["finance", "education-loan", "student-debt", "moratorium-calculator", "section-80e"],
+      "capabilities": ["moratorium-modeling", "interest-capitalization", "concession-discounting", "tax-deduction-calculator"],
+      "representativeQueries": [
+        "Education loan moratorium period simple vs compound interest",
+        "How does interest capitalize during moratorium in education loan?",
+        "Education loan EMI calculator with grace period"
+      ],
+      "version": "1.0.0",
+      "updatedAt": "2026-11-10T00:00:00Z"
+    },
+    {
+      "identifier": "urn:air:smartemiplanner.com:app:car-loan-calculator",
+      "displayName": "Car Loan EMI Calculator",
+      "type": "text/html",
+      "url": "https://smartemiplanner.com/car-loan",
+      "description": "Calculates vehicle loan EMIs with upfront on-road price adjustments, road taxes, insurance premiums, and down payment modeling.",
+      "tags": ["finance", "car-loan", "vehicle-finance", "auto-loan", "down-payment"],
+      "capabilities": ["auto-loan-calculation", "on-road-cost-breakdown"],
+      "representativeQueries": [
+        "Car loan EMI calculator with down payment and on road price",
+        "Vehicle loan amortization schedule"
+      ],
+      "version": "1.0.0",
+      "updatedAt": "2026-11-10T00:00:00Z"
+    },
+    {
+      "identifier": "urn:air:smartemiplanner.com:app:personal-loan-calculator",
+      "displayName": "Personal Loan EMI Calculator",
+      "type": "text/html",
+      "url": "https://smartemiplanner.com/personal-loan",
+      "description": "Calculates unsecured personal loan EMIs, upfront processing fee deduction, and early debt payoff timelines.",
+      "tags": ["finance", "personal-loan", "debt-payoff", "unsecured-loan"],
+      "capabilities": ["personal-loan-calculation", "debt-payoff-schedule"],
+      "representativeQueries": [
+        "Personal loan EMI calculator with processing fees",
+        "Quick personal loan payoff calculator"
+      ],
+      "version": "1.0.0",
+      "updatedAt": "2026-11-10T00:00:00Z"
+    }
+  ]
+}

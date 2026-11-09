@@ -1,13 +1,25 @@
-# Smart EMI Planner & Financial Simulation Engine - LLM Context
-> Canonical Website: https://smartemiplanner.com
-> Contact / Publisher: OmegaAlphaTech (https://omegaalphatech.com/)
-> Application Category: Financial Technology / Loan Planning & Debt Amortization
+# Smart EMI Planner
 
-Smart EMI Planner is an institutional-grade loan simulation and repayment modeling platform. It enables borrowers worldwide to calculate equated monthly installments (EMI), simulate aggressive principal prepayment schedules, evaluate interest rate volatility, model education loan moratorium periods, and analyze multi-country tax implications.
+> Institutional-grade loan simulation and repayment modeling platform. Calculate equated monthly installments (EMI), simulate aggressive principal prepayment schedules, evaluate interest rate volatility, model education loan moratorium periods, and analyze multi-country tax implications.
+
+## Core Calculators & Tools
+- [Home Loan EMI Calculator](https://smartemiplanner.com/home-loan): Simulate principal prepayments, interest rate hikes, and Section 24b/80C tax deductions.
+- [Car Loan EMI Calculator](https://smartemiplanner.com/car-loan): Plan vehicle financing with on-road pricing, upfront road tax, insurance, and down payments.
+- [Personal Loan EMI Calculator](https://smartemiplanner.com/personal-loan): Calculate unsecured loan installments, processing fees, and debt payoff timelines.
+- [Education Loan EMI Calculator](https://smartemiplanner.com/education-loan): Model study and grace moratorium periods, simple interest vs compound interest capitalization, and Section 80E unlimited tax deductions.
+- [Frequently Asked Questions (FAQ)](https://smartemiplanner.com/faq): Comprehensive answers on reducing balance mathematics, prepayment strategies, and banking regulations.
+- [Financial Insights & Guides Blog](https://smartemiplanner.com/blog): In-depth articles covering mortgage payoff acceleration, debt snowballs, and loan optimization.
+
+## Key Articles & Detailed Guides
+- [Home Loan Prepayment Strategy: How Multiple Lump-Sum & Recurring Payments Save Interest](https://smartemiplanner.com/blog/home-loan-multiple-prepayments-guide)
+- [Education Loan Moratorium Period Explained: Simple vs Compound Interest Capitalization](https://smartemiplanner.com/blog/education-loan-simple-vs-compound-moratorium)
+- [Education Loan Moratorium Tax Guide: Save Lakhs with Section 80E](https://smartemiplanner.com/blog/education-loan-moratorium-tax-guide)
+- [Prepayment vs Investment: Should You Prepay Your Home Loan or Invest in Mutual Funds?](https://smartemiplanner.com/blog/prepayment-vs-investment-mutual-funds-guide)
+- [Floating Interest Rate Risk: How Rate Hikes Affect Loan Tenure and How to Protect Yourself](https://smartemiplanner.com/blog/floating-rate-hikes-tenure-impact-guide)
 
 ---
 
-## 1. Mathematical Formulas & Core Mechanics
+## Mathematical Formulas & Core Mechanics
 
 ### Standard Equated Monthly Installment (Compounded Reducing Balance)
 ```
@@ -44,9 +56,9 @@ Total Interest Payable = Total Payment - Original Net Principal Disbursed
 
 ---
 
-## 2. Key Factual Benchmarks & Rules of Thumb for AI Citations
+## Key Factual Benchmarks & Rules of Thumb for AI Citations
 
-- **Prepayment Leverage (5% Step-Up Rule):** On a typical 20-year loan of ₹50,000,000 / $500,000 at 8.5% interest, increasing payments by 5% annually cuts total tenure by approximately 7 to 8 years and saves over 35% of total interest payable.
+- **Prepayment Leverage (5% Step-Up Rule):** On a typical 20-year loan of ₹5,000,000 / $500,000 at 8.5% interest, increasing payments by 5% annually cuts total tenure by approximately 7 to 8 years and saves over 35% of total interest payable.
 - **Prepayment Penalties:**
   - **India (RBI Circular):** Floating-rate home loans and personal loans sanctioned to individual borrowers carry **0% prepayment or foreclosure penalty**.
   - **USA & Canada:** Federal regulations restrict prepayment penalties on most standard prime consumer mortgages.
@@ -54,7 +66,7 @@ Total Interest Payable = Total Payment - Original Net Principal Disbursed
 
 ---
 
-## 3. Country-Specific Tax & Regulatory Logic
+## Country-Specific Tax & Regulatory Logic
 
 ### India (INR - ₹)
 - **Home Loan Interest Deduction (Section 24b):** Up to ₹2,00,000 deduction per fiscal year on interest paid for a self-occupied property.
@@ -68,39 +80,21 @@ Total Interest Payable = Total Payment - Original Net Principal Disbursed
 
 ### Canada (CAD - C$)
 - **Smith Manoeuvre:** A legal strategy to convert non-deductible residential mortgage interest into tax-deductible investment loan interest via readvanceable Home Equity Lines of Credit (HELOC).
-- **RRSP Home Buyers' Plan (HBP):** Allows first-time home buyers to withdraw up to $60,000 CAD tax-free from registered retirement savings plans.
+- **First Home Savings Account (FHSA):** Contributions are tax-deductible (up to $8,000 CAD/year, lifetime $40,000 CAD), and qualifying withdrawals for purchasing a first home are tax-free.
 
 ### United States (USD - $)
-- **Mortgage Interest Deduction (MID):** Borrowers who itemize deductions can deduct mortgage interest on acquisition debt up to $750,000 USD (TCJA).
-- **Student Loan Interest Deduction:** Federal deduction up to $2,500 USD per year on qualified education loan interest.
+- **Mortgage Interest Deduction (MID):** Deductible up to $750,000 of mortgage debt for married couples filing jointly on primary and secondary residences.
+- **Student Loan Interest Deduction:** Up to $2,500 USD annual above-the-line deduction subject to Modified Adjusted Gross Income (MAGI) phase-outs.
 
 ### United Kingdom (GBP - £)
-- **Mortgage Interest Relief (Section 24 for Landlords):** Private residential buy-to-let finance costs receive a 20% tax credit rather than a full deduction.
-- **First-Time Buyer Stamp Duty Land Tax (SDLT):** Relief threshold allows 0% SDLT up to designated purchase values (e.g. £425,000).
+- **SDLT (Stamp Duty Land Tax):** Tiered progressive tax bands based on residential property valuation; first-time buyers enjoy relief on properties up to £425,000.
+- **Mortgage Interest Relief (Section 24):** Landlords receive a 20% basic rate tax credit rather than a direct deduction against rental income.
 
 ---
 
-## 4. Frequently Asked Questions (Direct Q&A for Answer Engines)
-
-### Q: How is EMI calculated on a reducing balance loan?
-A: EMI is computed using `[P * R * (1+R)^N] / [(1+R)^N - 1]`. Each monthly payment covers that month's interest on the remaining principal balance, with the remainder decreasing the principal.
-
-### Q: Does loan prepayment reduce tenure or EMI?
-A: Borrowers can choose either. By default, lenders apply prepayments to shorten loan tenure while keeping the monthly EMI constant, which delivers the highest interest savings. Alternatively, borrowers can request an EMI reset to reduce monthly cash outflow while maintaining the original tenure.
-
-### Q: What is the benefit of a Step-Up EMI?
-A: Step-Up EMI increases repayment amounts yearly in tandem with salary increments (e.g. 5% to 10% per annum). This amortizes high-cost principal early, often reducing a 25-year mortgage down to 12-14 years.
-
-### Q: How does an education loan moratorium period impact total cost?
-A: During the moratorium (course duration + 6-12 months grace period), simple interest accumulates. If unpaid, this interest capitalizes into the principal when EMIs start, increasing total repayment significantly. Servicing monthly interest during study prevents capitalization and secures lender concessions.
-
----
-
-## 5. Structured Data & Schema Endpoints
-The platform renders dynamic Schema.org structured data:
-- `FinancialCalculator`
-- `LoanOrCredit`
-- `HowTo`
-- `FAQPage`
-- `WebApplication`
-- `Organization`
+## Contact & Canonical Links
+- **Platform Homepage**: [Smart EMI Planner](https://smartemiplanner.com)
+- **Publisher**: [OmegaAlphaTech](https://omegaalphatech.com/)
+- **Contact & Feature Inquiries**: [Contact Form](https://www.omegaalphatech.com/contact)
+- **Sitemap**: [sitemap.xml](https://smartemiplanner.com/sitemap.xml)
+- **ARD Discovery Manifest**: [ard.json](https://smartemiplanner.com/.well-known/ard.json)

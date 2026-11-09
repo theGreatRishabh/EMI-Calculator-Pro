@@ -52,11 +52,19 @@
         { "key": "Cache-Control", "value": "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400" },
         { "key": "Access-Control-Allow-Origin", "value": "*" }
       ]
+    },
+    {
+      "source": "/.well-known/ard.json",
+      "headers": [
+        { "key": "Content-Type", "value": "application/json; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
     }
   ],
   "rewrites": [
     {
-      "source": "/((?!assets/|content/|icons/|favicon.*|robots\\.txt|sitemap\\.xml|llms\\.txt|.*\\.png|.*\\.ico).*)",
+      "source": "/((?!assets/|content/|icons/|favicon.*|robots\\.txt|sitemap\\.xml|llms\\.txt|\\.well-known/.*|.*\\.png|.*\\.ico|.*\\.json).*)",
       "destination": "/index.html"
     }
   ]
