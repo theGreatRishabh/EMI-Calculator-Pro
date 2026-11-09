@@ -24,6 +24,16 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: isExtension ? "dist-extension" : "dist",
       sourcemap: true,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            "vendor-react": ["react", "react-dom", "react-router-dom"],
+            "vendor-charts": ["recharts"],
+            "vendor-motion": ["motion"],
+            "vendor-icons": ["lucide-react"],
+          },
+        },
+      },
     },
     test: {
       environment: "jsdom",

@@ -2052,6 +2052,7 @@ export default function App({
                           <input
                             id="course-duration-slider"
                             type="range"
+                            aria-label="Course Duration Slider"
                             min="1"
                             max="5"
                             step="1"
@@ -2086,6 +2087,7 @@ export default function App({
                           <input
                             id="grace-period-slider"
                             type="range"
+                            aria-label="Grace Period Slider"
                             min="0"
                             max="24"
                             step="6"
@@ -2671,22 +2673,32 @@ export default function App({
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-emerald-800">
+                    <label
+                      htmlFor="goal-target-months"
+                      className="text-sm font-medium text-emerald-800"
+                    >
                       Target Time to Close (Months)
                     </label>
                     <input
+                      id="goal-target-months"
                       type="number"
+                      aria-label="Target Time to Close in Months"
                       value={goalMonths}
                       onChange={(e) => setGoalMonths(parseNumberInput(e))}
                       className="w-full px-4 py-2 bg-white border border-emerald-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-emerald-800">
+                    <label
+                      htmlFor="goal-start-date"
+                      className="text-sm font-medium text-emerald-800"
+                    >
                       Start Date (Optional)
                     </label>
                     <input
+                      id="goal-start-date"
                       type="date"
+                      aria-label="Goal Start Date"
                       value={goalStartDate}
                       onChange={(e) => setGoalStartDate(e.target.value)}
                       className="w-full px-4 py-2 bg-white border border-emerald-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer"
@@ -3256,6 +3268,7 @@ export default function App({
                   <input
                     id="emi-step-up-slider"
                     type="range"
+                    aria-label="EMI Step-Up Percentage Slider"
                     min={0}
                     max={20}
                     step={0.5}
@@ -3559,7 +3572,10 @@ export default function App({
                 {loanType !== LoanType.PERSONAL && (
                   <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200">
                     <div className="flex items-center justify-between mb-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                      <label
+                        htmlFor="property-or-total-value"
+                        className="text-xs font-bold text-slate-500 uppercase tracking-wider"
+                      >
                         {loanType === LoanType.HOME
                           ? "Property Value"
                           : loanType === LoanType.CAR
@@ -3573,8 +3589,16 @@ export default function App({
                         {currency.symbol}
                       </div>
                       <input
+                        id="property-or-total-value"
                         type="text"
                         inputMode="decimal"
+                        aria-label={
+                          loanType === LoanType.HOME
+                            ? "Property Value"
+                            : loanType === LoanType.CAR
+                              ? "On-Road Price"
+                              : "Purchase Price / Total Value"
+                        }
                         value={propertyValue || ""}
                         onChange={(e) => {
                           const val = e.target.value;
@@ -3696,12 +3720,17 @@ export default function App({
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                      <label
+                        htmlFor="upfront-duty-rate"
+                        className="text-xs font-bold text-slate-500 uppercase tracking-wider"
+                      >
                         {upfrontConfig.label1}
                       </label>
                       <input
+                        id="upfront-duty-rate"
                         type="text"
                         inputMode="decimal"
+                        aria-label={upfrontConfig.label1}
                         value={currentStampDutyRate}
                         onChange={(e) => {
                           const val = e.target.value;
@@ -3713,12 +3742,17 @@ export default function App({
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                      <label
+                        htmlFor="upfront-reg-rate"
+                        className="text-xs font-bold text-slate-500 uppercase tracking-wider"
+                      >
                         {upfrontConfig.label2}
                       </label>
                       <input
+                        id="upfront-reg-rate"
                         type="text"
                         inputMode="decimal"
+                        aria-label={upfrontConfig.label2}
                         value={currentRegistrationRate}
                         onChange={(e) => {
                           const val = e.target.value;
@@ -3735,16 +3769,21 @@ export default function App({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-6 rounded-2xl border border-slate-200 self-start">
                 <div className="flex flex-col justify-center">
-                  <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">
+                  <label
+                    htmlFor="upfront-down-payment"
+                    className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1 cursor-pointer"
+                  >
                     {upfrontConfig.labelDP}
-                  </p>
+                  </label>
                   <div className="relative">
                     <div className="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center font-bold text-slate-400 text-xs">
                       {currency.symbol}
                     </div>
                     <input
+                      id="upfront-down-payment"
                       type="text"
                       inputMode="decimal"
+                      aria-label={upfrontConfig.labelDP}
                       value={downPayment || ""}
                       onChange={(e) => {
                         const val = e.target.value;

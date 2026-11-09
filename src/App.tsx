@@ -50,8 +50,18 @@ function GlobalHeader() {
 
   return (
     <header className="bg-white border-b border-slate-200 sticky top-0 z-50 px-4 py-3 sm:px-6 shadow-sm">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-emerald-600 focus:text-white focus:rounded-lg focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 font-semibold text-sm transition-all"
+      >
+        Skip to main content
+      </a>
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <Link to="/home-loan" className="flex items-center gap-3 group">
+        <Link
+          to="/home-loan"
+          aria-label="Smart EMI Planner Home"
+          className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-emerald-500 rounded-lg p-1"
+        >
           <img
             src="/favicon.png"
             alt="Smart EMI Planner Logo"
@@ -61,7 +71,10 @@ function GlobalHeader() {
             Smart EMI Planner
           </span>
         </Link>
-        <nav className="relative flex items-center gap-1 sm:gap-2 bg-slate-100/80 p-1 rounded-xl">
+        <nav
+          aria-label="Loan types and pages navigation"
+          className="relative flex items-center gap-1 sm:gap-2 bg-slate-100/80 p-1 rounded-xl"
+        >
           {/* Loan type pills */}
           {LOAN_ROUTES.map((route) => {
             const isActive =
@@ -72,6 +85,7 @@ function GlobalHeader() {
               <Link
                 key={route.path}
                 to={route.path}
+                aria-current={isActive ? "page" : undefined}
                 onClick={() =>
                   trackClick("click_nav_loan_tab", "navigation", {
                     target_path: route.path,
@@ -79,7 +93,7 @@ function GlobalHeader() {
                   })
                 }
                 className={cn(
-                  "relative z-10 flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold transition-colors duration-300",
+                  "relative z-10 flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500",
                   isActive
                     ? "text-emerald-700"
                     : "text-slate-600 hover:text-emerald-600 hover:bg-slate-50/50",
@@ -215,7 +229,7 @@ export default function App() {
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex flex-col">
       <ScrollToTop />
       <GlobalHeader />
-      <main className="flex-1 pb-16">
+      <main id="main-content" className="flex-1 pb-16">
         <Routes>
           {/* Loan-type specific SEO URLs */}
           <Route
