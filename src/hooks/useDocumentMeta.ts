@@ -3,9 +3,11 @@ import { useEffect } from "react";
 export function useDocumentMeta({
   title,
   description,
+  schema,
 }: {
   title: string;
   description: string;
+  schema?: Record<string, any>;
 }) {
   useEffect(() => {
     // Save original values
@@ -45,6 +47,20 @@ export function useDocumentMeta({
       canonicalElem.setAttribute("href", currentUrl);
     }
 
+    // Optional dynamic JSON-LD injection
+    const pageSchemaId = "page-custom-schema";
+    let scriptTag: HTMLScriptElement | null = null;
+    if (schema) {
+      scriptTag = document.getElementById(pageSchemaId) as HTMLScriptElement | null;
+      if (!scriptTag) {
+        scriptTag = document.createElement("script");
+        scriptTag.id = pageSchemaId;
+        scriptTag.type = "application/ld+json";
+        document.head.appendChild(scriptTag);
+      }
+      scriptTag.textContent = JSON.stringify(schema);
+    }
+
     // Cleanup function to restore originals when component unmounts
     return () => {
       document.title = originalTitle;
@@ -52,6 +68,9 @@ export function useDocumentMeta({
       if (ogTitleElem) ogTitleElem.setAttribute("content", originalOgTitle);
       if (ogDescElem) ogDescElem.setAttribute("content", originalOgDesc);
       if (canonicalElem) canonicalElem.setAttribute("href", originalCanonical);
+      if (scriptTag && scriptTag.parentNode) {
+        scriptTag.parentNode.removeChild(scriptTag);
+      }
     };
-  }, [title, description]);
+  }, [title, description, schema]);
 }

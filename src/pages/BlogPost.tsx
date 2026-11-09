@@ -38,10 +38,34 @@ export default function BlogPost() {
     return [...sameCategory, ...differentCategory].slice(0, 3);
   })();
 
-  // Fallback for metadata
+  // Fallback for metadata with BlogPosting JSON-LD Schema
+  const blogSchema = meta?.title && meta.title !== "Loading Blog..." ? {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": meta.title,
+    "description": meta.excerpt,
+    "datePublished": meta.date,
+    "author": {
+      "@type": "Organization",
+      "name": "Smart EMI Planner Research Team",
+      "url": "https://smartemiplanner.com"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Smart EMI Planner",
+      "url": "https://smartemiplanner.com",
+      "logo": "https://smartemiplanner.com/favicon.png"
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://smartemiplanner.com/blog/${slug}`
+    }
+  } : undefined;
+
   useDocumentMeta({
     title: meta.title ? `${meta.title} | Smart EMI Planner` : "Loading Blog...",
     description: meta.excerpt || "Read our latest financial insights.",
+    schema: blogSchema,
   });
 
   useEffect(() => {

@@ -145,29 +145,52 @@
         {
           "@context": "https://schema.org",
           "@type": "WebApplication",
-          "name": "EMI Calculator - Smart EMI Planner",
+          "name": "Smart EMI Planner - Financial Calculator Suite",
           "url": "https://smartemiplanner.com/",
-          "description": "Free online EMI Calculator. Calculate Home Loan, Car Loan, and Personal Loan EMI. Plan prepayments and simulate interest rate changes.",
+          "description": "Institutional-grade EMI and loan repayment simulation engine. Calculate monthly installments, model floating interest rate hikes, simulate principal prepayments, and analyze moratorium periods.",
           "applicationCategory": "FinanceApplication",
           "operatingSystem": "All",
+          "browserRequirements": "Requires JavaScript. Requires HTML5.",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
           "author": {
-            "@type": "Person",
-            "name": "Smart EMI Calculator"
+            "@type": "Organization",
+            "name": "Smart EMI Planner",
+            "url": "https://smartemiplanner.com"
           }
         },
         {
           "@context": "https://schema.org",
           "@type": "FinancialCalculator",
           "name": "Home Loan EMI Calculator",
-          "description": "Calculate monthly EMI and total interest for home loans with prepayment options.",
+          "description": "Calculate monthly EMI and total interest for home loans with lump-sum and recurring prepayments, rate hikes, and tax deductions.",
           "url": "https://smartemiplanner.com/home-loan",
           "category": "Finance"
         },
         {
           "@context": "https://schema.org",
           "@type": "FinancialCalculator",
+          "name": "Car Loan EMI Calculator",
+          "description": "Calculate car loan EMI with on-road price components, down payments, and amortization schedule.",
+          "url": "https://smartemiplanner.com/car-loan",
+          "category": "Finance"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "FinancialCalculator",
+          "name": "Personal Loan EMI Calculator",
+          "description": "Calculate personal loan installments, upfront processing fee deductions, and principal payoff dates.",
+          "url": "https://smartemiplanner.com/personal-loan",
+          "category": "Finance"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "FinancialCalculator",
           "name": "Education Loan EMI Calculator",
-          "description": "Calculate education loan EMI with study and grace moratorium period, simple vs compound interest, and Section 80E tax deduction.",
+          "description": "Calculate education loan EMI with study and grace moratorium period, simple vs compound interest capitalization, lender concessions, and Section 80E tax deduction.",
           "url": "https://smartemiplanner.com/education-loan",
           "category": "Finance"
         },
@@ -180,15 +203,31 @@
               "name": "How is EMI calculated?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "EMI is calculated using the formula: [P x R x (1+R)^N] / [(1+R)^N - 1], where P is Principal, R is monthly interest rate, and N is tenure in months."
+                "text": "EMI is calculated using the standard compounded formula: [P x R x (1+R)^N] / [(1+R)^N - 1], where P is Principal, R is monthly interest rate, and N is tenure in months."
               }
             },
             {
               "@type": "Question",
-              "name": "Does prepayment reduce home loan tenure?",
+              "name": "Does prepayment reduce home loan tenure or EMI?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Yes, prepaying your home loan usually reduces the remaining tenure while keeping the EMI amount the same, which saves you significant interest."
+                "text": "By default, prepaying your loan reduces the remaining loan tenure while keeping your monthly EMI constant. This option delivers the highest savings in total interest."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How does an education loan moratorium period work?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "During the course duration plus grace period (moratorium), simple interest accumulates. Servicing this interest monthly prevents it from compounding into the principal and often unlocks a 0.50% to 1% lender rate discount."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Are there prepayment penalties on home loans?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "In India (under RBI guidelines), individual borrowers with floating-rate home and personal loans pay 0% prepayment or foreclosure penalties."
               }
             }
           ]
@@ -199,7 +238,10 @@
           "name": "Smart EMI Planner",
           "url": "https://smartemiplanner.com/",
           "logo": "https://smartemiplanner.com/favicon.png",
-          "sameAs": ["https://omegaalphatech.com/"]
+          "sameAs": [
+            "https://omegaalphatech.com/",
+            "https://github.com/omegaalphatech"
+          ]
         }
       ]
     </script>
