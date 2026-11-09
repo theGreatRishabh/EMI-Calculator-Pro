@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import {
   Routes,
   Route,
@@ -7,12 +7,14 @@ import {
   useNavigate,
 } from "react-router-dom";
 import Calculator from "./Calculator";
-import BlogList from "./pages/BlogList";
-import BlogPost from "./pages/BlogPost";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import Disclaimer from "./pages/Disclaimer";
-import TermsOfUse from "./pages/TermsOfUse";
-import FAQ from "./pages/FAQ";
+
+// Lazy-load non-critical routes to optimize initial bundle, reduce TBT & unused JS
+const BlogList = lazy(() => import("./pages/BlogList"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const Disclaimer = lazy(() => import("./pages/Disclaimer"));
+const TermsOfUse = lazy(() => import("./pages/TermsOfUse"));
+const FAQ = lazy(() => import("./pages/FAQ"));
 import {
   BookOpen,
   Calculator as CalcIcon,
@@ -51,10 +53,16 @@ function GlobalHeader() {
   return (
     <header className="bg-white border-b border-slate-200 sticky top-0 z-50 px-4 py-3 sm:px-6 shadow-sm">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <Link to="/home-loan" className="flex items-center gap-3 group">
+        <Link
+          to="/home-loan"
+          aria-label="Smart EMI Planner Home"
+          className="flex items-center gap-3 group"
+        >
           <img
             src="/favicon.png"
             alt="Smart EMI Planner Logo"
+            width="32"
+            height="32"
             className="w-8 h-8 rounded-lg shadow-sm border border-slate-100 group-hover:shadow-md transition-shadow"
           />
           <span className="font-bold text-slate-800 text-lg hidden sm:block tracking-tight">
@@ -216,39 +224,47 @@ export default function App() {
       <ScrollToTop />
       <GlobalHeader />
       <main className="flex-1 pb-16">
-        <Routes>
-          {/* Loan-type specific SEO URLs */}
-          <Route
-            path="/home-loan"
-            element={<Calculator key="HOME" initialLoanType="HOME" />}
-          />
-          <Route
-            path="/car-loan"
-            element={<Calculator key="CAR" initialLoanType="CAR" />}
-          />
-          <Route
-            path="/personal-loan"
-            element={<Calculator key="PERSONAL" initialLoanType="PERSONAL" />}
-          />
-          <Route
-            path="/education-loan"
-            element={<Calculator key="EDUCATION" initialLoanType="EDUCATION" />}
-          />
-          {/* Legacy root — redirects to /home-loan via Calculator default */}
-          <Route path="/" element={<Calculator initialLoanType="HOME" />} />
-          <Route path="/blog" element={<BlogList />} />
-          <Route path="/blog/:slug" element={<BlogPost />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/disclaimer" element={<Disclaimer />} />
-          <Route path="/terms-of-use" element={<TermsOfUse />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route
-            path="/popup"
-            element={
-              <ExtensionPopup onOpenFullApp={() => setForceFullView(true)} />
-            }
-          />
-        </Routes>
+        <Suspense
+          fallback={
+            <div className="flex items-center justify-center min-h-[40vh]">
+              <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          }
+        >
+          <Routes>
+            {/* Loan-type specific SEO URLs */}
+            <Route
+              path="/home-loan"
+              element={<Calculator key="HOME" initialLoanType="HOME" />}
+            />
+            <Route
+              path="/car-loan"
+              element={<Calculator key="CAR" initialLoanType="CAR" />}
+            />
+            <Route
+              path="/personal-loan"
+              element={<Calculator key="PERSONAL" initialLoanType="PERSONAL" />}
+            />
+            <Route
+              path="/education-loan"
+              element={<Calculator key="EDUCATION" initialLoanType="EDUCATION" />}
+            />
+            {/* Legacy root — redirects to /home-loan via Calculator default */}
+            <Route path="/" element={<Calculator initialLoanType="HOME" />} />
+            <Route path="/blog" element={<BlogList />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/disclaimer" element={<Disclaimer />} />
+            <Route path="/terms-of-use" element={<TermsOfUse />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route
+              path="/popup"
+              element={
+                <ExtensionPopup onOpenFullApp={() => setForceFullView(true)} />
+              }
+            />
+          </Routes>
+        </Suspense>
       </main>
 
       <footer className="bg-slate-900 text-slate-400 py-12 px-4 border-t border-slate-800 mt-auto">
@@ -257,12 +273,15 @@ export default function App() {
           <div className="space-y-4">
             <Link
               to="/home-loan"
+              aria-label="Smart EMI Planner Home"
               onClick={handleScrollToTop}
               className="flex items-center gap-2 group w-fit"
             >
               <img
                 src="/favicon.png"
                 alt="Smart EMI Planner Logo"
+                width="24"
+                height="24"
                 className="w-6 h-6 rounded"
               />
               <span className="font-bold text-white tracking-tight group-hover:text-emerald-400 transition-colors">

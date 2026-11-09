@@ -1759,10 +1759,14 @@ export default function App({
 
                   {/* Currency Selector */}
                   <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-lg border border-slate-200 shadow-sm transition-all hover:bg-white hover:border-emerald-200 self-start sm:self-auto">
-                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter ml-1">
+                    <label
+                      htmlFor="currency-selector"
+                      className="text-[10px] font-bold text-slate-600 uppercase tracking-tighter ml-1 cursor-pointer"
+                    >
                       Currency
-                    </div>
+                    </label>
                     <select
+                      id="currency-selector"
                       aria-label="Currency"
                       value={currencyCode}
                       onChange={(e) => handleCurrencyChange(e.target.value)}
