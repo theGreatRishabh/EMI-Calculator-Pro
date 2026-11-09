@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import App from "./App";
@@ -62,7 +62,9 @@ describe("App Component & Navigation", () => {
       </MemoryRouter>,
     );
 
-    const footerEduLink = screen.getByRole("link", {
+    const footers = screen.getAllByRole("contentinfo");
+    const appFooter = footers[footers.length - 1];
+    const footerEduLink = within(appFooter).getByRole("link", {
       name: "Education Loan Calculator",
     });
     expect(footerEduLink).toBeInTheDocument();

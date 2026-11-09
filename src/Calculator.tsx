@@ -1694,11 +1694,16 @@ export default function App({
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex items-start justify-between w-full md:w-auto">
             <div className="flex items-center gap-4">
-              <img
-                src="/favicon.png"
-                alt="Smart EMI Planner Logo"
-                className="w-12 h-12 rounded-xl shadow-sm border border-slate-200"
-              />
+              <picture>
+                <source srcSet="/favicon.webp" type="image/webp" />
+                <img
+                  src="/favicon-64.png"
+                  alt="Smart EMI Planner Logo"
+                  width="48"
+                  height="48"
+                  className="w-12 h-12 rounded-xl shadow-sm border border-slate-200"
+                />
+              </picture>
               <div>
                 <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
                   <span>Smart EMI Planner</span>

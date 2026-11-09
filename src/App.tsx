@@ -58,13 +58,16 @@ function GlobalHeader() {
           aria-label="Smart EMI Planner Home"
           className="flex items-center gap-3 group"
         >
-          <img
-            src="/favicon.png"
-            alt="Smart EMI Planner Logo"
-            width="32"
-            height="32"
-            className="w-8 h-8 rounded-lg shadow-sm border border-slate-100 group-hover:shadow-md transition-shadow"
-          />
+          <picture>
+            <source srcSet="/favicon.webp" type="image/webp" />
+            <img
+              src="/favicon-64.png"
+              alt="Smart EMI Planner Logo"
+              width="32"
+              height="32"
+              className="w-8 h-8 rounded-lg shadow-sm border border-slate-100 group-hover:shadow-md transition-shadow"
+            />
+          </picture>
           <span className="font-bold text-slate-800 text-lg hidden sm:block tracking-tight">
             Smart EMI Planner
           </span>
@@ -281,13 +284,16 @@ export default function App() {
               onClick={handleScrollToTop}
               className="flex items-center gap-2 group w-fit"
             >
-              <img
-                src="/favicon.png"
-                alt="Smart EMI Planner Logo"
-                width="24"
-                height="24"
-                className="w-6 h-6 rounded"
-              />
+              <picture>
+                <source srcSet="/favicon.webp" type="image/webp" />
+                <img
+                  src="/favicon-64.png"
+                  alt="Smart EMI Planner Logo"
+                  width="24"
+                  height="24"
+                  className="w-6 h-6 rounded"
+                />
+              </picture>
               <span className="font-bold text-white tracking-tight group-hover:text-emerald-400 transition-colors">
                 Smart EMI Planner
               </span>
