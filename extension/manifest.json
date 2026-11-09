@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Smart EMI Planner",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Calculate loan EMIs, simulate rate hikes, moratorium interest, and optimize prepayments for Home, Car, Personal & Education loans.",
   "action": {
     "default_popup": "index.html",
