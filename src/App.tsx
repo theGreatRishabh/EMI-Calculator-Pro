@@ -80,6 +80,7 @@ function GlobalHeader() {
               <Link
                 key={route.path}
                 to={route.path}
+                aria-label={`${route.label} Loan Calculator`}
                 onClick={() =>
                   trackClick("click_nav_loan_tab", "navigation", {
                     target_path: route.path,
@@ -109,6 +110,7 @@ function GlobalHeader() {
           {/* Blog pill */}
           <Link
             to="/blog"
+            aria-label="Insights Blog"
             onClick={() =>
               trackClick("click_nav_blog", "navigation", {
                 target_path: "/blog",
