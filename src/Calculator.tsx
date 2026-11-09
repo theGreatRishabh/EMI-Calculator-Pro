@@ -377,7 +377,8 @@ const LOAN_TYPE_META: Record<
 > = {
   HOME: {
     slug: "/home-loan",
-    title: "Home Loan EMI Calculator with Multiple Prepayments - Smart EMI Planner",
+    title:
+      "Home Loan EMI Calculator with Multiple Prepayments - Smart EMI Planner",
     description:
       "Calculate Home Loan EMI with multiple lump-sum and recurring prepayments. Simulate rate hikes, EMI step-ups, and see exact interest savings and tenure reduction.",
   },
