@@ -3091,54 +3091,27 @@ export default function App({
               </div>
 
               {/* View Mode & Segmented Tab Controls */}
-              <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
-                {/* View Mode Switcher: Tabbed vs Stacked */}
-                <div className="flex items-center bg-slate-200/70 p-1 rounded-xl">
-                  <button
-                    type="button"
-                    onClick={() => toggleStudioViewMode("tabbed")}
-                    aria-label="Tabbed View"
-                    title="Tabbed View (Low cognitive load)"
-                    className={cn(
-                      "flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition-all",
-                      studioViewMode === "tabbed"
-                        ? "bg-white text-slate-800 shadow-sm"
-                        : "text-slate-500 hover:text-slate-800",
-                    )}
-                  >
-                    <Layers className="w-3.5 h-3.5" />
-                    <span>Tabs</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => toggleStudioViewMode("stacked")}
-                    aria-label="Stacked View"
-                    title="See all tools simultaneously"
-                    className={cn(
-                      "flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition-all",
-                      studioViewMode === "stacked"
-                        ? "bg-white text-slate-800 shadow-sm"
-                        : "text-slate-500 hover:text-slate-800",
-                    )}
-                  >
-                    <LayoutGrid className="w-3.5 h-3.5" />
-                    <span>All at Once</span>
-                  </button>
-                </div>
-
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 w-full lg:w-auto">
                 {/* Segmented Tab Controls (Active in Tabbed mode) */}
                 {studioViewMode === "tabbed" && (
-                  <div className="flex flex-wrap items-center gap-1 bg-slate-100/90 p-1 rounded-xl">
+                  <div className="relative flex flex-wrap items-center gap-1 bg-slate-100/90 p-1 rounded-xl">
                     <button
                       type="button"
                       onClick={() => setActiveStudioTab("prepayments")}
                       className={cn(
-                        "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all",
+                        "relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors duration-300",
                         activeStudioTab === "prepayments"
-                          ? "bg-white text-emerald-700 shadow-sm"
-                          : "text-slate-600 hover:text-emerald-600",
+                          ? "text-emerald-700"
+                          : "text-slate-600 hover:text-emerald-600 hover:bg-slate-50/50",
                       )}
                     >
+                      {activeStudioTab === "prepayments" && (
+                        <motion.div
+                          layoutId="studio-tab-pill"
+                          className="absolute inset-0 bg-white rounded-lg shadow-sm border border-slate-200/60 -z-10"
+                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                        />
+                      )}
                       <ArrowRight className="w-3.5 h-3.5" />
                       <span>Prepayments</span>
                       {prepayments.length > 0 && (
@@ -3151,12 +3124,19 @@ export default function App({
                       type="button"
                       onClick={() => setActiveStudioTab("stepup")}
                       className={cn(
-                        "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all",
+                        "relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors duration-300",
                         activeStudioTab === "stepup"
-                          ? "bg-white text-purple-700 shadow-sm"
-                          : "text-slate-600 hover:text-purple-600",
+                          ? "text-purple-700"
+                          : "text-slate-600 hover:text-purple-600 hover:bg-slate-50/50",
                       )}
                     >
+                      {activeStudioTab === "stepup" && (
+                        <motion.div
+                          layoutId="studio-tab-pill"
+                          className="absolute inset-0 bg-white rounded-lg shadow-sm border border-slate-200/60 -z-10"
+                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                        />
+                      )}
                       <Zap className="w-3.5 h-3.5" />
                       <span>Step-Up EMI</span>
                       {emiStepUpPercent > 0 && (
@@ -3169,12 +3149,19 @@ export default function App({
                       type="button"
                       onClick={() => setActiveStudioTab("rates")}
                       className={cn(
-                        "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all",
+                        "relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors duration-300",
                         activeStudioTab === "rates"
-                          ? "bg-white text-amber-700 shadow-sm"
-                          : "text-slate-600 hover:text-amber-600",
+                          ? "text-amber-700"
+                          : "text-slate-600 hover:text-amber-600 hover:bg-slate-50/50",
                       )}
                     >
+                      {activeStudioTab === "rates" && (
+                        <motion.div
+                          layoutId="studio-tab-pill"
+                          className="absolute inset-0 bg-white rounded-lg shadow-sm border border-slate-200/60 -z-10"
+                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                        />
+                      )}
                       <TrendingUp className="w-3.5 h-3.5" />
                       <span>Rate Changes</span>
                       {rateChanges.length > 0 && (
@@ -3187,17 +3174,72 @@ export default function App({
                       type="button"
                       onClick={() => setActiveStudioTab("upfront")}
                       className={cn(
-                        "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all",
+                        "relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors duration-300",
                         activeStudioTab === "upfront"
-                          ? "bg-white text-indigo-700 shadow-sm"
-                          : "text-slate-600 hover:text-indigo-600",
+                          ? "text-indigo-700"
+                          : "text-slate-600 hover:text-indigo-600 hover:bg-slate-50/50",
                       )}
                     >
+                      {activeStudioTab === "upfront" && (
+                        <motion.div
+                          layoutId="studio-tab-pill"
+                          className="absolute inset-0 bg-white rounded-lg shadow-sm border border-slate-200/60 -z-10"
+                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                        />
+                      )}
                       <Calculator className="w-3.5 h-3.5" />
                       <span>Upfront Costs</span>
                     </button>
                   </div>
                 )}
+
+                {/* View Mode Switcher: Tabbed vs Stacked placed at the right end */}
+                <div className="relative flex items-center bg-slate-200/80 p-1 rounded-xl sm:ml-auto">
+                  <button
+                    type="button"
+                    onClick={() => toggleStudioViewMode("tabbed")}
+                    aria-label="Tabbed View"
+                    title="Tabbed View (Low cognitive load)"
+                    className={cn(
+                      "relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors duration-300",
+                      studioViewMode === "tabbed"
+                        ? "text-slate-900"
+                        : "text-slate-500 hover:text-slate-800",
+                    )}
+                  >
+                    {studioViewMode === "tabbed" && (
+                      <motion.div
+                        layoutId="studio-view-pill"
+                        className="absolute inset-0 bg-white rounded-lg shadow-sm border border-slate-200/60 -z-10"
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+                    <Layers className="w-3.5 h-3.5" />
+                    <span>Tabs</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => toggleStudioViewMode("stacked")}
+                    aria-label="Stacked View"
+                    title="See all tools simultaneously"
+                    className={cn(
+                      "relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors duration-300",
+                      studioViewMode === "stacked"
+                        ? "text-slate-900"
+                        : "text-slate-500 hover:text-slate-800",
+                    )}
+                  >
+                    {studioViewMode === "stacked" && (
+                      <motion.div
+                        layoutId="studio-view-pill"
+                        className="absolute inset-0 bg-white rounded-lg shadow-sm border border-slate-200/60 -z-10"
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+                    <LayoutGrid className="w-3.5 h-3.5" />
+                    <span>All at Once</span>
+                  </button>
+                </div>
               </div>
             </div>
 
