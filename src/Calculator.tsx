@@ -3085,7 +3085,8 @@ export default function App({
                   </h2>
                 </div>
                 <p className="text-xs text-slate-500 mt-1">
-                  Customize prepayments, rate changes, step-ups, and upfront purchase costs without clutter
+                  Customize prepayments, rate changes, step-ups, and upfront
+                  purchase costs without clutter
                 </p>
               </div>
 
@@ -3204,739 +3205,761 @@ export default function App({
             <div className="p-4 sm:p-6 bg-slate-50/50">
               <div
                 className={cn(
-                  studioViewMode === "stacked"
-                    ? "space-y-8"
-                    : "space-y-0",
+                  studioViewMode === "stacked" ? "space-y-8" : "space-y-0",
                 )}
               >
                 <div
                   className={cn(
-                    studioViewMode === "stacked" || activeStudioTab === "prepayments"
+                    studioViewMode === "stacked" ||
+                      activeStudioTab === "prepayments"
                       ? "block"
                       : "hidden",
                   )}
                 >
-                <section
-              aria-labelledby="prepayment-planner-title"
-              className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4"
-            >
-              <div className="flex items-center justify-between">
-                <h2
-                  id="prepayment-planner-title"
-                  className="text-lg font-semibold flex items-center gap-2"
-                >
-                  <ArrowRight className="w-5 h-5 text-emerald-500" />
-                  Prepayment Planner
-                </h2>
-                <button
-                  onClick={addPrepayment}
-                  className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-100 transition-colors text-xs font-bold"
-                >
-                  <Plus className="w-4 h-4" />
-                  Add Prepayment
-                </button>
-              </div>
-
-              <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                {prepayments.length === 0 && (
-                  <div className="flex flex-col items-center justify-center py-12 text-slate-400 border-2 border-dashed border-slate-100 rounded-xl">
-                    <ArrowRight className="w-8 h-8 mb-2 opacity-20" />
-                    <p className="text-sm italic">No prepayments planned</p>
-                  </div>
-                )}
-                <AnimatePresence>
-                  {prepayments.map((p) => (
-                    <PrepaymentCard
-                      key={p.id}
-                      prepayment={p}
-                      currencySymbol={currency.symbol}
-                      onUpdate={updatePrepayment}
-                      onRemove={removePrepayment}
-                    />
-                  ))}
-                </AnimatePresence>
-              </div>
-
-              {/* Prepayment savings summary */}
-              {prepayments.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center justify-between px-4 py-3 bg-emerald-50 rounded-xl border border-emerald-100 text-sm"
-                >
-                  <div className="space-y-0.5">
-                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                      Prepayments Impact
-                    </p>
-                    <p className="font-bold text-base text-emerald-700">
-                      Saves{" "}
-                      {formatCurrencyFull(
-                        prepaymentSavings.interest,
-                        currency.code,
-                        currency.locale,
-                      )}
-                    </p>
-                  </div>
-                  <div className="text-right space-y-0.5">
-                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                      Tenure Reduced
-                    </p>
-                    <p className="font-bold text-base text-emerald-700">
-                      {Math.floor(prepaymentSavings.months / 12)}y{" "}
-                      {prepaymentSavings.months % 12}m
-                    </p>
-                  </div>
-                </motion.div>
-              )}
-            </section>
-              </div>
-              <div
-                className={cn(
-                  studioViewMode === "stacked" || activeStudioTab === "stepup"
-                    ? "block"
-                    : "hidden",
-                )}
-              >
-                <section
-            aria-labelledby="step-up-title"
-            className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                  <Zap className="w-4 h-4 text-purple-600" />
-                </div>
-                <div>
-                  <h2
-                    id="step-up-title"
-                    className="text-lg font-semibold text-slate-800"
+                  <section
+                    aria-labelledby="prepayment-planner-title"
+                    className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4"
                   >
-                    EMI Step-Up Planner
-                  </h2>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Simulate annual EMI increases as your income grows — pay off
-                    faster
-                  </p>
-                </div>
-              </div>
-              {emiStepUpPercent > 0 && (
-                <motion.button
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  onClick={() => setEmiStepUpPercent(0)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-500 rounded-lg hover:bg-red-100 transition-colors text-xs font-bold"
-                >
-                  <X className="w-3 h-3" />
-                  Disable
-                </motion.button>
-              )}
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Left: Controls */}
-              <div className="space-y-5">
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <label
-                      htmlFor="emi-step-up-slider"
-                      className="text-sm font-bold text-slate-600"
-                    >
-                      Annual Step-Up Rate
-                    </label>
-                    <span
-                      className={cn(
-                        "text-sm font-extrabold px-2 py-0.5 rounded-md",
-                        emiStepUpPercent === 0
-                          ? "text-slate-400 bg-slate-100"
-                          : "text-purple-700 bg-purple-100",
-                      )}
-                    >
-                      {emiStepUpPercent === 0
-                        ? "Disabled"
-                        : `+${emiStepUpPercent}% / year`}
-                    </span>
-                  </div>
-                  <input
-                    id="emi-step-up-slider"
-                    type="range"
-                    aria-label="EMI Step-Up Percentage Slider"
-                    min={0}
-                    max={20}
-                    step={0.5}
-                    value={emiStepUpPercent}
-                    onChange={(e) =>
-                      setEmiStepUpPercent(Number(e.target.value))
-                    }
-                    className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
-                  />
-                  <div className="flex justify-between text-[10px] text-slate-400 font-medium px-0.5">
-                    <span>0%</span>
-                    <span>5%</span>
-                    <span>10%</span>
-                    <span>15%</span>
-                    <span>20%</span>
-                  </div>
-                </div>
-
-                {/* Quick Presets */}
-                <div className="space-y-2">
-                  <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                    Quick Presets
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {[0, 5, 7, 10, 15].map((preset) => (
-                      <button
-                        key={preset}
-                        onClick={() => setEmiStepUpPercent(preset)}
-                        className={cn(
-                          "px-3 py-1.5 rounded-lg text-xs font-bold transition-all border",
-                          emiStepUpPercent === preset
-                            ? "bg-purple-600 text-white border-purple-600 shadow-md shadow-purple-200"
-                            : "bg-slate-50 text-slate-600 border-slate-200 hover:border-purple-300 hover:text-purple-600 hover:bg-purple-50",
-                        )}
+                    <div className="flex items-center justify-between">
+                      <h2
+                        id="prepayment-planner-title"
+                        className="text-lg font-semibold flex items-center gap-2"
                       >
-                        {preset === 0 ? "No Step-Up" : `+${preset}%`}
+                        <ArrowRight className="w-5 h-5 text-emerald-500" />
+                        Prepayment Planner
+                      </h2>
+                      <button
+                        onClick={addPrepayment}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-100 transition-colors text-xs font-bold"
+                      >
+                        <Plus className="w-4 h-4" />
+                        Add Prepayment
                       </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Savings Summary */}
-                {emiStepUpPercent > 0 && (
-                  <motion.div
-                    key={emiStepUpPercent}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="p-4 bg-purple-50 rounded-xl border border-purple-100 space-y-3"
-                  >
-                    <p className="text-[10px] uppercase font-bold text-purple-600 tracking-wider">
-                      Step-Up Impact
-                    </p>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wide">
-                          Tenure Saved
-                        </p>
-                        <p className="text-xl font-bold text-purple-700">
-                          {Math.floor(savings.months / 12)}y{" "}
-                          {savings.months % 12}m
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wide">
-                          Interest Saved
-                        </p>
-                        <p className="text-xl font-bold text-purple-700">
-                          {formatCurrencyFull(
-                            savings.interest,
-                            currency.code,
-                            currency.locale,
-                          )}
-                        </p>
-                      </div>
                     </div>
-                  </motion.div>
-                )}
-              </div>
 
-              {/* Right: Year-by-Year EMI Preview */}
-              <div className="space-y-3">
-                <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                  Year-by-Year EMI Preview
-                </p>
-                <div className="space-y-2 max-h-[280px] overflow-y-auto pr-1 custom-scrollbar">
-                  {(() => {
-                    const rows: React.ReactNode[] = [];
-                    const baseEmi = adjustedSchedule[0]?.emi || 0;
-                    const maxYears = Math.ceil(adjustedSchedule.length / 12);
-                    for (let y = 0; y < Math.min(maxYears, 10); y++) {
-                      const monthIdx = y * 12;
-                      const rowEmi = adjustedSchedule[monthIdx]?.emi;
-                      if (rowEmi === undefined) break;
-                      const increase = rowEmi - baseEmi;
-                      const pct = baseEmi > 0 ? (increase / baseEmi) * 100 : 0;
-                      rows.push(
-                        <div
-                          key={y}
-                          className={cn(
-                            "flex items-center justify-between px-4 py-2.5 rounded-xl border text-sm transition-all",
-                            y === 0
-                              ? "bg-slate-50 border-slate-200"
-                              : "bg-purple-50/60 border-purple-100 hover:border-purple-200",
-                          )}
-                        >
-                          <div className="flex items-center gap-3">
-                            <span
-                              className={cn(
-                                "w-6 h-6 flex items-center justify-center rounded-full text-[10px] font-bold",
-                                y === 0
-                                  ? "bg-slate-200 text-slate-600"
-                                  : "bg-purple-200 text-purple-700",
-                              )}
-                            >
-                              {y + 1}
-                            </span>
-                            <span className="font-medium text-slate-700">
-                              Year {y + 1}
-                            </span>
-                          </div>
-                          <div className="text-right">
-                            <p className="font-bold text-slate-800">
-                              {formatCurrency(
-                                rowEmi,
-                                currency.code,
-                                currency.locale,
-                                currency.useIndianNotation,
-                              )}
-                            </p>
-                            {pct > 0 && (
-                              <p className="text-[10px] text-purple-600 font-semibold">
-                                +{pct.toFixed(1)}% from base
-                              </p>
-                            )}
-                          </div>
-                        </div>,
-                      );
-                    }
-                    if (emiStepUpPercent === 0) {
-                      return (
-                        <div className="flex flex-col items-center justify-center py-10 text-slate-400 border-2 border-dashed border-slate-100 rounded-xl">
-                          <Zap className="w-8 h-8 mb-2 opacity-20" />
+                    <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                      {prepayments.length === 0 && (
+                        <div className="flex flex-col items-center justify-center py-12 text-slate-400 border-2 border-dashed border-slate-100 rounded-xl">
+                          <ArrowRight className="w-8 h-8 mb-2 opacity-20" />
                           <p className="text-sm italic">
-                            Enable step-up to see year-wise EMI
+                            No prepayments planned
                           </p>
                         </div>
-                      );
-                    }
-                    return rows;
-                  })()}
-                </div>
-              </div>
-            </div>
-
-            <div className="p-3 bg-slate-50 rounded-xl border border-dashed border-slate-200">
-              <p className="text-xs text-slate-500 leading-relaxed italic">
-                <Info className="w-3.5 h-3.5 inline mr-1 mb-0.5 text-purple-500" />
-                EMI increases by the step-up rate each year on the loan
-                anniversary. Works alongside prepayments and rate changes to
-                give you the most accurate projection of your repayment
-                strategy.
-              </p>
-            </div>
-          </section>
-              </div>
-              <div
-                className={cn(
-                  studioViewMode === "stacked" || activeStudioTab === "rates"
-                    ? "block"
-                    : "hidden",
-                )}
-              >
-                <section
-              aria-labelledby="rate-simulator-title"
-              className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4"
-            >
-              <div className="flex items-center justify-between">
-                <h2
-                  id="rate-simulator-title"
-                  className="text-lg font-semibold flex items-center gap-2"
-                >
-                  <TrendingUp className="w-5 h-5 text-amber-500" />
-                  Rate Change Simulator
-                </h2>
-                <button
-                  onClick={addRateChange}
-                  className="flex items-center gap-2 px-3 py-1.5 bg-amber-50 text-amber-600 rounded-lg hover:bg-amber-100 transition-colors text-xs font-bold"
-                >
-                  <Plus className="w-4 h-4" />
-                  Add Change
-                </button>
-              </div>
-
-              <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                {rateChanges.length === 0 && (
-                  <div className="flex flex-col items-center justify-center py-12 text-slate-400 border-2 border-dashed border-slate-100 rounded-xl">
-                    <TrendingUp className="w-8 h-8 mb-2 opacity-20" />
-                    <p className="text-sm italic">No rate changes simulated</p>
-                  </div>
-                )}
-                <AnimatePresence>
-                  {rateChanges.map((rc) => (
-                    <RateChangeCard
-                      key={rc.id}
-                      rateChange={rc}
-                      onUpdate={updateRateChange}
-                      onRemove={removeRateChange}
-                    />
-                  ))}
-                </AnimatePresence>
-              </div>
-
-              {/* Rate Change savings summary */}
-              {rateChanges.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={cn(
-                    "flex items-center justify-between px-4 py-3 rounded-xl border text-sm",
-                    rateChangeSavings.interest >= 0
-                      ? "bg-amber-50 border-amber-100"
-                      : "bg-red-50 border-red-100",
-                  )}
-                >
-                  <div className="space-y-0.5">
-                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                      Rate Changes Impact
-                    </p>
-                    <p
-                      className={cn(
-                        "font-bold text-base",
-                        rateChangeSavings.interest >= 0
-                          ? "text-amber-700"
-                          : "text-red-600",
                       )}
-                    >
-                      {rateChangeSavings.interest >= 0 ? "Saves " : "Costs "}
-                      {formatCurrencyFull(
-                        Math.abs(rateChangeSavings.interest),
-                        currency.code,
-                        currency.locale,
-                      )}
-                    </p>
-                  </div>
-                  <div className="text-right space-y-0.5">
-                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                      Tenure{" "}
-                      {rateChangeSavings.months >= 0 ? "Reduced" : "Added"}
-                    </p>
-                    <p
-                      className={cn(
-                        "font-bold text-base",
-                        rateChangeSavings.months >= 0
-                          ? "text-amber-700"
-                          : "text-red-600",
-                      )}
-                    >
-                      {Math.floor(Math.abs(rateChangeSavings.months) / 12)}y{" "}
-                      {Math.abs(rateChangeSavings.months) % 12}m
-                    </p>
-                  </div>
-                </motion.div>
-              )}
-            </section>
-              </div>
-              <div
-                className={cn(
-                  studioViewMode === "stacked" || activeStudioTab === "upfront"
-                    ? "block"
-                    : "hidden",
-                )}
-              >
-                <section className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200 space-y-8">
-            <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-              <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-200 flex-shrink-0">
-                <Calculator className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-slate-900 leading-none">
-                  {upfrontConfig.title}
-                </h2>
-                <p className="text-slate-500 text-sm mt-1">
-                  {loanType === LoanType.HOME
-                    ? "Estimate the upfront costs for your property purchase"
-                    : "Estimate your initial out-of-pocket expenses"}
-                </p>
-              </div>
-            </div>
+                      <AnimatePresence>
+                        {prepayments.map((p) => (
+                          <PrepaymentCard
+                            key={p.id}
+                            prepayment={p}
+                            currencySymbol={currency.symbol}
+                            onUpdate={updatePrepayment}
+                            onRemove={removePrepayment}
+                          />
+                        ))}
+                      </AnimatePresence>
+                    </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="space-y-6">
-                {loanType !== LoanType.PERSONAL && (
-                  <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200">
-                    <div className="flex items-center justify-between mb-2">
-                      <label
-                        htmlFor="property-or-total-value"
-                        className="text-xs font-bold text-slate-500 uppercase tracking-wider"
+                    {/* Prepayment savings summary */}
+                    {prepayments.length > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex items-center justify-between px-4 py-3 bg-emerald-50 rounded-xl border border-emerald-100 text-sm"
                       >
-                        {loanType === LoanType.HOME
-                          ? "Property Value"
-                          : loanType === LoanType.CAR
-                            ? "On-Road Price"
-                            : "Purchase Price / Total Value"}
-                      </label>
-                      <Target className="w-4 h-4 text-slate-400" />
-                    </div>
-                    <div className="relative">
-                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center font-bold text-slate-400 text-lg">
-                        {currency.symbol}
-                      </div>
-                      <input
-                        id="property-or-total-value"
-                        type="text"
-                        inputMode="decimal"
-                        aria-label={
-                          loanType === LoanType.HOME
-                            ? "Property Value"
-                            : loanType === LoanType.CAR
-                              ? "On-Road Price"
-                              : "Purchase Price / Total Value"
-                        }
-                        value={propertyValue || ""}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          if (val === "" || /^\d*\.?\d*$/.test(val)) {
-                            setPropertyValue(parseNumberInput(e));
-                          }
-                        }}
-                        className="w-full pl-8 pr-4 py-2 bg-transparent border-b-2 border-slate-200 text-2xl font-bold text-slate-900 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-300"
-                        placeholder="Enter value..."
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {loanType === LoanType.CAR ? (
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                      Insurance Amount
-                    </label>
-                    <div className="relative">
-                      <div className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400 text-sm">
-                        {currency.symbol}
-                      </div>
-                      <input
-                        type="text"
-                        inputMode="decimal"
-                        value={
-                          customRegistrationRate !== null
-                            ? customRegistrationRate
-                            : Math.round(propertyValue * 0.04)
-                        }
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          if (val === "" || /^\d*\.?\d*$/.test(val)) {
-                            setCustomRegistrationRate(parseNumberInput(e));
-                          }
-                        }}
-                        className="w-full pl-8 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-semibold"
-                      />
-                    </div>
-                  </div>
-                ) : loanType === LoanType.PERSONAL ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                        Filing/Processing Charges
-                      </label>
-                      <div className="relative">
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400 text-sm">
-                          {currency.symbol}
+                        <div className="space-y-0.5">
+                          <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                            Prepayments Impact
+                          </p>
+                          <p className="font-bold text-base text-emerald-700">
+                            Saves{" "}
+                            {formatCurrencyFull(
+                              prepaymentSavings.interest,
+                              currency.code,
+                              currency.locale,
+                            )}
+                          </p>
                         </div>
-                        <input
-                          type="text"
-                          inputMode="decimal"
-                          value={
-                            customStampDutyRate !== null
-                              ? customStampDutyRate
-                              : Math.round(amount * 0.01)
-                          }
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            if (val === "" || /^\d*\.?\d*$/.test(val)) {
-                              setCustomStampDutyRate(parseNumberInput(e));
-                            }
-                          }}
-                          className="w-full pl-8 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-semibold"
-                        />
-                      </div>
-                      <p className="text-[10px] text-slate-500 font-bold">
-                        Equivalent to{" "}
-                        {(
-                          ((customStampDutyRate !== null
-                            ? customStampDutyRate
-                            : Math.round(amount * 0.01)) /
-                            amount) *
-                          100
-                        ).toFixed(2)}
-                        % of Loan
-                      </p>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                        Documentation Charges
-                      </label>
-                      <div className="relative">
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400 text-sm">
-                          {currency.symbol}
+                        <div className="text-right space-y-0.5">
+                          <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                            Tenure Reduced
+                          </p>
+                          <p className="font-bold text-base text-emerald-700">
+                            {Math.floor(prepaymentSavings.months / 12)}y{" "}
+                            {prepaymentSavings.months % 12}m
+                          </p>
                         </div>
-                        <input
-                          type="text"
-                          inputMode="decimal"
-                          value={
-                            customRegistrationRate !== null
-                              ? customRegistrationRate
-                              : 1000
-                          }
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            if (val === "" || /^\d*\.?\d*$/.test(val)) {
-                              setCustomRegistrationRate(parseNumberInput(e));
-                            }
-                          }}
-                          className="w-full pl-8 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-semibold"
-                        />
-                      </div>
-                      <p className="text-[10px] text-slate-500 font-bold">
-                        Equivalent to{" "}
-                        {(
-                          ((customRegistrationRate !== null
-                            ? customRegistrationRate
-                            : 1000) /
-                            amount) *
-                          100
-                        ).toFixed(2)}
-                        % of Loan
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label
-                        htmlFor="upfront-duty-rate"
-                        className="text-xs font-bold text-slate-500 uppercase tracking-wider"
-                      >
-                        {upfrontConfig.label1}
-                      </label>
-                      <input
-                        id="upfront-duty-rate"
-                        type="text"
-                        inputMode="decimal"
-                        aria-label={upfrontConfig.label1}
-                        value={currentStampDutyRate}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          if (val === "" || /^\d*\.?\d*$/.test(val)) {
-                            setCustomStampDutyRate(parseNumberInput(e));
-                          }
-                        }}
-                        className="w-full pl-3 pr-9 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label
-                        htmlFor="upfront-reg-rate"
-                        className="text-xs font-bold text-slate-500 uppercase tracking-wider"
-                      >
-                        {upfrontConfig.label2}
-                      </label>
-                      <input
-                        id="upfront-reg-rate"
-                        type="text"
-                        inputMode="decimal"
-                        aria-label={upfrontConfig.label2}
-                        value={currentRegistrationRate}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          if (val === "" || /^\d*\.?\d*$/.test(val)) {
-                            setCustomRegistrationRate(parseNumberInput(e));
-                          }
-                        }}
-                        className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none"
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-6 rounded-2xl border border-slate-200 self-start">
-                <div className="flex flex-col justify-center">
-                  <label
-                    htmlFor="upfront-down-payment"
-                    className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1 cursor-pointer"
-                  >
-                    {upfrontConfig.labelDP}
-                  </label>
-                  <div className="relative">
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center font-bold text-slate-400 text-xs">
-                      {currency.symbol}
-                    </div>
-                    <input
-                      id="upfront-down-payment"
-                      type="text"
-                      inputMode="decimal"
-                      aria-label={upfrontConfig.labelDP}
-                      value={downPayment || ""}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        if (val === "" || /^\d*\.?\d*$/.test(val)) {
-                          setDownPayment(parseNumberInput(e));
-                        }
-                      }}
-                      className="w-full pl-5 pr-2 py-1 bg-transparent border-b border-slate-200 text-lg font-bold text-slate-900 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-300"
-                      placeholder="0"
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-col justify-center">
-                  <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">
-                    Total Upfront
-                  </p>
-                  <p className="text-xl font-extrabold text-slate-900 break-all">
-                    {formatCurrencyFull(
-                      totalUpfront,
-                      currency.code,
-                      currency.locale,
+                      </motion.div>
                     )}
-                  </p>
+                  </section>
                 </div>
-                <div className="md:col-span-2 pt-4 border-t border-slate-200 mt-2">
-                  {loanType !== LoanType.CAR && (
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-slate-500">
-                        {upfrontConfig.summary1}
-                      </span>
-                      <span className="font-bold text-slate-700">
-                        {formatCurrencyFull(
-                          stampDuty,
-                          currency.code,
-                          currency.locale,
-                        )}
-                      </span>
-                    </div>
+                <div
+                  className={cn(
+                    studioViewMode === "stacked" || activeStudioTab === "stepup"
+                      ? "block"
+                      : "hidden",
                   )}
-                  <div className="flex justify-between items-center text-sm mt-1">
-                    <span className="text-slate-500">
-                      {upfrontConfig.summary2}
-                    </span>
-                    <span className="font-bold text-slate-700">
-                      {formatCurrencyFull(
-                        registrationFee,
-                        currency.code,
-                        currency.locale,
+                >
+                  <section
+                    aria-labelledby="step-up-title"
+                    className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                          <Zap className="w-4 h-4 text-purple-600" />
+                        </div>
+                        <div>
+                          <h2
+                            id="step-up-title"
+                            className="text-lg font-semibold text-slate-800"
+                          >
+                            EMI Step-Up Planner
+                          </h2>
+                          <p className="text-xs text-slate-500 mt-0.5">
+                            Simulate annual EMI increases as your income grows —
+                            pay off faster
+                          </p>
+                        </div>
+                      </div>
+                      {emiStepUpPercent > 0 && (
+                        <motion.button
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          onClick={() => setEmiStepUpPercent(0)}
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-500 rounded-lg hover:bg-red-100 transition-colors text-xs font-bold"
+                        >
+                          <X className="w-3 h-3" />
+                          Disable
+                        </motion.button>
                       )}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
+                    </div>
 
-            <div className="p-4 bg-slate-50 rounded-xl border border-dashed border-slate-300">
-              <p className="text-xs text-slate-500 leading-relaxed italic">
-                <Info className="w-3.5 h-3.5 inline mr-1 mb-0.5 text-indigo-500" />
-                Stamp duty and registration fees are estimates based on standard
-                regional rates ({currency.name}). Actual costs may vary by
-                specific state, city, property type, and ownership status.
-                Consult a local legal expert for precise figures.
-              </p>
-            </div>
-          </section>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      {/* Left: Controls */}
+                      <div className="space-y-5">
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-center">
+                            <label
+                              htmlFor="emi-step-up-slider"
+                              className="text-sm font-bold text-slate-600"
+                            >
+                              Annual Step-Up Rate
+                            </label>
+                            <span
+                              className={cn(
+                                "text-sm font-extrabold px-2 py-0.5 rounded-md",
+                                emiStepUpPercent === 0
+                                  ? "text-slate-400 bg-slate-100"
+                                  : "text-purple-700 bg-purple-100",
+                              )}
+                            >
+                              {emiStepUpPercent === 0
+                                ? "Disabled"
+                                : `+${emiStepUpPercent}% / year`}
+                            </span>
+                          </div>
+                          <input
+                            id="emi-step-up-slider"
+                            type="range"
+                            aria-label="EMI Step-Up Percentage Slider"
+                            min={0}
+                            max={20}
+                            step={0.5}
+                            value={emiStepUpPercent}
+                            onChange={(e) =>
+                              setEmiStepUpPercent(Number(e.target.value))
+                            }
+                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                          />
+                          <div className="flex justify-between text-[10px] text-slate-400 font-medium px-0.5">
+                            <span>0%</span>
+                            <span>5%</span>
+                            <span>10%</span>
+                            <span>15%</span>
+                            <span>20%</span>
+                          </div>
+                        </div>
+
+                        {/* Quick Presets */}
+                        <div className="space-y-2">
+                          <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                            Quick Presets
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {[0, 5, 7, 10, 15].map((preset) => (
+                              <button
+                                key={preset}
+                                onClick={() => setEmiStepUpPercent(preset)}
+                                className={cn(
+                                  "px-3 py-1.5 rounded-lg text-xs font-bold transition-all border",
+                                  emiStepUpPercent === preset
+                                    ? "bg-purple-600 text-white border-purple-600 shadow-md shadow-purple-200"
+                                    : "bg-slate-50 text-slate-600 border-slate-200 hover:border-purple-300 hover:text-purple-600 hover:bg-purple-50",
+                                )}
+                              >
+                                {preset === 0 ? "No Step-Up" : `+${preset}%`}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Savings Summary */}
+                        {emiStepUpPercent > 0 && (
+                          <motion.div
+                            key={emiStepUpPercent}
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="p-4 bg-purple-50 rounded-xl border border-purple-100 space-y-3"
+                          >
+                            <p className="text-[10px] uppercase font-bold text-purple-600 tracking-wider">
+                              Step-Up Impact
+                            </p>
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wide">
+                                  Tenure Saved
+                                </p>
+                                <p className="text-xl font-bold text-purple-700">
+                                  {Math.floor(savings.months / 12)}y{" "}
+                                  {savings.months % 12}m
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wide">
+                                  Interest Saved
+                                </p>
+                                <p className="text-xl font-bold text-purple-700">
+                                  {formatCurrencyFull(
+                                    savings.interest,
+                                    currency.code,
+                                    currency.locale,
+                                  )}
+                                </p>
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </div>
+
+                      {/* Right: Year-by-Year EMI Preview */}
+                      <div className="space-y-3">
+                        <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                          Year-by-Year EMI Preview
+                        </p>
+                        <div className="space-y-2 max-h-[280px] overflow-y-auto pr-1 custom-scrollbar">
+                          {(() => {
+                            const rows: React.ReactNode[] = [];
+                            const baseEmi = adjustedSchedule[0]?.emi || 0;
+                            const maxYears = Math.ceil(
+                              adjustedSchedule.length / 12,
+                            );
+                            for (let y = 0; y < Math.min(maxYears, 10); y++) {
+                              const monthIdx = y * 12;
+                              const rowEmi = adjustedSchedule[monthIdx]?.emi;
+                              if (rowEmi === undefined) break;
+                              const increase = rowEmi - baseEmi;
+                              const pct =
+                                baseEmi > 0 ? (increase / baseEmi) * 100 : 0;
+                              rows.push(
+                                <div
+                                  key={y}
+                                  className={cn(
+                                    "flex items-center justify-between px-4 py-2.5 rounded-xl border text-sm transition-all",
+                                    y === 0
+                                      ? "bg-slate-50 border-slate-200"
+                                      : "bg-purple-50/60 border-purple-100 hover:border-purple-200",
+                                  )}
+                                >
+                                  <div className="flex items-center gap-3">
+                                    <span
+                                      className={cn(
+                                        "w-6 h-6 flex items-center justify-center rounded-full text-[10px] font-bold",
+                                        y === 0
+                                          ? "bg-slate-200 text-slate-600"
+                                          : "bg-purple-200 text-purple-700",
+                                      )}
+                                    >
+                                      {y + 1}
+                                    </span>
+                                    <span className="font-medium text-slate-700">
+                                      Year {y + 1}
+                                    </span>
+                                  </div>
+                                  <div className="text-right">
+                                    <p className="font-bold text-slate-800">
+                                      {formatCurrency(
+                                        rowEmi,
+                                        currency.code,
+                                        currency.locale,
+                                        currency.useIndianNotation,
+                                      )}
+                                    </p>
+                                    {pct > 0 && (
+                                      <p className="text-[10px] text-purple-600 font-semibold">
+                                        +{pct.toFixed(1)}% from base
+                                      </p>
+                                    )}
+                                  </div>
+                                </div>,
+                              );
+                            }
+                            if (emiStepUpPercent === 0) {
+                              return (
+                                <div className="flex flex-col items-center justify-center py-10 text-slate-400 border-2 border-dashed border-slate-100 rounded-xl">
+                                  <Zap className="w-8 h-8 mb-2 opacity-20" />
+                                  <p className="text-sm italic">
+                                    Enable step-up to see year-wise EMI
+                                  </p>
+                                </div>
+                              );
+                            }
+                            return rows;
+                          })()}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-3 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                      <p className="text-xs text-slate-500 leading-relaxed italic">
+                        <Info className="w-3.5 h-3.5 inline mr-1 mb-0.5 text-purple-500" />
+                        EMI increases by the step-up rate each year on the loan
+                        anniversary. Works alongside prepayments and rate
+                        changes to give you the most accurate projection of your
+                        repayment strategy.
+                      </p>
+                    </div>
+                  </section>
+                </div>
+                <div
+                  className={cn(
+                    studioViewMode === "stacked" || activeStudioTab === "rates"
+                      ? "block"
+                      : "hidden",
+                  )}
+                >
+                  <section
+                    aria-labelledby="rate-simulator-title"
+                    className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4"
+                  >
+                    <div className="flex items-center justify-between">
+                      <h2
+                        id="rate-simulator-title"
+                        className="text-lg font-semibold flex items-center gap-2"
+                      >
+                        <TrendingUp className="w-5 h-5 text-amber-500" />
+                        Rate Change Simulator
+                      </h2>
+                      <button
+                        onClick={addRateChange}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-amber-50 text-amber-600 rounded-lg hover:bg-amber-100 transition-colors text-xs font-bold"
+                      >
+                        <Plus className="w-4 h-4" />
+                        Add Change
+                      </button>
+                    </div>
+
+                    <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                      {rateChanges.length === 0 && (
+                        <div className="flex flex-col items-center justify-center py-12 text-slate-400 border-2 border-dashed border-slate-100 rounded-xl">
+                          <TrendingUp className="w-8 h-8 mb-2 opacity-20" />
+                          <p className="text-sm italic">
+                            No rate changes simulated
+                          </p>
+                        </div>
+                      )}
+                      <AnimatePresence>
+                        {rateChanges.map((rc) => (
+                          <RateChangeCard
+                            key={rc.id}
+                            rateChange={rc}
+                            onUpdate={updateRateChange}
+                            onRemove={removeRateChange}
+                          />
+                        ))}
+                      </AnimatePresence>
+                    </div>
+
+                    {/* Rate Change savings summary */}
+                    {rateChanges.length > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className={cn(
+                          "flex items-center justify-between px-4 py-3 rounded-xl border text-sm",
+                          rateChangeSavings.interest >= 0
+                            ? "bg-amber-50 border-amber-100"
+                            : "bg-red-50 border-red-100",
+                        )}
+                      >
+                        <div className="space-y-0.5">
+                          <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                            Rate Changes Impact
+                          </p>
+                          <p
+                            className={cn(
+                              "font-bold text-base",
+                              rateChangeSavings.interest >= 0
+                                ? "text-amber-700"
+                                : "text-red-600",
+                            )}
+                          >
+                            {rateChangeSavings.interest >= 0
+                              ? "Saves "
+                              : "Costs "}
+                            {formatCurrencyFull(
+                              Math.abs(rateChangeSavings.interest),
+                              currency.code,
+                              currency.locale,
+                            )}
+                          </p>
+                        </div>
+                        <div className="text-right space-y-0.5">
+                          <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                            Tenure{" "}
+                            {rateChangeSavings.months >= 0
+                              ? "Reduced"
+                              : "Added"}
+                          </p>
+                          <p
+                            className={cn(
+                              "font-bold text-base",
+                              rateChangeSavings.months >= 0
+                                ? "text-amber-700"
+                                : "text-red-600",
+                            )}
+                          >
+                            {Math.floor(
+                              Math.abs(rateChangeSavings.months) / 12,
+                            )}
+                            y {Math.abs(rateChangeSavings.months) % 12}m
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </section>
+                </div>
+                <div
+                  className={cn(
+                    studioViewMode === "stacked" ||
+                      activeStudioTab === "upfront"
+                      ? "block"
+                      : "hidden",
+                  )}
+                >
+                  <section className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200 space-y-8">
+                    <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+                      <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-200 flex-shrink-0">
+                        <Calculator className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-bold text-slate-900 leading-none">
+                          {upfrontConfig.title}
+                        </h2>
+                        <p className="text-slate-500 text-sm mt-1">
+                          {loanType === LoanType.HOME
+                            ? "Estimate the upfront costs for your property purchase"
+                            : "Estimate your initial out-of-pocket expenses"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      <div className="space-y-6">
+                        {loanType !== LoanType.PERSONAL && (
+                          <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200">
+                            <div className="flex items-center justify-between mb-2">
+                              <label
+                                htmlFor="property-or-total-value"
+                                className="text-xs font-bold text-slate-500 uppercase tracking-wider"
+                              >
+                                {loanType === LoanType.HOME
+                                  ? "Property Value"
+                                  : loanType === LoanType.CAR
+                                    ? "On-Road Price"
+                                    : "Purchase Price / Total Value"}
+                              </label>
+                              <Target className="w-4 h-4 text-slate-400" />
+                            </div>
+                            <div className="relative">
+                              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center font-bold text-slate-400 text-lg">
+                                {currency.symbol}
+                              </div>
+                              <input
+                                id="property-or-total-value"
+                                type="text"
+                                inputMode="decimal"
+                                aria-label={
+                                  loanType === LoanType.HOME
+                                    ? "Property Value"
+                                    : loanType === LoanType.CAR
+                                      ? "On-Road Price"
+                                      : "Purchase Price / Total Value"
+                                }
+                                value={propertyValue || ""}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                                    setPropertyValue(parseNumberInput(e));
+                                  }
+                                }}
+                                className="w-full pl-8 pr-4 py-2 bg-transparent border-b-2 border-slate-200 text-2xl font-bold text-slate-900 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-300"
+                                placeholder="Enter value..."
+                              />
+                            </div>
+                          </div>
+                        )}
+
+                        {loanType === LoanType.CAR ? (
+                          <div className="space-y-2">
+                            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                              Insurance Amount
+                            </label>
+                            <div className="relative">
+                              <div className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400 text-sm">
+                                {currency.symbol}
+                              </div>
+                              <input
+                                type="text"
+                                inputMode="decimal"
+                                value={
+                                  customRegistrationRate !== null
+                                    ? customRegistrationRate
+                                    : Math.round(propertyValue * 0.04)
+                                }
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                                    setCustomRegistrationRate(
+                                      parseNumberInput(e),
+                                    );
+                                  }
+                                }}
+                                className="w-full pl-8 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-semibold"
+                              />
+                            </div>
+                          </div>
+                        ) : loanType === LoanType.PERSONAL ? (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                Filing/Processing Charges
+                              </label>
+                              <div className="relative">
+                                <div className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400 text-sm">
+                                  {currency.symbol}
+                                </div>
+                                <input
+                                  type="text"
+                                  inputMode="decimal"
+                                  value={
+                                    customStampDutyRate !== null
+                                      ? customStampDutyRate
+                                      : Math.round(amount * 0.01)
+                                  }
+                                  onChange={(e) => {
+                                    const val = e.target.value;
+                                    if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                                      setCustomStampDutyRate(
+                                        parseNumberInput(e),
+                                      );
+                                    }
+                                  }}
+                                  className="w-full pl-8 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-semibold"
+                                />
+                              </div>
+                              <p className="text-[10px] text-slate-500 font-bold">
+                                Equivalent to{" "}
+                                {(
+                                  ((customStampDutyRate !== null
+                                    ? customStampDutyRate
+                                    : Math.round(amount * 0.01)) /
+                                    amount) *
+                                  100
+                                ).toFixed(2)}
+                                % of Loan
+                              </p>
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                Documentation Charges
+                              </label>
+                              <div className="relative">
+                                <div className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400 text-sm">
+                                  {currency.symbol}
+                                </div>
+                                <input
+                                  type="text"
+                                  inputMode="decimal"
+                                  value={
+                                    customRegistrationRate !== null
+                                      ? customRegistrationRate
+                                      : 1000
+                                  }
+                                  onChange={(e) => {
+                                    const val = e.target.value;
+                                    if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                                      setCustomRegistrationRate(
+                                        parseNumberInput(e),
+                                      );
+                                    }
+                                  }}
+                                  className="w-full pl-8 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-semibold"
+                                />
+                              </div>
+                              <p className="text-[10px] text-slate-500 font-bold">
+                                Equivalent to{" "}
+                                {(
+                                  ((customRegistrationRate !== null
+                                    ? customRegistrationRate
+                                    : 1000) /
+                                    amount) *
+                                  100
+                                ).toFixed(2)}
+                                % of Loan
+                              </p>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <label
+                                htmlFor="upfront-duty-rate"
+                                className="text-xs font-bold text-slate-500 uppercase tracking-wider"
+                              >
+                                {upfrontConfig.label1}
+                              </label>
+                              <input
+                                id="upfront-duty-rate"
+                                type="text"
+                                inputMode="decimal"
+                                aria-label={upfrontConfig.label1}
+                                value={currentStampDutyRate}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                                    setCustomStampDutyRate(parseNumberInput(e));
+                                  }
+                                }}
+                                className="w-full pl-3 pr-9 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <label
+                                htmlFor="upfront-reg-rate"
+                                className="text-xs font-bold text-slate-500 uppercase tracking-wider"
+                              >
+                                {upfrontConfig.label2}
+                              </label>
+                              <input
+                                id="upfront-reg-rate"
+                                type="text"
+                                inputMode="decimal"
+                                aria-label={upfrontConfig.label2}
+                                value={currentRegistrationRate}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                                    setCustomRegistrationRate(
+                                      parseNumberInput(e),
+                                    );
+                                  }
+                                }}
+                                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-emerald-500 outline-none"
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-6 rounded-2xl border border-slate-200 self-start">
+                        <div className="flex flex-col justify-center">
+                          <label
+                            htmlFor="upfront-down-payment"
+                            className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1 cursor-pointer"
+                          >
+                            {upfrontConfig.labelDP}
+                          </label>
+                          <div className="relative">
+                            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center font-bold text-slate-400 text-xs">
+                              {currency.symbol}
+                            </div>
+                            <input
+                              id="upfront-down-payment"
+                              type="text"
+                              inputMode="decimal"
+                              aria-label={upfrontConfig.labelDP}
+                              value={downPayment || ""}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                                  setDownPayment(parseNumberInput(e));
+                                }
+                              }}
+                              className="w-full pl-5 pr-2 py-1 bg-transparent border-b border-slate-200 text-lg font-bold text-slate-900 focus:border-indigo-500 outline-none transition-all placeholder:text-slate-300"
+                              placeholder="0"
+                            />
+                          </div>
+                        </div>
+                        <div className="flex flex-col justify-center">
+                          <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">
+                            Total Upfront
+                          </p>
+                          <p className="text-xl font-extrabold text-slate-900 break-all">
+                            {formatCurrencyFull(
+                              totalUpfront,
+                              currency.code,
+                              currency.locale,
+                            )}
+                          </p>
+                        </div>
+                        <div className="md:col-span-2 pt-4 border-t border-slate-200 mt-2">
+                          {loanType !== LoanType.CAR && (
+                            <div className="flex justify-between items-center text-sm">
+                              <span className="text-slate-500">
+                                {upfrontConfig.summary1}
+                              </span>
+                              <span className="font-bold text-slate-700">
+                                {formatCurrencyFull(
+                                  stampDuty,
+                                  currency.code,
+                                  currency.locale,
+                                )}
+                              </span>
+                            </div>
+                          )}
+                          <div className="flex justify-between items-center text-sm mt-1">
+                            <span className="text-slate-500">
+                              {upfrontConfig.summary2}
+                            </span>
+                            <span className="font-bold text-slate-700">
+                              {formatCurrencyFull(
+                                registrationFee,
+                                currency.code,
+                                currency.locale,
+                              )}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-4 bg-slate-50 rounded-xl border border-dashed border-slate-300">
+                      <p className="text-xs text-slate-500 leading-relaxed italic">
+                        <Info className="w-3.5 h-3.5 inline mr-1 mb-0.5 text-indigo-500" />
+                        Stamp duty and registration fees are estimates based on
+                        standard regional rates ({currency.name}). Actual costs
+                        may vary by specific state, city, property type, and
+                        ownership status. Consult a local legal expert for
+                        precise figures.
+                      </p>
+                    </div>
+                  </section>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-<div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">
                 Loan Balance Projection
