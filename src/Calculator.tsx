@@ -47,6 +47,9 @@ import {
   School,
   Sparkles,
   BookOpen,
+  Sliders,
+  Layers,
+  LayoutGrid,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import {
@@ -1687,6 +1690,32 @@ export default function App({
 
   const totalUpfront = stampDuty + registrationFee + downPayment;
 
+  // Scenario Studio active tab: 'prepayments' | 'stepup' | 'rates' | 'upfront'
+  const [activeStudioTab, setActiveStudioTab] = useState<
+    "prepayments" | "stepup" | "rates" | "upfront"
+  >("prepayments");
+
+  // Layout mode: 'tabbed' (compact, lower cognitive load) vs 'stacked' (see everything at once)
+  const [studioViewMode, setStudioViewMode] = useState<"tabbed" | "stacked">(
+    () => {
+      try {
+        const saved = localStorage.getItem("smart_emi_studio_view_mode");
+        return saved === "stacked" ? "stacked" : "tabbed";
+      } catch {
+        return "tabbed";
+      }
+    },
+  );
+
+  const toggleStudioViewMode = (mode: "tabbed" | "stacked") => {
+    setStudioViewMode(mode);
+    try {
+      localStorage.setItem("smart_emi_studio_view_mode", mode);
+    } catch {
+      // ignore
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans p-4 md:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -1755,7 +1784,7 @@ export default function App({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Loan Parameters & Goal Optimizer */}
             <div className="lg:col-span-7 xl:col-span-8 space-y-8 self-start">
-              <section className="bg-white p-8 rounded-3xl shadow-sm border-[6px] border-slate-200">
+              <section className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200/80">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
                   <h2 className="text-xl font-bold flex items-center gap-2 text-slate-800">
                     <Calculator className="w-6 h-6 text-emerald-600" />
@@ -2123,7 +2152,7 @@ export default function App({
 
               {/* Education Loan Moratorium Configuration */}
               {isEducation && (
-                <section className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border-[4px] border-indigo-100 space-y-6">
+                <section className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-indigo-100 space-y-6">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center font-bold shrink-0">
@@ -3043,104 +3072,151 @@ export default function App({
             {/* Row 1 Grid Conclusion */}
           </div>
 
-          {/* Row 2: Advanced Tools */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Rate Change Simulator */}
-            <section
-              aria-labelledby="rate-simulator-title"
-              className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4"
-            >
-              <div className="flex items-center justify-between">
-                <h2
-                  id="rate-simulator-title"
-                  className="text-lg font-semibold flex items-center gap-2"
-                >
-                  <TrendingUp className="w-5 h-5 text-amber-500" />
-                  Rate Change Simulator
-                </h2>
-                <button
-                  onClick={addRateChange}
-                  className="flex items-center gap-2 px-3 py-1.5 bg-amber-50 text-amber-600 rounded-lg hover:bg-amber-100 transition-colors text-xs font-bold"
-                >
-                  <Plus className="w-4 h-4" />
-                  Add Change
-                </button>
+          {/* Scenario Studio: Structured Tabs to Lower Cognitive Load */}
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
+            <div className="p-4 sm:p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                    <Sliders className="w-4 h-4" />
+                  </div>
+                  <h2 className="text-lg font-bold text-slate-800">
+                    Loan Scenario Studio
+                  </h2>
+                </div>
+                <p className="text-xs text-slate-500 mt-1">
+                  Customize prepayments, rate changes, step-ups, and upfront purchase costs without clutter
+                </p>
               </div>
 
-              <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                {rateChanges.length === 0 && (
-                  <div className="flex flex-col items-center justify-center py-12 text-slate-400 border-2 border-dashed border-slate-100 rounded-xl">
-                    <TrendingUp className="w-8 h-8 mb-2 opacity-20" />
-                    <p className="text-sm italic">No rate changes simulated</p>
+              {/* View Mode & Segmented Tab Controls */}
+              <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+                {/* View Mode Switcher: Tabbed vs Stacked */}
+                <div className="flex items-center bg-slate-200/70 p-1 rounded-xl">
+                  <button
+                    type="button"
+                    onClick={() => toggleStudioViewMode("tabbed")}
+                    aria-label="Tabbed View"
+                    title="Tabbed View (Low cognitive load)"
+                    className={cn(
+                      "flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition-all",
+                      studioViewMode === "tabbed"
+                        ? "bg-white text-slate-800 shadow-sm"
+                        : "text-slate-500 hover:text-slate-800",
+                    )}
+                  >
+                    <Layers className="w-3.5 h-3.5" />
+                    <span>Tabs</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => toggleStudioViewMode("stacked")}
+                    aria-label="Stacked View"
+                    title="See all tools simultaneously"
+                    className={cn(
+                      "flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition-all",
+                      studioViewMode === "stacked"
+                        ? "bg-white text-slate-800 shadow-sm"
+                        : "text-slate-500 hover:text-slate-800",
+                    )}
+                  >
+                    <LayoutGrid className="w-3.5 h-3.5" />
+                    <span>All at Once</span>
+                  </button>
+                </div>
+
+                {/* Segmented Tab Controls (Active in Tabbed mode) */}
+                {studioViewMode === "tabbed" && (
+                  <div className="flex flex-wrap items-center gap-1 bg-slate-100/90 p-1 rounded-xl">
+                    <button
+                      type="button"
+                      onClick={() => setActiveStudioTab("prepayments")}
+                      className={cn(
+                        "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all",
+                        activeStudioTab === "prepayments"
+                          ? "bg-white text-emerald-700 shadow-sm"
+                          : "text-slate-600 hover:text-emerald-600",
+                      )}
+                    >
+                      <ArrowRight className="w-3.5 h-3.5" />
+                      <span>Prepayments</span>
+                      {prepayments.length > 0 && (
+                        <span className="w-4 h-4 rounded-full bg-emerald-600 text-white text-[10px] flex items-center justify-center">
+                          {prepayments.length}
+                        </span>
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveStudioTab("stepup")}
+                      className={cn(
+                        "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all",
+                        activeStudioTab === "stepup"
+                          ? "bg-white text-purple-700 shadow-sm"
+                          : "text-slate-600 hover:text-purple-600",
+                      )}
+                    >
+                      <Zap className="w-3.5 h-3.5" />
+                      <span>Step-Up EMI</span>
+                      {emiStepUpPercent > 0 && (
+                        <span className="px-1.5 py-0.2 rounded-full bg-purple-100 text-purple-700 text-[10px]">
+                          +{emiStepUpPercent}%
+                        </span>
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveStudioTab("rates")}
+                      className={cn(
+                        "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all",
+                        activeStudioTab === "rates"
+                          ? "bg-white text-amber-700 shadow-sm"
+                          : "text-slate-600 hover:text-amber-600",
+                      )}
+                    >
+                      <TrendingUp className="w-3.5 h-3.5" />
+                      <span>Rate Changes</span>
+                      {rateChanges.length > 0 && (
+                        <span className="w-4 h-4 rounded-full bg-amber-500 text-white text-[10px] flex items-center justify-center">
+                          {rateChanges.length}
+                        </span>
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveStudioTab("upfront")}
+                      className={cn(
+                        "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all",
+                        activeStudioTab === "upfront"
+                          ? "bg-white text-indigo-700 shadow-sm"
+                          : "text-slate-600 hover:text-indigo-600",
+                      )}
+                    >
+                      <Calculator className="w-3.5 h-3.5" />
+                      <span>Upfront Costs</span>
+                    </button>
                   </div>
                 )}
-                <AnimatePresence>
-                  {rateChanges.map((rc) => (
-                    <RateChangeCard
-                      key={rc.id}
-                      rateChange={rc}
-                      onUpdate={updateRateChange}
-                      onRemove={removeRateChange}
-                    />
-                  ))}
-                </AnimatePresence>
               </div>
+            </div>
 
-              {/* Rate Change savings summary */}
-              {rateChanges.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
+            {/* Studio Content */}
+            <div className="p-4 sm:p-6 bg-slate-50/50">
+              <div
+                className={cn(
+                  studioViewMode === "stacked"
+                    ? "space-y-8"
+                    : "space-y-0",
+                )}
+              >
+                <div
                   className={cn(
-                    "flex items-center justify-between px-4 py-3 rounded-xl border text-sm",
-                    rateChangeSavings.interest >= 0
-                      ? "bg-amber-50 border-amber-100"
-                      : "bg-red-50 border-red-100",
+                    studioViewMode === "stacked" || activeStudioTab === "prepayments"
+                      ? "block"
+                      : "hidden",
                   )}
                 >
-                  <div className="space-y-0.5">
-                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                      Rate Changes Impact
-                    </p>
-                    <p
-                      className={cn(
-                        "font-bold text-base",
-                        rateChangeSavings.interest >= 0
-                          ? "text-amber-700"
-                          : "text-red-600",
-                      )}
-                    >
-                      {rateChangeSavings.interest >= 0 ? "Saves " : "Costs "}
-                      {formatCurrencyFull(
-                        Math.abs(rateChangeSavings.interest),
-                        currency.code,
-                        currency.locale,
-                      )}
-                    </p>
-                  </div>
-                  <div className="text-right space-y-0.5">
-                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                      Tenure{" "}
-                      {rateChangeSavings.months >= 0 ? "Reduced" : "Added"}
-                    </p>
-                    <p
-                      className={cn(
-                        "font-bold text-base",
-                        rateChangeSavings.months >= 0
-                          ? "text-amber-700"
-                          : "text-red-600",
-                      )}
-                    >
-                      {Math.floor(Math.abs(rateChangeSavings.months) / 12)}y{" "}
-                      {Math.abs(rateChangeSavings.months) % 12}m
-                    </p>
-                  </div>
-                </motion.div>
-              )}
-            </section>
-
-            {/* Prepayment Planner */}
-            <section
+                <section
               aria-labelledby="prepayment-planner-title"
               className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4"
             >
@@ -3213,10 +3289,15 @@ export default function App({
                 </motion.div>
               )}
             </section>
-          </div>
-
-          {/* EMI Step-Up Planner */}
-          <section
+              </div>
+              <div
+                className={cn(
+                  studioViewMode === "stacked" || activeStudioTab === "stepup"
+                    ? "block"
+                    : "hidden",
+                )}
+              >
+                <section
             aria-labelledby="step-up-title"
             className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5"
           >
@@ -3443,124 +3524,115 @@ export default function App({
               </p>
             </div>
           </section>
+              </div>
+              <div
+                className={cn(
+                  studioViewMode === "stacked" || activeStudioTab === "rates"
+                    ? "block"
+                    : "hidden",
+                )}
+              >
+                <section
+              aria-labelledby="rate-simulator-title"
+              className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4"
+            >
+              <div className="flex items-center justify-between">
+                <h2
+                  id="rate-simulator-title"
+                  className="text-lg font-semibold flex items-center gap-2"
+                >
+                  <TrendingUp className="w-5 h-5 text-amber-500" />
+                  Rate Change Simulator
+                </h2>
+                <button
+                  onClick={addRateChange}
+                  className="flex items-center gap-2 px-3 py-1.5 bg-amber-50 text-amber-600 rounded-lg hover:bg-amber-100 transition-colors text-xs font-bold"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Change
+                </button>
+              </div>
 
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">
-                Loan Balance Projection
-              </h3>
-              <div className="flex flex-wrap items-center gap-3">
-                {/* Legend */}
-                <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest">
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-0.5 bg-slate-300 border-t-2 border-dashed border-slate-300" />
-                    <span className="text-slate-400">Original</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-0.5 bg-emerald-500" />
-                    <span className="text-emerald-500">Adjusted</span>
-                  </div>
-                </div>
-                {/* Collective savings chips */}
-                {savings.interest !== 0 && (
-                  <div className="flex items-center gap-2">
-                    <div className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-bold flex items-center gap-1">
-                      <TrendingUp className="w-3 h-3" />
-                      {formatCurrencyFull(
-                        savings.interest,
-                        currency.code,
-                        currency.locale,
-                      )}{" "}
-                      saved
-                    </div>
-                    <div className="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-[10px] font-bold flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      {Math.floor(savings.months / 12)}y {savings.months % 12}m
-                      faster
-                    </div>
+              <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                {rateChanges.length === 0 && (
+                  <div className="flex flex-col items-center justify-center py-12 text-slate-400 border-2 border-dashed border-slate-100 rounded-xl">
+                    <TrendingUp className="w-8 h-8 mb-2 opacity-20" />
+                    <p className="text-sm italic">No rate changes simulated</p>
                   </div>
                 )}
+                <AnimatePresence>
+                  {rateChanges.map((rc) => (
+                    <RateChangeCard
+                      key={rc.id}
+                      rateChange={rc}
+                      onUpdate={updateRateChange}
+                      onRemove={removeRateChange}
+                    />
+                  ))}
+                </AnimatePresence>
               </div>
-            </div>
-            <div className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartData}>
-                  <defs>
-                    <linearGradient id="colorOrig" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#94a3b8" stopOpacity={0.1} />
-                      <stop offset="95%" stopColor="#94a3b8" stopOpacity={0} />
-                    </linearGradient>
-                    <linearGradient id="colorAdj" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.1} />
-                      <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    vertical={false}
-                    stroke="#f1f5f9"
-                  />
-                  <XAxis
-                    dataKey="year"
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 10, fill: "#94a3b8" }}
-                    dy={10}
-                  />
-                  <YAxis
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 10, fill: "#94a3b8" }}
-                    tickFormatter={(value) =>
-                      formatCompactCurrency(
-                        value,
-                        currency.symbol,
-                        currency.useIndianNotation,
-                        currency.code,
-                      )
-                    }
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      borderRadius: "12px",
-                      border: "none",
-                      boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
-                    }}
-                    formatter={(value: number) =>
-                      formatCurrency(
-                        value,
+
+              {/* Rate Change savings summary */}
+              {rateChanges.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={cn(
+                    "flex items-center justify-between px-4 py-3 rounded-xl border text-sm",
+                    rateChangeSavings.interest >= 0
+                      ? "bg-amber-50 border-amber-100"
+                      : "bg-red-50 border-red-100",
+                  )}
+                >
+                  <div className="space-y-0.5">
+                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                      Rate Changes Impact
+                    </p>
+                    <p
+                      className={cn(
+                        "font-bold text-base",
+                        rateChangeSavings.interest >= 0
+                          ? "text-amber-700"
+                          : "text-red-600",
+                      )}
+                    >
+                      {rateChangeSavings.interest >= 0 ? "Saves " : "Costs "}
+                      {formatCurrencyFull(
+                        Math.abs(rateChangeSavings.interest),
                         currency.code,
                         currency.locale,
-                        currency.useIndianNotation,
-                      )
-                    }
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="original"
-                    name="Original"
-                    stroke="#94a3b8"
-                    fillOpacity={1}
-                    fill="url(#colorOrig)"
-                    strokeWidth={2}
-                    strokeDasharray="5 5"
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="adjusted"
-                    name="Adjusted"
-                    stroke="#10b981"
-                    fillOpacity={1}
-                    fill="url(#colorAdj)"
-                    strokeWidth={2}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          {/* Upfront Costs Estimator */}
-          <section className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200 space-y-8">
+                      )}
+                    </p>
+                  </div>
+                  <div className="text-right space-y-0.5">
+                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                      Tenure{" "}
+                      {rateChangeSavings.months >= 0 ? "Reduced" : "Added"}
+                    </p>
+                    <p
+                      className={cn(
+                        "font-bold text-base",
+                        rateChangeSavings.months >= 0
+                          ? "text-amber-700"
+                          : "text-red-600",
+                      )}
+                    >
+                      {Math.floor(Math.abs(rateChangeSavings.months) / 12)}y{" "}
+                      {Math.abs(rateChangeSavings.months) % 12}m
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </section>
+              </div>
+              <div
+                className={cn(
+                  studioViewMode === "stacked" || activeStudioTab === "upfront"
+                    ? "block"
+                    : "hidden",
+                )}
+              >
+                <section className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200 space-y-8">
             <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
               <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-200 flex-shrink-0">
                 <Calculator className="w-6 h-6 text-white" />
@@ -3859,6 +3931,125 @@ export default function App({
               </p>
             </div>
           </section>
+              </div>
+            </div>
+          </div>
+        </div>
+
+<div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">
+                Loan Balance Projection
+              </h3>
+              <div className="flex flex-wrap items-center gap-3">
+                {/* Legend */}
+                <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-widest">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-3 h-0.5 bg-slate-300 border-t-2 border-dashed border-slate-300" />
+                    <span className="text-slate-400">Original</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-3 h-0.5 bg-emerald-500" />
+                    <span className="text-emerald-500">Adjusted</span>
+                  </div>
+                </div>
+                {/* Collective savings chips */}
+                {savings.interest !== 0 && (
+                  <div className="flex items-center gap-2">
+                    <div className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-bold flex items-center gap-1">
+                      <TrendingUp className="w-3 h-3" />
+                      {formatCurrencyFull(
+                        savings.interest,
+                        currency.code,
+                        currency.locale,
+                      )}{" "}
+                      saved
+                    </div>
+                    <div className="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-[10px] font-bold flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {Math.floor(savings.months / 12)}y {savings.months % 12}m
+                      faster
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={chartData}>
+                  <defs>
+                    <linearGradient id="colorOrig" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#94a3b8" stopOpacity={0.1} />
+                      <stop offset="95%" stopColor="#94a3b8" stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient id="colorAdj" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.1} />
+                      <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    vertical={false}
+                    stroke="#f1f5f9"
+                  />
+                  <XAxis
+                    dataKey="year"
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 10, fill: "#94a3b8" }}
+                    dy={10}
+                  />
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 10, fill: "#94a3b8" }}
+                    tickFormatter={(value) =>
+                      formatCompactCurrency(
+                        value,
+                        currency.symbol,
+                        currency.useIndianNotation,
+                        currency.code,
+                      )
+                    }
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: "12px",
+                      border: "none",
+                      boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+                    }}
+                    formatter={(value: number) =>
+                      formatCurrency(
+                        value,
+                        currency.code,
+                        currency.locale,
+                        currency.useIndianNotation,
+                      )
+                    }
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="original"
+                    name="Original"
+                    stroke="#94a3b8"
+                    fillOpacity={1}
+                    fill="url(#colorOrig)"
+                    strokeWidth={2}
+                    strokeDasharray="5 5"
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="adjusted"
+                    name="Adjusted"
+                    stroke="#10b981"
+                    fillOpacity={1}
+                    fill="url(#colorAdj)"
+                    strokeWidth={2}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
 
           {/* Row 4: Amortization Table */}
           <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
