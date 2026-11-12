@@ -84,15 +84,38 @@ export default function PrivacyPolicy() {
           <section className="space-y-4">
             <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
               <Eye className="w-5 h-5 text-emerald-600" />
-              3. Analytics & Third-Party Cookies
+              3. Analytics & Cookie Choices (GDPR & ePrivacy)
             </h2>
             <p className="leading-relaxed">
-              We may use privacy-centric website analytics (such as Google
-              Analytics) to monitor website traffic, page load speeds, and user
-              interactions to help improve our tools. These services collect
-              anonymous aggregate data like browser types, screen resolutions,
-              and general geographic locations. They do not access or capture
-              any values you enter in the calculator.
+              We respect your privacy choices under the EU General Data
+              Protection Regulation (GDPR) and the ePrivacy Directive. We
+              provide a cookie consent interface offering three clear choices:
+            </p>
+            <ul className="list-disc pl-6 space-y-2 text-slate-600 text-sm">
+              <li>
+                <strong>Accept All:</strong> Enables aggregated website
+                analytics cookies (Google Analytics 4) to help us analyze
+                traffic patterns, popular loan scenarios, and user experience.
+              </li>
+              <li>
+                <strong>Accept Only Required:</strong> Blocks all analytics
+                cookies and tracking identifiers. Only strictly necessary
+                functional storage (
+                <code className="bg-slate-100 text-slate-800 px-1 py-0.5 rounded text-xs">
+                  localStorage
+                </code>
+                ) is used to remember your currency preference and current loan
+                inputs.
+              </li>
+              <li>
+                <strong>Deny All:</strong> Rejects all non-essential cookies and
+                tracking mechanisms completely.
+              </li>
+            </ul>
+            <p className="leading-relaxed text-sm text-slate-600">
+              You can change or reset your cookie preferences at any time by
+              clicking the <strong>Cookie Preferences</strong> link in the
+              website footer.
             </p>
           </section>
 

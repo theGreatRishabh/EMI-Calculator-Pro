@@ -34,7 +34,7 @@ describe("Static Pages Rendering", () => {
         screen.getByText(/2. Local Storage and Sharing Features/i),
       ).toBeInTheDocument();
       expect(
-        screen.getByText(/3. Analytics & Third-Party Cookies/i),
+        screen.getByText(/3. Analytics & Cookie Choices/i),
       ).toBeInTheDocument();
     });
   });

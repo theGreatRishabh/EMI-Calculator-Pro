@@ -19,6 +19,69 @@ const getEnv = (): Record<string, string | boolean | undefined> =>
     }
   )?.env || {};
 
+export type CookieConsentChoice = "all" | "necessary" | "none";
+
+export const COOKIE_CONSENT_KEY = "cookie_consent_choice";
+
+/**
+ * Gets the current stored cookie consent choice.
+ */
+export function getStoredCookieConsent(): CookieConsentChoice | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const val = localStorage.getItem(COOKIE_CONSENT_KEY);
+    if (val === "all" || val === "necessary" || val === "none") {
+      return val;
+    }
+  } catch (e) {
+    // Ignore localStorage access errors
+  }
+  return null;
+}
+
+/**
+ * Updates Google Consent Mode v2 and persists user choice.
+ */
+export function updateCookieConsent(choice: CookieConsentChoice): void {
+  if (typeof window === "undefined") return;
+
+  try {
+    localStorage.setItem(COOKIE_CONSENT_KEY, choice);
+  } catch (e) {
+    // Ignore localStorage quota/security errors
+  }
+
+  if (typeof window.gtag === "function") {
+    if (choice === "all") {
+      window.gtag("consent", "update", {
+        analytics_storage: "granted",
+        ad_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
+        personalization_storage: "denied",
+        functionality_storage: "granted",
+        security_storage: "granted",
+      });
+    } else {
+      // Both "necessary" (only required) and "none" (reject all) keep analytics_storage denied
+      window.gtag("consent", "update", {
+        analytics_storage: "denied",
+        ad_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
+        personalization_storage: "denied",
+        functionality_storage: "granted",
+        security_storage: "granted",
+      });
+    }
+  }
+
+  // Dispatch custom event for UI components listening for consent changes
+  window.dispatchEvent(
+    new CustomEvent("cookie_consent_updated", { detail: choice }),
+  );
+}
+
 /**
  * Initializes Google Analytics 4 (gtag.js) if a Measurement ID is provided
  * via environment variables (VITE_GA_MEASUREMENT_ID) or window configuration.

@@ -27,6 +27,7 @@ import {
 import { motion } from "framer-motion";
 import { cn } from "./lib/utils";
 import ExtensionPopup from "./components/ExtensionPopup";
+import CookieConsentBanner from "./components/CookieConsentBanner";
 import { trackPageView, trackClick } from "./lib/analytics";
 
 const LOAN_ROUTES = [
@@ -419,6 +420,20 @@ export default function App() {
                   Terms of Use
                 </Link>
               </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => {
+                    try {
+                      localStorage.removeItem("cookie_consent_choice");
+                      window.location.reload();
+                    } catch (e) {}
+                  }}
+                  className="hover:text-emerald-400 transition-colors text-left"
+                >
+                  Cookie Preferences
+                </button>
+              </li>
             </ul>
           </div>
         </div>
@@ -442,6 +457,7 @@ export default function App() {
           </p>
         </div>
       </footer>
+      {!isExtension && <CookieConsentBanner />}
     </div>
   );
 }

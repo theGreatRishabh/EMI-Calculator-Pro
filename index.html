@@ -1,15 +1,58 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EL18H7HZN0"></script>
+    <!-- Google Consent Mode v2 (Default: Denied for EU/EEA compliance) -->
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+      function gtag() {
+        dataLayer.push(arguments);
+      }
 
-      gtag('config', 'G-EL18H7HZN0');
+      // Check saved consent or default to denied for storage
+      try {
+        var savedConsent = localStorage.getItem("cookie_consent_choice");
+        if (savedConsent === "all") {
+          gtag("consent", "default", {
+            analytics_storage: "granted",
+            ad_storage: "denied",
+            ad_user_data: "denied",
+            ad_personalization: "denied",
+            personalization_storage: "denied",
+            functionality_storage: "granted",
+            security_storage: "granted",
+          });
+        } else {
+          gtag("consent", "default", {
+            analytics_storage: "denied",
+            ad_storage: "denied",
+            ad_user_data: "denied",
+            ad_personalization: "denied",
+            personalization_storage: "denied",
+            functionality_storage: "granted",
+            security_storage: "granted",
+          });
+        }
+      } catch (e) {
+        gtag("consent", "default", {
+          analytics_storage: "denied",
+          ad_storage: "denied",
+          ad_user_data: "denied",
+          ad_personalization: "denied",
+          personalization_storage: "denied",
+          functionality_storage: "granted",
+          security_storage: "granted",
+        });
+      }
+
+      gtag("js", new Date());
+      gtag("config", "G-EL18H7HZN0", {
+        send_page_view: false,
+      });
     </script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-EL18H7HZN0"
+    ></script>
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -113,21 +156,86 @@
   </head>
   <body>
     <noscript>
-      <div style="font-family: system-ui, -apple-system, sans-serif; max-width: 800px; margin: 2rem auto; padding: 2rem; background: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); color: #1e293b; line-height: 1.6;">
-        <h1 style="color: #059669; font-size: 1.75rem; margin-bottom: 0.75rem;">Smart EMI Planner - Financial Calculator Suite</h1>
-        <p style="font-size: 1.1rem; color: #475569; margin-bottom: 1.5rem;">
-          Calculate Equated Monthly Installments (EMI), plan aggressive principal prepayments, model interest rate hikes, and evaluate education loan moratoriums.
+      <div
+        style="
+          font-family:
+            system-ui,
+            -apple-system,
+            sans-serif;
+          max-width: 800px;
+          margin: 2rem auto;
+          padding: 2rem;
+          background: #ffffff;
+          border-radius: 12px;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+          color: #1e293b;
+          line-height: 1.6;
+        "
+      >
+        <h1 style="color: #059669; font-size: 1.75rem; margin-bottom: 0.75rem">
+          Smart EMI Planner - Financial Calculator Suite
+        </h1>
+        <p style="font-size: 1.1rem; color: #475569; margin-bottom: 1.5rem">
+          Calculate Equated Monthly Installments (EMI), plan aggressive
+          principal prepayments, model interest rate hikes, and evaluate
+          education loan moratoriums.
         </p>
-        <h2 style="font-size: 1.25rem; color: #0f172a; margin-top: 1.5rem; margin-bottom: 0.5rem;">Core Calculators</h2>
-        <ul style="list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1.5rem;">
-          <li><a href="/home-loan" style="color: #059669; font-weight: 600;">Home Loan EMI Calculator</a> - Prepayment simulation, tax benefits under Section 24b and 80C.</li>
-          <li><a href="/car-loan" style="color: #059669; font-weight: 600;">Car Loan EMI Calculator</a> - On-road price, down payment, and tenure optimization.</li>
-          <li><a href="/personal-loan" style="color: #059669; font-weight: 600;">Personal Loan EMI Calculator</a> - Processing fees and debt payoff timelines.</li>
-          <li><a href="/education-loan" style="color: #059669; font-weight: 600;">Education Loan EMI Calculator</a> - Study and grace moratorium period, simple vs compound interest, Section 80E tax deduction.</li>
-          <li><a href="/faq" style="color: #059669; font-weight: 600;">Frequently Asked Questions</a> - Mathematical formulas, reducing balance calculations, and prepayment rules.</li>
+        <h2
+          style="
+            font-size: 1.25rem;
+            color: #0f172a;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+          "
+        >
+          Core Calculators
+        </h2>
+        <ul
+          style="
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+          "
+        >
+          <li>
+            <a href="/home-loan" style="color: #059669; font-weight: 600"
+              >Home Loan EMI Calculator</a
+            >
+            - Prepayment simulation, tax benefits under Section 24b and 80C.
+          </li>
+          <li>
+            <a href="/car-loan" style="color: #059669; font-weight: 600"
+              >Car Loan EMI Calculator</a
+            >
+            - On-road price, down payment, and tenure optimization.
+          </li>
+          <li>
+            <a href="/personal-loan" style="color: #059669; font-weight: 600"
+              >Personal Loan EMI Calculator</a
+            >
+            - Processing fees and debt payoff timelines.
+          </li>
+          <li>
+            <a href="/education-loan" style="color: #059669; font-weight: 600"
+              >Education Loan EMI Calculator</a
+            >
+            - Study and grace moratorium period, simple vs compound interest,
+            Section 80E tax deduction.
+          </li>
+          <li>
+            <a href="/faq" style="color: #059669; font-weight: 600"
+              >Frequently Asked Questions</a
+            >
+            - Mathematical formulas, reducing balance calculations, and
+            prepayment rules.
+          </li>
         </ul>
-        <p style="color: #64748b; font-size: 0.9rem;">
-          <em>Note: JavaScript is required for interactive real-time calculations and charting simulations. Please enable JavaScript to unlock the full interactive experience.</em>
+        <p style="color: #64748b; font-size: 0.9rem">
+          <em
+            >Note: JavaScript is required for interactive real-time calculations
+            and charting simulations. Please enable JavaScript to unlock the
+            full interactive experience.</em
+          >
         </p>
       </div>
     </noscript>
@@ -136,9 +244,15 @@
         <div class="spinner"></div>
         <div class="sr-only">
           <h1>Smart EMI Planner - Financial Calculator Suite</h1>
-          <h2>Home, Car, Personal & Education Loan EMI Calculator with Prepayment</h2>
+          <h2>
+            Home, Car, Personal & Education Loan EMI Calculator with Prepayment
+          </h2>
           <p>
-            Loading Smart EMI Planner... Calculate monthly installments, principal prepayments, floating interest rate hikes, and student loan moratorium periods with institution-grade precision. Free Amortization Schedule generator, Goal Optimizer, and Multi-Currency Debt Planner.
+            Loading Smart EMI Planner... Calculate monthly installments,
+            principal prepayments, floating interest rate hikes, and student
+            loan moratorium periods with institution-grade precision. Free
+            Amortization Schedule generator, Goal Optimizer, and Multi-Currency
+            Debt Planner.
           </p>
           <nav aria-label="Static Crawler Navigation">
             <a href="/home-loan">Home Loan EMI Calculator</a>
