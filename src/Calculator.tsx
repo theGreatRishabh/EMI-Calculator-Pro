@@ -3109,7 +3109,11 @@ export default function App({
                         <motion.div
                           layoutId="studio-tab-pill"
                           className="absolute inset-0 bg-white rounded-lg shadow-sm border border-slate-200/60 -z-10"
-                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                          transition={{
+                            type: "spring",
+                            bounce: 0.2,
+                            duration: 0.6,
+                          }}
                         />
                       )}
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -3134,7 +3138,11 @@ export default function App({
                         <motion.div
                           layoutId="studio-tab-pill"
                           className="absolute inset-0 bg-white rounded-lg shadow-sm border border-slate-200/60 -z-10"
-                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                          transition={{
+                            type: "spring",
+                            bounce: 0.2,
+                            duration: 0.6,
+                          }}
                         />
                       )}
                       <Zap className="w-3.5 h-3.5" />
@@ -3159,7 +3167,11 @@ export default function App({
                         <motion.div
                           layoutId="studio-tab-pill"
                           className="absolute inset-0 bg-white rounded-lg shadow-sm border border-slate-200/60 -z-10"
-                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                          transition={{
+                            type: "spring",
+                            bounce: 0.2,
+                            duration: 0.6,
+                          }}
                         />
                       )}
                       <TrendingUp className="w-3.5 h-3.5" />
@@ -3184,7 +3196,11 @@ export default function App({
                         <motion.div
                           layoutId="studio-tab-pill"
                           className="absolute inset-0 bg-white rounded-lg shadow-sm border border-slate-200/60 -z-10"
-                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                          transition={{
+                            type: "spring",
+                            bounce: 0.2,
+                            duration: 0.6,
+                          }}
                         />
                       )}
                       <Calculator className="w-3.5 h-3.5" />
@@ -3211,7 +3227,11 @@ export default function App({
                       <motion.div
                         layoutId="studio-view-pill"
                         className="absolute inset-0 bg-white rounded-lg shadow-sm border border-slate-200/60 -z-10"
-                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                        transition={{
+                          type: "spring",
+                          bounce: 0.2,
+                          duration: 0.6,
+                        }}
                       />
                     )}
                     <Layers className="w-3.5 h-3.5" />
@@ -3233,7 +3253,11 @@ export default function App({
                       <motion.div
                         layoutId="studio-view-pill"
                         className="absolute inset-0 bg-white rounded-lg shadow-sm border border-slate-200/60 -z-10"
-                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                        transition={{
+                          type: "spring",
+                          bounce: 0.2,
+                          duration: 0.6,
+                        }}
                       />
                     )}
                     <LayoutGrid className="w-3.5 h-3.5" />
